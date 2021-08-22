@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using De.TorstenMandelkow.MetroChart;
 using DigitalWellbeingUI.Models;
 using DigitalWellbeingUI.Models.UserControls;
 using DigitalWellbeingUI.ViewModels;
@@ -41,15 +40,20 @@ namespace DigitalWellbeingUI.Views
         {
             if (e.AddedItems.Count > 0)
             {
-                appUsageChart.SelectedItem = vm.OnAppUsageListView_SelectionChanged((AppUsageListItem)e.AddedItems[0]);
+                //appUsageChart.SelectedItem = vm.OnAppUsageListView_SelectionChanged((AppUsageListItem)e.AddedItems[0]);
             }
         }
 
-        private void appUsageChart_MouseUp(object sender, MouseButtonEventArgs e)
+        private void AppUsageChart_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            PieChart chart = (PieChart)sender;
-            ChartDataPoint point = (ChartDataPoint)chart.SelectedItem;
-            AppUsageListView.SelectedItem = vm.OnAppUsagePieChart_SelectionChanged(point);
+            //PieChart chart = (PieChart)sender;
+            //ChartDataPoint point = (ChartDataPoint)chart.SelectedItem;
+            //AppUsageListView.SelectedItem = vm.OnAppUsagePieChart_SelectionChanged(point);
+        }
+
+        public void ReloadData()
+        {
+            vm.LoadData();
         }
     }
 }

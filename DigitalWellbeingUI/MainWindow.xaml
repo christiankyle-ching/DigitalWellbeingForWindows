@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:pg="clr-namespace:DigitalWellbeingUI.Views"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         ui:WindowHelper.UseModernWindowStyle="True" 
         mc:Ignorable="d"
@@ -15,7 +16,7 @@
             </ui:NavigationView.MenuItems>
 
             <ScrollViewer>
-                <Frame x:Name="ContentFrame" IsTabStop="True" NavigationUIVisibility="Hidden"/>
+                <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Margin="0,0,20,20"/>
             </ScrollViewer>
         </ui:NavigationView>
     </Grid>

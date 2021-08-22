@@ -4,11 +4,56 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:DigitalWellbeingUI.Views"
+      xmlns:ui="http://schemas.modernwpf.com/2019"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="SettingsPage">
+      Title="SettingsPage"
+      Background="{DynamicResource SystemControlPageBackgroundAltHighBrush}"
+      Foreground="{DynamicResource SystemControlPageTextBaseHighBrush}">
 
     <Grid>
-        
+        <ui:ListView IsSelectionEnabled="False">
+            <ui:ListView.ItemContainerStyle>
+                <Style TargetType="ui:ListViewItem">
+                    <Setter Property="Padding" Value="12,10"/>
+                </Style>
+            </ui:ListView.ItemContainerStyle>
+            <!-- Minimum Duration -->
+            <ui:ListViewItem HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="Minimum App Duration" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}"/>
+                    <ui:SimpleStackPanel Orientation="Horizontal" Grid.Column ="1">
+                        <ui:NumberBox x:Name="MinDuration_Hours" VerticalAlignment="Center" Maximum="23" Minimum="0" ValueChanged="MinDuration_ValueChanged" SpinButtonPlacementMode="Compact" SmallChange="1" LargeChange="3"/>
+                        <Label Content="hr" VerticalAlignment="Center" Margin="10,0,10,0"/>
+                        <ui:NumberBox x:Name="MinDuration_Minutes" VerticalAlignment="Center" Maximum="59" Minimum="0" ValueChanged="MinDuration_ValueChanged" SpinButtonPlacementMode="Compact"  SmallChange="1" LargeChange="5"/>
+                        <Label Content="min" VerticalAlignment="Center" Margin="10,0,10,0"/>
+                        <ui:NumberBox x:Name="MinDuration_Seconds" VerticalAlignment="Center" Maximum="59" Minimum="0" ValueChanged="MinDuration_ValueChanged" SpinButtonPlacementMode="Compact"  SmallChange="1" LargeChange="5"/>
+                        <Label Content="sec" VerticalAlignment="Center" Margin="10,0,10,0"/>
+                    </ui:SimpleStackPanel>
+                </Grid>
+            </ui:ListViewItem>
+
+            <!-- Theme Mode -->
+            <ui:ListViewItem HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="Theme" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}"/>
+                    <ComboBox Grid.Column="1" x:Name="CBTheme" SelectionChanged="CBTheme_SelectionChanged">
+                        <ComboBoxItem x:Name="CBTheme_System">System</ComboBoxItem>
+                        <ComboBoxItem x:Name="CBTheme_Light">Light</ComboBoxItem>
+                        <ComboBoxItem x:Name="CBTheme_Dark">Dark</ComboBoxItem>
+                    </ComboBox>
+                </Grid>
+            </ui:ListViewItem>
+        </ui:ListView>
     </Grid>
 </Page>

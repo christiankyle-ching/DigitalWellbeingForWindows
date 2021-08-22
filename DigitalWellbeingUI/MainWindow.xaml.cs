@@ -32,6 +32,7 @@ namespace DigitalWellbeingUI
             {
                 case "home":
                     NavView.Header = "App Usage";
+                    usagePage.ReloadData();
                     ContentFrame.Content = usagePage;
                     break;
                 case "Settings":

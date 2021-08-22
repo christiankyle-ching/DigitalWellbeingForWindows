@@ -8,9 +8,32 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ModernUICharts.WPF.Beta" Version="0.9.1" />
+	  <Page Remove="Properties\DesignTimeResources.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="ModernWpfUI" Version="0.9.4" />
+		<PackageReference Include="ModernWpfUI.MahApps" Version="0.9.4" />
 		<PackageReference Include="System.Drawing.Common" Version="5.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="Properties\DesignTimeResources.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Properties\Settings.Designer.cs">
+	    <DesignTimeSharedInput>True</DesignTimeSharedInput>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Settings.settings</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Properties\Settings.settings">
+	    <Generator>SettingsSingleFileGenerator</Generator>
+	    <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+	  </None>
 	</ItemGroup>
 
 </Project>

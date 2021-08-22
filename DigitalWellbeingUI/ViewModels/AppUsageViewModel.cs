@@ -100,6 +100,9 @@ namespace DigitalWellbeingUI.ViewModels
 
                     TimeSpan duration = endTime - startTime;
 
+                    // Filter Minimum Duration
+                    if (duration <= Properties.Settings.Default.MinumumDuration) continue; 
+
                     AppUsage existingRecord = appUsageList.Find(a => a.Name == name);
                     if (existingRecord == null)
                     {
