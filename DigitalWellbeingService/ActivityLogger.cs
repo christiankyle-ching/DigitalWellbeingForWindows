@@ -84,6 +84,20 @@ namespace DigitalWellbeingService
                     File.AppendAllLines(filePath, lines);
                 }
             }
+            catch (FileNotFoundException)
+            {
+                //First entry, insert 2 lines(total 3 lines incl.last newline)
+                if (isInsertingProcess)
+                {
+                    File.AppendAllLines(filePath, lines);
+                }
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine(ex);
+                // File might be currently read by UI application for auto-refresh.
+                return;
+            }
         }
 
         public void Start()

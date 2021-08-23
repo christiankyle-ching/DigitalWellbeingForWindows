@@ -46,5 +46,29 @@ namespace DigitalWellbeingUI.Properties {
                 this["ThemeMode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int RefreshIntervalSeconds {
+            get {
+                return ((int)(this["RefreshIntervalSeconds"]));
+            }
+            set {
+                this["RefreshIntervalSeconds"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableAutoRefresh {
+            get {
+                return ((bool)(this["EnableAutoRefresh"]));
+            }
+            set {
+                this["EnableAutoRefresh"] = value;
+            }
+        }
     }
 }

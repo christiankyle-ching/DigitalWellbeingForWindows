@@ -20,6 +20,7 @@ namespace DigitalWellbeingService
 
                 host.EnableShutdown();
                 host.EnableSessionChanged();
+                host.StartAutomatically();
 
                 host.SetServiceName("DigitalWellbeing");
                 host.SetDisplayName("Digital Wellbeing");

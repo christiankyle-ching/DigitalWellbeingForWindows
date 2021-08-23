@@ -28,19 +28,26 @@ namespace DigitalWellbeingUI
         {
             NavigationViewItem selectedNavItem = args.SelectedItem as NavigationViewItem;
 
+            if (args.IsSettingsSelected)
+            {
+                NavView.Header = "Settings";
+                ContentFrame.Content = settingsPage;
+                return;
+            }
+
             switch (selectedNavItem.Tag)
             {
                 case "home":
                     NavView.Header = "App Usage";
-                    usagePage.ReloadData();
+                    usagePage.RefreshWithSettings();
                     ContentFrame.Content = usagePage;
                     break;
-                case "Settings":
-                    NavView.Header = "Settings";
-                    ContentFrame.Content = settingsPage;
+                default:
+                    NavView.Header = "App Usage";
+                    usagePage.RefreshWithSettings();
+                    ContentFrame.Content = usagePage;
                     break;
             }
-
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Media;
 using DigitalWellbeingUI.Helpers;
 
 namespace DigitalWellbeingUI.Models.UserControls
 {
-    public class AppUsageListItem
+    public class AppUsageListItem : INotifyPropertyChanged
     {
         public int Percentage { get; set; }
 
@@ -19,6 +21,21 @@ namespace DigitalWellbeingUI.Models.UserControls
             Duration = duration;
             Percentage = percentage;
             IconSource = IconManager.GetIconSource(appName);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void Refresh()
+        {
+            OnPropertyChanged(nameof(AppName));
+            OnPropertyChanged(nameof(Percentage));
+            OnPropertyChanged(nameof(Duration));
+            OnPropertyChanged(nameof(StrDuration));
         }
 
     }

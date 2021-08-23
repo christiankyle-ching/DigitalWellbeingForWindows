@@ -40,16 +40,21 @@ namespace DigitalWellbeingUI.Views
             MinDuration_Hours.NumberFormatter = formatter;
             MinDuration_Minutes.NumberFormatter = formatter;
             MinDuration_Seconds.NumberFormatter = formatter;
+
+            RefreshInterval.NumberFormatter = formatter;
         }
 
         private void LoadCurrentSettings()
         {
-            CBTheme.SelectedItem = CBTheme.FindName($"CBTheme_{Properties.Settings.Default.ThemeMode}");
-
             TimeSpan minDuration = Properties.Settings.Default.MinumumDuration;
             MinDuration_Hours.Value = minDuration.Hours;
             MinDuration_Minutes.Value = minDuration.Minutes;
             MinDuration_Seconds.Value = minDuration.Seconds;
+
+            EnableAutoRefresh.IsOn = Properties.Settings.Default.EnableAutoRefresh;
+            RefreshInterval.Value = Properties.Settings.Default.RefreshIntervalSeconds;
+
+            CBTheme.SelectedItem = CBTheme.FindName($"CBTheme_{Properties.Settings.Default.ThemeMode}");
         }
 
         private void CBTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -85,6 +90,20 @@ namespace DigitalWellbeingUI.Views
             int sec = (int)MinDuration_Seconds.Value;
 
             Properties.Settings.Default.MinumumDuration = new TimeSpan(hrs, min, sec);
+            Properties.Settings.Default.Save();
+        }
+
+        private void RefreshInterval_ValueChanged(ModernWpf.Controls.NumberBox sender, ModernWpf.Controls.NumberBoxValueChangedEventArgs args)
+        {
+            int refreshInterval = (int)sender.Value;
+
+            Properties.Settings.Default.RefreshIntervalSeconds = refreshInterval;
+            Properties.Settings.Default.Save();
+        }
+
+        private void EnableAutoRefresh_Toggled(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.EnableAutoRefresh = EnableAutoRefresh.IsOn;
             Properties.Settings.Default.Save();
         }
     }

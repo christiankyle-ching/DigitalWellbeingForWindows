@@ -21,11 +21,6 @@ namespace DigitalWellbeingUI.Views
             vm = (AppUsageViewModel)DataContext;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            vm.OpenLogsFolder();
-        }
-
         private void BtnPreviousDay_Click(object sender, RoutedEventArgs e)
         {
             vm.LoadPreviousDay();
@@ -51,9 +46,14 @@ namespace DigitalWellbeingUI.Views
             //AppUsageListView.SelectedItem = vm.OnAppUsagePieChart_SelectionChanged(point);
         }
 
-        public void ReloadData()
+        public void RefreshWithSettings()
         {
-            vm.LoadData();
+            vm.OnNavigate();
+        }
+
+        private void BtnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            vm.ManualRefresh();
         }
     }
 }

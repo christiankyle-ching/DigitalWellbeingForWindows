@@ -6,6 +6,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
 using DigitalWellbeingUI.Helpers;
 using DigitalWellbeingUI.Models;
 using DigitalWellbeingUI.Models.UserControls;
@@ -26,6 +30,8 @@ namespace DigitalWellbeingUI.ViewModels
             "*LAST",
             "*SHUTDOWN",
         };
+
+        private DispatcherTimer refreshTimer;
 
         // Loaded Date
         public DateTime LoadedDate = DateTime.Now;
@@ -55,6 +61,7 @@ namespace DigitalWellbeingUI.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         public bool HasData { get => AppData.Count > 0; }
         public bool CanGoNext { get => LoadedDate.Date < DateTime.Now.Date; }
+        public bool IsLoading { get; set; }
 
         public AppUsageViewModel()
         {
@@ -63,13 +70,58 @@ namespace DigitalWellbeingUI.ViewModels
             AppData = new ObservableCollection<ChartDataPoint>();
             AppDataItems = new ObservableCollection<AppUsageListItem>();
 
-            LoadData();
+            OnNavigate(false);
+        }
+
+        public void OnNavigate(bool fromNavView = true)
+        {
+            // Apply new settings
+            bool enableAutoRefresh = Properties.Settings.Default.EnableAutoRefresh;
+            int refreshInterval = Properties.Settings.Default.RefreshIntervalSeconds;
+
+            if (!fromNavView)
+            {
+                LoadData();
+                return;
+            }
+
+            if (enableAutoRefresh)
+            {
+                TimeSpan intervalDuration = TimeSpan.FromSeconds(refreshInterval);
+
+                refreshTimer = new DispatcherTimer() { Interval = intervalDuration };
+                refreshTimer.Tick += (s, e) =>
+                {
+                    // Only refresh data when the selected date is today,
+                    // Else, no point in auto-refreshing non-changing data.
+                    if (DateTime.Now.Date == LoadedDate.Date)
+                    {
+                        LoadData();
+                    }
+                };
+                refreshTimer.Start();
+            }
+            else
+            {
+                LoadData();
+
+                try
+                {
+                    refreshTimer.Stop();
+                }
+                catch (NullReferenceException)
+                {
+                    // No timer to start with
+                    Debug.WriteLine("No Timer");
+                }
+
+            }
         }
 
         public async void LoadData()
         {
-            AppData.Clear();
-            AppDataItems.Clear();
+            SetLoading(true);
+
             TotalDuration = TimeSpan.Zero;
 
             try
@@ -101,7 +153,7 @@ namespace DigitalWellbeingUI.ViewModels
                     TimeSpan duration = endTime - startTime;
 
                     // Filter Minimum Duration
-                    if (duration <= Properties.Settings.Default.MinumumDuration) continue; 
+                    if (duration <= Properties.Settings.Default.MinumumDuration) continue;
 
                     AppUsage existingRecord = appUsageList.Find(a => a.Name == name);
                     if (existingRecord == null)
@@ -132,23 +184,74 @@ namespace DigitalWellbeingUI.ViewModels
                     string label = app.Name;
                     if (durationStr != "") { label += $" ({durationStr})"; }
 
-                    AppData.Add(new ChartDataPoint(label, percentage));
-                    AppDataItems.Add(new AppUsageListItem(app.Name, app.Duration, percentage));
+                    try
+                    {
+                        ChartDataPoint existingChartPoint = AppData.Single(c => c.Name.Contains(app.Name));
+                        existingChartPoint.Name = label;
+                        existingChartPoint.Value = percentage;
+                        existingChartPoint.Refresh();
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        AppData.Add(new ChartDataPoint(label, percentage));
+                    }
+
+                    try
+                    {
+                        AppUsageListItem existingListItem = AppDataItems.Single(c => c.AppName == app.Name);
+                        existingListItem.AppName = app.Name;
+                        existingListItem.Duration = app.Duration;
+                        existingListItem.Percentage = percentage;
+                        existingListItem.Refresh();
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        AppDataItems.Add(new AppUsageListItem(app.Name, app.Duration, percentage));
+                    }
                 }
             }
             catch (FileNotFoundException)
             {
                 Debug.WriteLine($"CANNOT FIND: {folderPath}{LoadedDate:MM-dd-yyyy}.log");
-
-                // TODO: Handle No Data
             }
+            finally
+            {
+                SetLoading(false);
+                NotifyChange();
+            }
+        }
 
-            NotifyChange();
+        private void SetLoading(bool value)
+        {
+            if (value == false)
+            {
+                // Apply delay on hiding LoadingProgress
+                TimeSpan delay = TimeSpan.FromMilliseconds(1000);
+
+                var delayTimer = new DispatcherTimer() { Interval = delay };
+                delayTimer.Tick += (s, e) =>
+                {
+                    IsLoading = value;
+                    OnPropertyChanged(nameof(IsLoading));
+                    delayTimer.Stop();
+                };
+                delayTimer.Start();
+            }
+            else
+            {
+                IsLoading = value;
+                OnPropertyChanged(nameof(IsLoading));
+            }
         }
 
         public void OpenLogsFolder()
         {
             Process.Start($"explorer.exe", folderPath);
+        }
+
+        public void ManualRefresh()
+        {
+            OnNavigate(false);
         }
 
         public void LoadPreviousDay()
@@ -169,11 +272,6 @@ namespace DigitalWellbeingUI.ViewModels
             OnPropertyChanged(nameof(StrTotalDuration));
             OnPropertyChanged(nameof(HasData));
             OnPropertyChanged(nameof(CanGoNext));
-        }
-
-        private void OnPropertyChanged([CallerMemberName] String propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public ChartDataPoint OnAppUsageListView_SelectionChanged(AppUsageListItem item)
@@ -198,6 +296,11 @@ namespace DigitalWellbeingUI.ViewModels
             {
                 return null;
             }
+        }
+
+        private void OnPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

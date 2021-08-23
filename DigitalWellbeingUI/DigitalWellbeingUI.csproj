@@ -5,6 +5,7 @@
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<UseWPF>true</UseWPF>
 		<NoWin32Manifest>true</NoWin32Manifest>
+		<StartupObject>DigitalWellbeingUI.App</StartupObject>
 	</PropertyGroup>
 
 	<ItemGroup>
