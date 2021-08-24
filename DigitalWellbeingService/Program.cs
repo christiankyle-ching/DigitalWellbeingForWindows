@@ -1,36 +1,22 @@
 ﻿using System;
 using System.Diagnostics;
-using Topshelf;
+using System.Threading;
 
 namespace DigitalWellbeingService
 {
     class Program
     {
+        private static int checkInterval = 1000;
+
         static void Main(string[] args)
         {
-            var rc = HostFactory.Run(host =>
+            ActivityLogger _al = new ActivityLogger();
+
+            while (true)
             {
-                host.Service<ActivityLogger>(service =>
-                {
-                    service.ConstructUsing(name => new ActivityLogger());
-                    service.WhenStarted(al => al.Start());
-                    service.WhenStopped(al => al.Stop());
-                    service.WhenShutdown(al => al.Shutdown());
-                });
-
-                host.EnableShutdown();
-                host.EnableSessionChanged();
-                host.StartAutomatically();
-
-                host.SetServiceName("DigitalWellbeing");
-                host.SetDisplayName("Digital Wellbeing");
-                host.SetDescription("This is a required service for monitoring your app usage.");
-
-                host.RunAsLocalSystem();
-            });
-
-            var exitCode = (int)Convert.ChangeType(rc, rc.GetTypeCode());
-            Environment.ExitCode = exitCode;
+                _al.OnTimer();
+                Thread.Sleep(checkInterval);
+            }
         }
     }
 }

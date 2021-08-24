@@ -1,14 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<OutputType>Exe</OutputType>
+		<OutputType>WinExe</OutputType>
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<Platforms>AnyCPU;x64;x86</Platforms>
 		<StartupObject>DigitalWellbeingService.Program</StartupObject>
+		<ApplicationIcon />
 	</PropertyGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Topshelf" Version="4.3.0" />
-	</ItemGroup>
 
 </Project>

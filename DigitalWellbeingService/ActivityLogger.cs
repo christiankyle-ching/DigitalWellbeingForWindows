@@ -13,22 +13,18 @@ namespace DigitalWellbeingService
     public class ActivityLogger
     {
         private static readonly string IND_LAST = "*LAST";
-        private static readonly string IND_SHUTDOWN = "*SHUTDOWN";
 
         private const string envFolderPath = @"%USERPROFILE%\.digitalwellbeing\dailylogs\";
         private string folderPath;
 
-        private Timer _timer;
         private uint lastProcessId = 0;
 
         public ActivityLogger()
         {
             folderPath = Environment.ExpandEnvironmentVariables(envFolderPath);
-            _timer = new Timer() { AutoReset = true, Interval = 1000 };
-            _timer.Elapsed += OnTimer;
         }
 
-        private void OnTimer(object sender, ElapsedEventArgs e)
+        public void OnTimer()
         {
             DateTime _dateTime = DateTime.Now;
             uint currProcessId = GetForegroundProcessId();
@@ -100,38 +96,11 @@ namespace DigitalWellbeingService
             }
         }
 
-        public void Start()
-        {
-            _timer.Start();
-        }
-
-        public void Stop()
-        {
-            _timer.Stop();
-        }
-
-        public void Shutdown()
-        {
-            _timer.Stop();
-
-            DateTime _dateTime = DateTime.Now;
-
-            string[] ind_lastLine = new string[] {
-                    $"{_dateTime}\t{IND_SHUTDOWN}",
-                    $"{_dateTime}\t{IND_LAST}"
-                };
-
-            AppendLineToFile(ind_lastLine);
-        }
-
         [DllImport("user32.dll")]
         static extern IntPtr GetForegroundWindow();
 
         [DllImport("user32.dll")]
         static extern IntPtr GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
-
-        [DllImport("user32.dll")]
-        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
         private uint GetForegroundProcessId()
         {

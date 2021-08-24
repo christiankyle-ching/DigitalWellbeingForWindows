@@ -13,6 +13,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="LiveCharts.Wpf.NetCore3" Version="0.9.7" />
 		<PackageReference Include="ModernWpfUI" Version="0.9.4" />
 		<PackageReference Include="ModernWpfUI.MahApps" Version="0.9.4" />
 		<PackageReference Include="System.Drawing.Common" Version="5.0.2" />

@@ -13,6 +13,8 @@ using System.Windows.Threading;
 using DigitalWellbeingUI.Helpers;
 using DigitalWellbeingUI.Models;
 using DigitalWellbeingUI.Models.UserControls;
+using LiveCharts;
+using LiveCharts.Wpf;
 
 namespace DigitalWellbeingUI.ViewModels
 {
@@ -54,7 +56,7 @@ namespace DigitalWellbeingUI.ViewModels
         }
 
         // Collections
-        public ObservableCollection<ChartDataPoint> AppData { get; set; }
+        public SeriesCollection AppData { get; set; }
         public ObservableCollection<AppUsageListItem> AppDataItems { get; set; }
 
         // Getters
@@ -67,8 +69,21 @@ namespace DigitalWellbeingUI.ViewModels
         {
             folderPath = Environment.ExpandEnvironmentVariables(envFolderPath);
 
-            AppData = new ObservableCollection<ChartDataPoint>();
+            AppData = new SeriesCollection();
             AppDataItems = new ObservableCollection<AppUsageListItem>();
+
+            int refreshInterval = Properties.Settings.Default.RefreshIntervalSeconds;
+            TimeSpan intervalDuration = TimeSpan.FromSeconds(refreshInterval);
+            refreshTimer = new DispatcherTimer() { Interval = intervalDuration };
+            refreshTimer.Tick += (s, e) =>
+            {
+                // Only refresh data when the selected date is today,
+                // Else, no point in auto-refreshing non-changing data.
+                if (DateTime.Now.Date == LoadedDate.Date)
+                {
+                    LoadData();
+                }
+            };
 
             OnNavigate(false);
         }
@@ -77,7 +92,7 @@ namespace DigitalWellbeingUI.ViewModels
         {
             // Apply new settings
             bool enableAutoRefresh = Properties.Settings.Default.EnableAutoRefresh;
-            int refreshInterval = Properties.Settings.Default.RefreshIntervalSeconds;
+
 
             if (!fromNavView)
             {
@@ -87,19 +102,10 @@ namespace DigitalWellbeingUI.ViewModels
 
             if (enableAutoRefresh)
             {
-                TimeSpan intervalDuration = TimeSpan.FromSeconds(refreshInterval);
-
-                refreshTimer = new DispatcherTimer() { Interval = intervalDuration };
-                refreshTimer.Tick += (s, e) =>
+                if (!refreshTimer.IsEnabled)
                 {
-                    // Only refresh data when the selected date is today,
-                    // Else, no point in auto-refreshing non-changing data.
-                    if (DateTime.Now.Date == LoadedDate.Date)
-                    {
-                        LoadData();
-                    }
-                };
-                refreshTimer.Start();
+                    refreshTimer.Start();
+                }
             }
             else
             {
@@ -114,9 +120,13 @@ namespace DigitalWellbeingUI.ViewModels
                     // No timer to start with
                     Debug.WriteLine("No Timer");
                 }
-
             }
         }
+
+        private Func<ChartPoint, string> parseChartLabel = (chartPoint) =>
+        {
+            return string.Format("{0:F2} min/s ({1:P})", chartPoint.Y, chartPoint.Participation);
+        };
 
         public async void LoadData()
         {
@@ -152,9 +162,6 @@ namespace DigitalWellbeingUI.ViewModels
 
                     TimeSpan duration = endTime - startTime;
 
-                    // Filter Minimum Duration
-                    if (duration <= Properties.Settings.Default.MinumumDuration) continue;
-
                     AppUsage existingRecord = appUsageList.Find(a => a.Name == name);
                     if (existingRecord == null)
                     {
@@ -174,7 +181,7 @@ namespace DigitalWellbeingUI.ViewModels
                     TotalDuration = TotalDuration.Add(app.Duration);
                 }
 
-                // Add ListItems
+                // Add List Items and Chart Items
                 foreach (AppUsage app in appUsageList)
                 {
                     int percentage = (int)Math.Round(app.Duration.TotalSeconds / TotalDuration.TotalSeconds * 100);
@@ -184,29 +191,53 @@ namespace DigitalWellbeingUI.ViewModels
                     string label = app.Name;
                     if (durationStr != "") { label += $" ({durationStr})"; }
 
+                    // Add Chart Points
                     try
                     {
-                        ChartDataPoint existingChartPoint = AppData.Single(c => c.Name.Contains(app.Name));
-                        existingChartPoint.Name = label;
-                        existingChartPoint.Value = percentage;
-                        existingChartPoint.Refresh();
+                        PieSeries existingData = (PieSeries)AppData.Single(pieSeries => pieSeries.Title == app.Name);
+                        existingData.Values[0] = app.Duration.TotalMinutes;
+
+                        // Remove if not within MinimumDuration
+                        if (app.Duration <= Properties.Settings.Default.MinumumDuration)
+                        {
+                            AppData.Remove(existingData);
+                        }
                     }
                     catch (InvalidOperationException)
                     {
-                        AppData.Add(new ChartDataPoint(label, percentage));
+                        // Add record only if higher than MinimumDuration and not currently on the list
+                        if (app.Duration > Properties.Settings.Default.MinumumDuration)
+                        {
+                            AppData.Add(new PieSeries()
+                            {
+                                Title = app.Name,
+                                Values = new ChartValues<double> { app.Duration.TotalMinutes },
+                                LabelPoint = parseChartLabel,
+                            });
+                        }
                     }
 
+                    // Add List Items
                     try
                     {
                         AppUsageListItem existingListItem = AppDataItems.Single(c => c.AppName == app.Name);
-                        existingListItem.AppName = app.Name;
                         existingListItem.Duration = app.Duration;
                         existingListItem.Percentage = percentage;
                         existingListItem.Refresh();
+
+                        // Remove if not within MinimumDuration
+                        if (app.Duration <= Properties.Settings.Default.MinumumDuration)
+                        {
+                            AppDataItems.Remove(existingListItem);
+                        }
                     }
                     catch (InvalidOperationException)
                     {
-                        AppDataItems.Add(new AppUsageListItem(app.Name, app.Duration, percentage));
+                        // Add record only if higher than MinimumDuration and not currently on the list
+                        if (app.Duration > Properties.Settings.Default.MinumumDuration)
+                        {
+                            AppDataItems.Add(new AppUsageListItem(app.Name, app.Duration, percentage));
+                        }
                     }
                 }
             }
@@ -257,12 +288,16 @@ namespace DigitalWellbeingUI.ViewModels
         public void LoadPreviousDay()
         {
             LoadedDate = LoadedDate.AddDays(-1);
+            AppData.Clear();
+            AppDataItems.Clear();
             LoadData();
         }
 
         public void LoadNextDay()
         {
             LoadedDate = LoadedDate.AddDays(1);
+            AppData.Clear();
+            AppDataItems.Clear();
             LoadData();
         }
 
@@ -274,27 +309,45 @@ namespace DigitalWellbeingUI.ViewModels
             OnPropertyChanged(nameof(CanGoNext));
         }
 
-        public ChartDataPoint OnAppUsageListView_SelectionChanged(AppUsageListItem item)
+        public void OnAppUsageListView_SelectionChanged(AppUsageListItem item)
         {
             try
             {
-                return AppData.Single(appData => appData.Name.Contains(item.AppName));
+                // HighlightChartPoint(item.AppName);
             }
-            catch (InvalidOperationException)
+            catch
+            {
+                Debug.WriteLine("Series not found in chart.");
+            }
+        }
+
+        public AppUsageListItem OnAppUsageChart_SelectionChanged(ChartPoint chartPoint)
+        {
+            try
+            {
+                // HighlightChartPoint(chartPoint.SeriesView.Title); // FIXME: (or not) Slow PushOut animation
+                return AppDataItems.Single(listItem => listItem.AppName == chartPoint.SeriesView.Title);
+            }
+            catch
             {
                 return null;
             }
         }
 
-        public AppUsageListItem OnAppUsagePieChart_SelectionChanged(ChartDataPoint chartPoint)
+        private int selectedChartPointPushOut = 15;
+
+        private void HighlightChartPoint(string appName)
         {
-            try
+            foreach (PieSeries series in AppData)
             {
-                return AppDataItems.Single(listItem => chartPoint.Name.Contains(listItem.AppName));
-            }
-            catch (InvalidOperationException ex)
-            {
-                return null;
+                if (series.Title == appName)
+                {
+                    series.PushOut = selectedChartPointPushOut;
+                }
+                else
+                {
+                    series.PushOut = 0;
+                }
             }
         }
 

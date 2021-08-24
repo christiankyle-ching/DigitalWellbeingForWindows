@@ -4,6 +4,7 @@ using System.Windows.Input;
 using DigitalWellbeingUI.Models;
 using DigitalWellbeingUI.Models.UserControls;
 using DigitalWellbeingUI.ViewModels;
+using LiveCharts.Wpf;
 
 namespace DigitalWellbeingUI.Views
 {
@@ -31,21 +32,6 @@ namespace DigitalWellbeingUI.Views
             vm.LoadNextDay();
         }
 
-        private void AppUsageListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (e.AddedItems.Count > 0)
-            {
-                //appUsageChart.SelectedItem = vm.OnAppUsageListView_SelectionChanged((AppUsageListItem)e.AddedItems[0]);
-            }
-        }
-
-        private void AppUsageChart_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            //PieChart chart = (PieChart)sender;
-            //ChartDataPoint point = (ChartDataPoint)chart.SelectedItem;
-            //AppUsageListView.SelectedItem = vm.OnAppUsagePieChart_SelectionChanged(point);
-        }
-
         public void RefreshWithSettings()
         {
             vm.OnNavigate();
@@ -54,6 +40,19 @@ namespace DigitalWellbeingUI.Views
         private void BtnRefresh_Click(object sender, RoutedEventArgs e)
         {
             vm.ManualRefresh();
+        }
+
+        private void appUsageChart_DataClick(object sender, LiveCharts.ChartPoint chartPoint)
+        {
+            AppUsageListView.SelectedItem = vm.OnAppUsageChart_SelectionChanged(chartPoint);
+        }
+
+        private void AppUsageListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0)
+            {
+                vm.OnAppUsageListView_SelectionChanged((AppUsageListItem)e.AddedItems[0]);
+            }
         }
     }
 }
