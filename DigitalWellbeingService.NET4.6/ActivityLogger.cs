@@ -30,7 +30,6 @@ namespace DigitalWellbeingService.NET4._6
 
             if (IsProcessChanged(currProcessId))
             {
-                Console.WriteLine("CHANGED");
                 lastProcessId = currProcessId;
 
                 string[] newProcessLine = new string[] {
@@ -42,8 +41,6 @@ namespace DigitalWellbeingService.NET4._6
             }
             else
             {
-                Console.WriteLine("NO CHANGE");
-
                 string[] ind_lastLine = new string[] {
                     $"{_dateTime}\t{IND_LAST}"
                 };

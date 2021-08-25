@@ -21,7 +21,8 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition />
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
 
         <!-- Progress Bar -->
@@ -39,7 +40,23 @@
             <ui:ProgressBar IsIndeterminate="True" Margin="0,0,0,5"/>
         </Grid>
 
-        <Grid Grid.Row="1">
+        <!-- Previous Days Chart -->
+        <lvc:CartesianChart Grid.Row="1" x:Name="WeeklyChart" LegendLocation="None"
+                            Series="{Binding WeeklyChartData}" Margin="20,0,20,0"
+                            DataTooltip="{x:Null}" DataClick="WeeklyChart_DataClick">
+            <lvc:CartesianChart.AxisX>
+                <lvc:Axis Labels="{Binding WeeklyChartLabels}">
+                    <lvc:Axis.Separator>
+                        <lvc:Separator IsEnabled="False"/>
+                    </lvc:Axis.Separator>
+                </lvc:Axis>
+            </lvc:CartesianChart.AxisX>
+            <lvc:CartesianChart.AxisY >
+                <lvc:Axis Title="Hours" LabelFormatter="{Binding HourFormatter}"/>
+            </lvc:CartesianChart.AxisY>
+        </lvc:CartesianChart>
+
+        <Grid Grid.Row="2">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
@@ -47,7 +64,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- First Column : Chart -->
-            <lvc:PieChart x:Name="appUsageChart" Grid.Column="0" LegendLocation="Bottom" Series="{Binding AppData}" Margin="20" DataClick="appUsageChart_DataClick">
+            <lvc:PieChart x:Name="appUsageChart" Grid.Column="0" LegendLocation="Bottom" Series="{Binding DayPieChartData}" Margin="20" DataClick="appUsageChart_DataClick">
                 <lvc:PieChart.DataTooltip>
                     <lvc:DefaultTooltip SelectionMode="OnlySender">
                         <lvc:DefaultTooltip.Style>
@@ -78,7 +95,7 @@
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <Button x:Name="BtnPreviousDay" Grid.Column="0" Content="&lt;" Click="BtnPreviousDay_Click"/>
+                        <Button x:Name="BtnPreviousDay" Grid.Column="0" Content="&lt;" Click="BtnPreviousDay_Click" IsEnabled="{Binding CanGoPrev}"/>
 
                         <TextBlock Grid.Column="1"
                         Text="{Binding StrLoadedDate, Mode=OneWay}"
@@ -89,7 +106,7 @@
                     </Grid>
 
                     <!-- Control : List View -->
-                    <ui:ListView x:Name="AppUsageListView" SelectionChanged="AppUsageListView_SelectionChanged" SelectionMode="Single" ItemsSource="{Binding AppDataItems}">
+                    <ui:ListView x:Name="AppUsageListView" SelectionChanged="AppUsageListView_SelectionChanged" SelectionMode="Single" ItemsSource="{Binding DayListItems}">
 
                         <ui:ListView.ItemContainerStyle>
                             <Style TargetType="ui:ListViewItem">

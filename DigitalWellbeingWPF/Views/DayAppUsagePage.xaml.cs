@@ -1,7 +1,10 @@
 ﻿using DigitalWellbeingWPF.Models.UserControls;
 using DigitalWellbeingWPF.ViewModels;
+using LiveCharts;
+using LiveCharts.Wpf;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -62,6 +65,11 @@ namespace DigitalWellbeingWPF.Views
             {
                 vm.OnAppUsageListView_SelectionChanged((AppUsageListItem)e.AddedItems[0]);
             }
+        }
+
+        private void WeeklyChart_DataClick(object sender, LiveCharts.ChartPoint chartPoint)
+        {
+            vm.WeeklyChart_SelectionChanged((int)chartPoint.X);
         }
     }
 }
