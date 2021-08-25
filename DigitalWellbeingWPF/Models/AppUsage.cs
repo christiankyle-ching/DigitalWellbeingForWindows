@@ -10,12 +10,14 @@ namespace DigitalWellbeingWPF.Models
 {
     public class AppUsage : INotifyPropertyChanged
     {
-        public string Name { get; set; }
+        public string ProgramName { get; set; }
+        public string ProcessName { get; set; } // Process name : Use as identifier
         public TimeSpan Duration { get; set; }
 
-        public AppUsage(string appName, TimeSpan duration)
+        public AppUsage(string processName, string programName, TimeSpan duration)
         {
-            this.Name = appName;
+            this.ProcessName = processName;
+            this.ProgramName = programName;
             this.Duration = duration;
         }
 
@@ -28,7 +30,7 @@ namespace DigitalWellbeingWPF.Models
 
         public void Refresh()
         {
-            OnPropertyChanged(nameof(Name));
+            OnPropertyChanged(nameof(ProcessName));
             OnPropertyChanged(nameof(Duration));
         }
     }

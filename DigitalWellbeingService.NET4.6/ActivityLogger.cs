@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -25,28 +26,55 @@ namespace DigitalWellbeingService.NET4._6
 
         public void OnTimer()
         {
-            DateTime _dateTime = DateTime.Now;
-            uint currProcessId = GetForegroundProcessId();
+            IntPtr handle = GetForegroundWindow();
+            uint currProcessId = GetForegroundProcessId(handle);
+            Process proc = Process.GetProcessById((int)currProcessId);
 
             if (IsProcessChanged(currProcessId))
             {
-                lastProcessId = currProcessId;
+                string newProcessName = GetActiveProcessName(proc);
+                string newProgramName = GetActiveProgramName(proc);
 
-                string[] newProcessLine = new string[] {
-                    $"{_dateTime}\t{GetActiveProcessName(currProcessId)}",
-                    $"{_dateTime}\t{IND_LAST}"
-                };
-
-                AppendLineToFile(newProcessLine);
+                if (newProgramName == null && newProcessName == null)
+                {
+                    // Error in getting process or program name.
+                    UpdateLastLine();
+                }
+                else
+                {
+                    lastProcessId = currProcessId;
+                    UpdateLastLine(newProcessName, newProgramName);
+                }
             }
             else
             {
+                UpdateLastLine();
+            }
+        }
+
+        private void UpdateLastLine(string processName = "", string programName = "")
+        {
+            DateTime _dateTime = DateTime.Now;
+            string lastLine = $"{_dateTime}\t{IND_LAST}\t{IND_LAST}";
+
+            if (programName == "" && processName == "")
+            {
                 string[] ind_lastLine = new string[] {
-                    $"{_dateTime}\t{IND_LAST}"
+                    lastLine
                 };
 
                 AppendLineToFile(ind_lastLine);
             }
+            else
+            {
+                string[] newProcessLine = new string[] {
+                    $"{_dateTime}\t{processName}\t{programName}",
+                    lastLine
+                };
+
+                AppendLineToFile(newProcessLine);
+            }
+
         }
 
         private void AppendLineToFile(string[] linesToInsert)
@@ -99,29 +127,52 @@ namespace DigitalWellbeingService.NET4._6
             }
         }
 
-        [DllImport("user32.dll")]
-        static extern IntPtr GetForegroundWindow();
-
-        [DllImport("user32.dll")]
-        static extern IntPtr GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
-
-        private uint GetForegroundProcessId()
+        private uint GetForegroundProcessId(IntPtr handle)
         {
-            IntPtr handle = GetForegroundWindow();
             GetWindowThreadProcessId(handle, out uint processId);
 
             return processId;
         }
 
-        private string GetActiveProcessName(uint processId)
+        private string GetActiveProcessName(Process p)
         {
-            Process p = Process.GetProcessById((int)processId);
-            return p.ProcessName;
+
+
+            try
+            {
+                return p.ProcessName;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private string GetActiveProgramName(Process p)
+        {
+            try
+            {
+                return p.MainModule.FileVersionInfo.ProductName;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private bool IsProcessChanged(uint processId)
         {
             return processId != lastProcessId;
         }
+
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        static extern IntPtr GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
+
+        [DllImport("user32.dll")]
+        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+
     }
 }

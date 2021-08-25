@@ -64,6 +64,8 @@ namespace DigitalWellbeingWPF.Views
             if (e.AddedItems.Count > 0)
             {
                 vm.OnAppUsageListView_SelectionChanged((AppUsageListItem)e.AddedItems[0]);
+                ModernWpf.Controls.ListViewItem item = (ModernWpf.Controls.ListViewItem)AppUsageListView.ItemContainerGenerator.ContainerFromItem(e.AddedItems[0]);
+                item.Focus();
             }
         }
 

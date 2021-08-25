@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DigitalWellbeingWPF")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("DigitalWellbeing.UI")]
+[assembly: AssemblyDescription("An app for monitoring your daily app usage.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DigitalWellbeingWPF")]
-[assembly: AssemblyCopyright("Copyright ©  2021")]
+[assembly: AssemblyProduct("Digital Wellbeing For Windows")]
+[assembly: AssemblyCopyright("© 2021 Christian Kyle Ching")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

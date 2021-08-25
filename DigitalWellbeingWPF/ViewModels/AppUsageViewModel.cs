@@ -225,9 +225,10 @@ namespace DigitalWellbeingWPF.ViewModels
 
                     string[] data = line.Split('\t');
 
-                    string name = data[1];
+                    string processName = data[1];
+                    string programName = (data[2] == "") ? processName : data[2];
 
-                    if (excludeProcesses.Contains(name)) continue;
+                    if (excludeProcesses.Contains(processName)) continue;
 
                     DateTime startTime = DateTime.Parse(data[0]);
                     DateTime endTime = DateTime.Parse(lines[i + 1].Split('\t')[0]);
@@ -236,10 +237,10 @@ namespace DigitalWellbeingWPF.ViewModels
 
                     TimeSpan duration = endTime - startTime;
 
-                    AppUsage existingRecord = appUsageList.Find(a => a.Name == name);
+                    AppUsage existingRecord = appUsageList.Find(a => a.ProcessName == processName);
                     if (existingRecord == null)
                     {
-                        appUsageList.Add(new AppUsage(name, duration));
+                        appUsageList.Add(new AppUsage(processName, programName, duration));
                     }
                     else
                     {
@@ -278,13 +279,13 @@ namespace DigitalWellbeingWPF.ViewModels
 
                     string durationStr = StringParser.TimeSpanToString(app.Duration);
 
-                    string label = app.Name;
+                    string label = app.ProcessName;
                     if (durationStr != "") { label += $" ({durationStr})"; }
 
                     // Add Chart Points
                     try
                     {
-                        PieSeries existingData = (PieSeries)DayPieChartData.Single(pieSeries => pieSeries.Title == app.Name);
+                        PieSeries existingData = (PieSeries)DayPieChartData.Single(pieSeries => pieSeries.Title == app.ProcessName);
                         existingData.Values[0] = app.Duration.TotalMinutes;
 
                         // Remove if not within MinimumDuration
@@ -300,7 +301,7 @@ namespace DigitalWellbeingWPF.ViewModels
                         {
                             DayPieChartData.Add(new PieSeries()
                             {
-                                Title = app.Name,
+                                Title = app.ProcessName,
                                 Values = new ChartValues<double> { app.Duration.TotalMinutes },
                                 LabelPoint = PieChartTooltipFormatter,
                                 StrokeThickness = 0,
@@ -311,7 +312,7 @@ namespace DigitalWellbeingWPF.ViewModels
                     // Add List Items
                     try
                     {
-                        AppUsageListItem existingListItem = DayListItems.Single(c => c.AppName == app.Name);
+                        AppUsageListItem existingListItem = DayListItems.Single(c => c.ProcessName == app.ProcessName);
                         existingListItem.Duration = app.Duration;
                         existingListItem.Percentage = percentage;
                         existingListItem.Refresh();
@@ -327,7 +328,7 @@ namespace DigitalWellbeingWPF.ViewModels
                         // Add record only if higher than MinimumDuration and not currently on the list
                         if (app.Duration > Properties.Settings.Default.MinumumDuration)
                         {
-                            DayListItems.Add(new AppUsageListItem(app.Name, app.Duration, percentage));
+                            DayListItems.Add(new AppUsageListItem(app.ProcessName, app.ProgramName, app.Duration, percentage));
                         }
                     }
                 }
@@ -416,8 +417,13 @@ namespace DigitalWellbeingWPF.ViewModels
         {
             try
             {
-                // HighlightChartPoint(chartPoint.SeriesView.Title); // FIXME: (or not) Slow PushOut animation
-                return DayListItems.Single(listItem => listItem.AppName == chartPoint.SeriesView.Title);
+
+                return DayListItems.Single(listItem =>
+                {
+                    Debug.WriteLine(listItem);
+                    Debug.WriteLine(chartPoint);
+                    return listItem.ProcessName == chartPoint.SeriesView.Title;
+                });
             }
             catch
             {
