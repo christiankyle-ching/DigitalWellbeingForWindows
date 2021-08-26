@@ -46,11 +46,11 @@
                             </ui:SimpleStackPanel>
 
                             <ui:SimpleStackPanel Orientation="Horizontal" Grid.Column ="1">
-                                <ui:NumberBox x:Name="MinDuration_Hours" VerticalAlignment="Center" Maximum="23" Minimum="0" LostFocus="MinDuration_LostFocus" SpinButtonPlacementMode="Compact" SmallChange="1" LargeChange="3" PlaceholderText="hh"/>
+                                <ui:NumberBox x:Name="MinDuration_Hours" VerticalAlignment="Center" Maximum="23" Minimum="0" LostFocus="MinDuration_LostFocus" SpinButtonPlacementMode="Compact" SmallChange="1" LargeChange="3" PlaceholderText="hh" AcceptsExpression="False"/>
                                 <Label Content="hr" VerticalAlignment="Center" Margin="10,0,10,0"/>
-                                <ui:NumberBox x:Name="MinDuration_Minutes" VerticalAlignment="Center" Maximum="59" Minimum="0" LostFocus="MinDuration_LostFocus" SpinButtonPlacementMode="Compact"  SmallChange="1" LargeChange="5" PlaceholderText="mm"/>
+                                <ui:NumberBox x:Name="MinDuration_Minutes" VerticalAlignment="Center" Maximum="59" Minimum="0" LostFocus="MinDuration_LostFocus" SpinButtonPlacementMode="Compact"  SmallChange="1" LargeChange="5" PlaceholderText="mm"  AcceptsExpression="False"/>
                                 <Label Content="min" VerticalAlignment="Center" Margin="10,0,10,0"/>
-                                <ui:NumberBox x:Name="MinDuration_Seconds" VerticalAlignment="Center" Maximum="59" Minimum="0" LostFocus="MinDuration_LostFocus" SpinButtonPlacementMode="Compact"  SmallChange="1" LargeChange="5" PlaceholderText="ss"/>
+                                <ui:NumberBox x:Name="MinDuration_Seconds" VerticalAlignment="Center" Maximum="59" Minimum="0" LostFocus="MinDuration_LostFocus" SpinButtonPlacementMode="Compact"  SmallChange="1" LargeChange="5" PlaceholderText="ss"  AcceptsExpression="False"/>
                                 <Label Content="sec" VerticalAlignment="Center" Margin="10,0,10,0"/>
                             </ui:SimpleStackPanel>
                         </Grid>

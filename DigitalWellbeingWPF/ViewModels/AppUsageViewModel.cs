@@ -115,7 +115,20 @@ namespace DigitalWellbeingWPF.ViewModels
             InitCollections();
             InitFormatters();
 
-            LoadWeeklyData();
+            bool loadedWeeklyData = false;
+
+            do
+            {
+                try
+                {
+                    LoadWeeklyData();
+                    loadedWeeklyData = true;
+                }
+                catch (IOException)
+                {
+                    // Retry Loading Weekly Data
+                }
+            } while (!loadedWeeklyData);
 
             InitAutoRefreshTimer();
         }
@@ -152,16 +165,25 @@ namespace DigitalWellbeingWPF.ViewModels
             // Else, no point in auto-refreshing non-changing data.
             if (DateTime.Now.Date == LoadedDate.Date)
             {
-                List<AppUsage> appUsageList = await GetData(LoadedDate.Date);
-                UpdatePieChartAndList(appUsageList);
+                try
+                {
+                    List<AppUsage> appUsageList = await GetData(LoadedDate.Date);
+                    UpdatePieChartAndList(appUsageList);
 
-                // Refresh Bar Graph
-                WeeklyChartData.ElementAt(0).Values[GetDayIndex(LoadedDate.Date)] = TotalDuration.TotalHours;
+                    // Refresh Bar Graph
+                    WeeklyChartData.ElementAt(0).Values[GetDayIndex(LoadedDate.Date)] = TotalDuration.TotalHours;
+                }
+                catch
+                {
+                    Debug.WriteLine("Skip Refresh");
+                }
             }
         }
 
         public void OnNavigate()
         {
+            TryRefreshData();
+
             // Apply new settings
             bool enableAutoRefresh = Properties.Settings.Default.EnableAutoRefresh;
             if (enableAutoRefresh)
@@ -173,8 +195,6 @@ namespace DigitalWellbeingWPF.ViewModels
             }
             else
             {
-                TryRefreshData();
-
                 try
                 {
                     refreshTimer.Stop();
@@ -234,6 +254,10 @@ namespace DigitalWellbeingWPF.ViewModels
                 WeeklyChartLabelDates = loadedDates.ToArray();
 
                 WeeklyChart_SelectionChanged(WeekAppUsage.Count - 1);
+            }
+            catch (IOException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -297,7 +321,9 @@ namespace DigitalWellbeingWPF.ViewModels
             catch (IOException)
             {
                 // TODO : Find another way to retry (dangerous! might stuck in a loop)
-                return await GetData(date);
+                Debug.WriteLine("Can't read, file is still being used");
+                //return await GetData(date);
+                throw;
             }
 
             return appUsageList;
