@@ -388,14 +388,12 @@ namespace DigitalWellbeingWPF.ViewModels
 
         public void LoadPreviousDay()
         {
-            LoadedDate = LoadedDate.AddDays(-1);
-            WeeklyChart_SelectionChanged(GetDayIndex(LoadedDate));
+            WeeklyChart_SelectionChanged(GetDayIndex(LoadedDate.AddDays(-1)));
         }
 
         public void LoadNextDay()
         {
-            LoadedDate = LoadedDate.AddDays(1);
-            WeeklyChart_SelectionChanged(GetDayIndex(LoadedDate));
+            WeeklyChart_SelectionChanged(GetDayIndex(LoadedDate.AddDays(1)));
         }
 
         private int GetDayIndex(DateTime date)
@@ -412,7 +410,7 @@ namespace DigitalWellbeingWPF.ViewModels
             OnPropertyChanged(nameof(CanGoNext));
             OnPropertyChanged(nameof(CanGoPrev));
         }
-        
+
         public AppUsageListItem OnAppUsageChart_SelectionChanged(ChartPoint chartPoint)
         {
             try
@@ -432,24 +430,30 @@ namespace DigitalWellbeingWPF.ViewModels
 
         public void WeeklyChart_SelectionChanged(int index)
         {
-            DateTime selectedDate = WeeklyChartLabelDates.ElementAt(index);
-
-            // If selected date is already shown (loaded) and it is not the date today
-            // Avoid Refresh, but Refresh if date is today
-            if (selectedDate == LoadedDate && selectedDate != DateTime.Now.Date)
+            try
             {
-                return;
+                DateTime selectedDate = WeeklyChartLabelDates.ElementAt(index);
+
+                // If selected date is already shown (loaded) and it is not the date today
+                // Avoid Refresh, but Refresh if date is today
+                if (selectedDate == LoadedDate && selectedDate != DateTime.Now.Date)
+                {
+                    return;
+                }
+                else
+                {
+                    LoadedDate = selectedDate;
+
+                    DayPieChartData.Clear();
+                    DayListItems.Clear();
+
+                    UpdatePieChartAndList(WeekAppUsage.ElementAt(index));
+                }
             }
-            else
+            catch (IndexOutOfRangeException)
             {
-                LoadedDate = selectedDate;
-
-                DayPieChartData.Clear();
-                DayListItems.Clear();
-
-                UpdatePieChartAndList(WeekAppUsage.ElementAt(index));
-            }
-
+                Debug.WriteLine("Element index exceeded in WeeklyChart");
+            } catch { }
         }
 
         private void OnPropertyChanged([CallerMemberName] String propertyName = "")
