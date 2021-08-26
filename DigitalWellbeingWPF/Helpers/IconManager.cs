@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -35,8 +36,9 @@ namespace DigitalWellbeingWPF.Helpers
                 try
                 {
                     Icon icon = Icon.ExtractAssociatedIcon(processes[0].MainModule.FileName);
+                    Bitmap bmpIcon = icon.ToBitmap();
 
-                    CacheImageLocation(icon, appName);
+                    CacheImage(bmpIcon, appName);
                     return Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                 }
                 catch (Win32Exception)
@@ -63,19 +65,20 @@ namespace DigitalWellbeingWPF.Helpers
             return GetFolderPath(applicationPath) + $@"\{applicationFolderName}";
         }
 
-        private static string GetImageCacheLocation(string appName)
+        private static string GetImageCacheLocation(string appName = "")
         {
             string location = GetApplicationLocation() + $@"\{imageCacheFolderName}\";
-            if (!(appName == "" || appName == null)) { location += $"{appName}.ico"; }
+            if (appName != "") { location += $"{appName}.ico"; }
             return location;
         }
 
-        private static void CacheImageLocation(Icon icon, string appName)
+        private static void CacheImage(Bitmap icon, string appName)
         {
             try
             {
                 FileStream outputStream = new FileStream(GetImageCacheLocation(appName), FileMode.Create);
-                icon.Save(outputStream);
+                icon.Save(outputStream, ImageFormat.Icon);
+                icon.Dispose();
             }
             catch (Exception ex)
             {
@@ -89,6 +92,7 @@ namespace DigitalWellbeingWPF.Helpers
             {
                 BitmapImage img = new BitmapImage();
                 img.BeginInit();
+                img.CacheOption = BitmapCacheOption.OnLoad;
                 img.UriSource = new Uri(GetImageCacheLocation(appName));
                 img.EndInit();
 
@@ -100,6 +104,20 @@ namespace DigitalWellbeingWPF.Helpers
             }
 
             return null;
+        }
+
+        public static bool ClearCachedImages()
+        {
+            try
+            {
+                Directory.Delete(GetImageCacheLocation(), true);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                return false;
+            }
         }
     }
 }

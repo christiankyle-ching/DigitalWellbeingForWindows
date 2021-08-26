@@ -11,104 +11,151 @@
       Background="{DynamicResource SystemControlPageBackgroundAltHighBrush}"
       Foreground="{DynamicResource SystemControlPageTextBaseHighBrush}">
 
+    <Page.Resources>
+        <ResourceDictionary>
+            <Style x:Name="SettingListItemStyle" TargetType="ui:ListViewItem">
+                <Setter Property="Padding" Value="12,10"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            </Style>
+        </ResourceDictionary>
+    </Page.Resources>
+
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
 
-        <ui:ListView Grid.Row="0" IsSelectionEnabled="False">
-            <ui:ListView.ItemContainerStyle>
-                <Style TargetType="ui:ListViewItem">
-                    <Setter Property="Padding" Value="12,10"/>
-                </Style>
-            </ui:ListView.ItemContainerStyle>
 
-            <!-- Minimum Duration -->
-            <ui:ListViewItem HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
+        <ui:ScrollViewerEx>
 
-                    <ui:SimpleStackPanel Grid.Column="0" Margin="0,0,20,0">
-                        <TextBlock Text="Minumum App Duration" Style="{StaticResource BaseTextBlockStyle}"/>
-                        <TextBlock Text="Hide all apps that the usage time is below the set duration." Style="{StaticResource CaptionTextBlockStyle}"/>
-                    </ui:SimpleStackPanel>
+            <ui:SimpleStackPanel>
 
-                    <ui:SimpleStackPanel Orientation="Horizontal" Grid.Column ="1">
-                        <ui:NumberBox x:Name="MinDuration_Hours" VerticalAlignment="Center" Maximum="23" Minimum="0" ValueChanged="MinDuration_ValueChanged" SpinButtonPlacementMode="Compact" SmallChange="1" LargeChange="3" PlaceholderText="hh"/>
-                        <Label Content="hr" VerticalAlignment="Center" Margin="10,0,10,0"/>
-                        <ui:NumberBox x:Name="MinDuration_Minutes" VerticalAlignment="Center" Maximum="59" Minimum="0" ValueChanged="MinDuration_ValueChanged" SpinButtonPlacementMode="Compact"  SmallChange="1" LargeChange="5" PlaceholderText="mm"/>
-                        <Label Content="min" VerticalAlignment="Center" Margin="10,0,10,0"/>
-                        <ui:NumberBox x:Name="MinDuration_Seconds" VerticalAlignment="Center" Maximum="59" Minimum="0" ValueChanged="MinDuration_ValueChanged" SpinButtonPlacementMode="Compact"  SmallChange="1" LargeChange="5" PlaceholderText="ss"/>
-                        <Label Content="sec" VerticalAlignment="Center" Margin="10,0,10,0"/>
-                    </ui:SimpleStackPanel>
-                </Grid>
-            </ui:ListViewItem>
+                <TextBlock Text="Display" Style="{StaticResource SubtitleTextBlockStyle}" Margin="10,0,0,10"/>
 
-            <!-- Refresh Interval -->
-            <ui:ListViewItem HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
+                <ui:ListView IsSelectionEnabled="False">
 
-                    <ui:SimpleStackPanel Grid.Column="0" Margin="0,0,20,0">
-                        <TextBlock Text="Auto-Refresh Usage Data" Style="{StaticResource BaseTextBlockStyle}"/>
-                        <TextBlock Text="Automatically refresh app usage data." Style="{StaticResource CaptionTextBlockStyle}"/>
-                    </ui:SimpleStackPanel>
+                    <!-- Minimum Duration -->
+                    <ui:ListViewItem>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
 
-                    <ui:SimpleStackPanel Orientation="Horizontal" Grid.Column ="1">
-                        <ui:ToggleSwitch x:Name="EnableAutoRefresh" Toggled="EnableAutoRefresh_Toggled"/>
-                    </ui:SimpleStackPanel>
-                </Grid>
-            </ui:ListViewItem>
+                            <ui:SimpleStackPanel Grid.Column="0" Margin="0,0,20,0">
+                                <TextBlock Text="Minumum App Duration" Style="{StaticResource BaseTextBlockStyle}"/>
+                                <TextBlock Text="Hide all apps that the usage time is below the set duration." Style="{StaticResource CaptionTextBlockStyle}"/>
+                            </ui:SimpleStackPanel>
 
-            <ui:ListViewItem HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsEnabled="{Binding ElementName=EnableAutoRefresh, Path=IsOn}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
+                            <ui:SimpleStackPanel Orientation="Horizontal" Grid.Column ="1">
+                                <ui:NumberBox x:Name="MinDuration_Hours" VerticalAlignment="Center" Maximum="23" Minimum="0" ValueChanged="MinDuration_ValueChanged" SpinButtonPlacementMode="Compact" SmallChange="1" LargeChange="3" PlaceholderText="hh"/>
+                                <Label Content="hr" VerticalAlignment="Center" Margin="10,0,10,0"/>
+                                <ui:NumberBox x:Name="MinDuration_Minutes" VerticalAlignment="Center" Maximum="59" Minimum="0" ValueChanged="MinDuration_ValueChanged" SpinButtonPlacementMode="Compact"  SmallChange="1" LargeChange="5" PlaceholderText="mm"/>
+                                <Label Content="min" VerticalAlignment="Center" Margin="10,0,10,0"/>
+                                <ui:NumberBox x:Name="MinDuration_Seconds" VerticalAlignment="Center" Maximum="59" Minimum="0" ValueChanged="MinDuration_ValueChanged" SpinButtonPlacementMode="Compact"  SmallChange="1" LargeChange="5" PlaceholderText="ss"/>
+                                <Label Content="sec" VerticalAlignment="Center" Margin="10,0,10,0"/>
+                            </ui:SimpleStackPanel>
+                        </Grid>
+                    </ui:ListViewItem>
 
-                    <ui:SimpleStackPanel Grid.Column="0" Margin="0,0,20,0">
-                        <TextBlock Text="Refresh Interval (Seconds)" Style="{StaticResource BaseTextBlockStyle}"/>
-                        <TextBlock Text="Set interval of auto-refresh in seconds. Can be set to an expression, (60 * 3) for 3 minutes (Minimum: 10, Maximum: 600)." Style="{StaticResource CaptionTextBlockStyle}"/>
-                    </ui:SimpleStackPanel>
+                    <!-- Refresh Interval -->
+                    <ui:ListViewItem>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
 
-                    <ui:SimpleStackPanel Orientation="Horizontal" Grid.Column ="1">
-                        <ui:NumberBox x:Name="RefreshInterval" VerticalAlignment="Center" Maximum="600" Minimum="10" AcceptsExpression="True" ValueChanged="RefreshInterval_ValueChanged" SpinButtonPlacementMode="Compact" SmallChange="1" LargeChange="5" PlaceholderText="10 or (60 * 5)"/>
-                        <Label Content="sec" VerticalAlignment="Center" Margin="10,0,10,0"/>
-                    </ui:SimpleStackPanel>
-                </Grid>
-            </ui:ListViewItem>
+                            <ui:SimpleStackPanel Grid.Column="0" Margin="0,0,20,0">
+                                <TextBlock Text="Auto-Refresh Usage Data" Style="{StaticResource BaseTextBlockStyle}"/>
+                                <TextBlock Text="Automatically refresh app usage data." Style="{StaticResource CaptionTextBlockStyle}"/>
+                            </ui:SimpleStackPanel>
 
-            <!-- Theme Mode -->
-            <ui:ListViewItem HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
+                            <ui:ToggleSwitch x:Name="EnableAutoRefresh" Toggled="EnableAutoRefresh_Toggled" Grid.Column="1"/>
+                        </Grid>
+                    </ui:ListViewItem>
 
-                    <ui:SimpleStackPanel Grid.Column="0" Margin="0,0,20,0">
-                        <TextBlock Text="Theme Mode" Style="{StaticResource BaseTextBlockStyle}"/>
-                        <TextBlock Text="Sets the app theme to Light, Dark, or follow the System-wide setting." Style="{StaticResource CaptionTextBlockStyle}"/>
-                    </ui:SimpleStackPanel>
+                    <ui:ListViewItem IsEnabled="{Binding ElementName=EnableAutoRefresh, Path=IsOn}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
 
-                    <ComboBox Grid.Column="1" x:Name="CBTheme" SelectionChanged="CBTheme_SelectionChanged">
-                        <ComboBoxItem x:Name="CBTheme_System">System</ComboBoxItem>
-                        <ComboBoxItem x:Name="CBTheme_Light">Light</ComboBoxItem>
-                        <ComboBoxItem x:Name="CBTheme_Dark">Dark</ComboBoxItem>
-                    </ComboBox>
-                </Grid>
-            </ui:ListViewItem>
+                            <ui:SimpleStackPanel Grid.Column="0" Margin="0,0,20,0">
+                                <TextBlock Text="Refresh Interval (Seconds)" Style="{StaticResource BaseTextBlockStyle}"/>
+                                <TextBlock Text="Set interval of auto-refresh in seconds. Can be set to an expression, (60 * 3) for 3 minutes (Minimum: 10, Maximum: 600)." Style="{StaticResource CaptionTextBlockStyle}"/>
+                            </ui:SimpleStackPanel>
 
-        </ui:ListView>
+                            <ui:SimpleStackPanel Orientation="Horizontal" Grid.Column ="1">
+                                <ui:NumberBox x:Name="RefreshInterval" VerticalAlignment="Center" Maximum="600" Minimum="10" AcceptsExpression="True" ValueChanged="RefreshInterval_ValueChanged" SpinButtonPlacementMode="Compact" SmallChange="1" LargeChange="5" PlaceholderText="10 or (60 * 5)"/>
+                                <Label Content="sec" VerticalAlignment="Center" Margin="10,0,10,0"/>
+                            </ui:SimpleStackPanel>
+                        </Grid>
+                    </ui:ListViewItem>
 
-        <Button Grid.Row="1" x:Name="BtnAboutDev" Content="About the Developer" Margin="10,0,0,0" Click="BtnAboutDev_Click"/>
+                    <!-- Theme Mode -->
+                    <ui:ListViewItem >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <ui:SimpleStackPanel Grid.Column="0" Margin="0,0,20,0">
+                                <TextBlock Text="Theme Mode" Style="{StaticResource BaseTextBlockStyle}"/>
+                                <TextBlock Text="Sets the app theme to Light, Dark, or follow the System-wide setting." Style="{StaticResource CaptionTextBlockStyle}"/>
+                            </ui:SimpleStackPanel>
+
+                            <ComboBox Grid.Column="1" x:Name="CBTheme" SelectionChanged="CBTheme_SelectionChanged">
+                                <ComboBoxItem x:Name="CBTheme_System">System</ComboBoxItem>
+                                <ComboBoxItem x:Name="CBTheme_Light">Light</ComboBoxItem>
+                                <ComboBoxItem x:Name="CBTheme_Dark">Dark</ComboBoxItem>
+                            </ComboBox>
+                        </Grid>
+                    </ui:ListViewItem>
+
+                </ui:ListView>
+
+                <TextBlock Text="Cache" Style="{StaticResource SubtitleTextBlockStyle}" Margin="10,0,0,10"/>
+
+                <ui:ListView IsSelectionEnabled="False">
+                    <!-- Open Cache Folder -->
+                    <ui:ListViewItem>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <ui:SimpleStackPanel Grid.Column="0" Margin="0,0,20,0">
+                                <TextBlock Text="Clear Icons Cache" Style="{StaticResource BaseTextBlockStyle}"/>
+                                <TextBlock Text="Deletes all the cached icon images." Style="{StaticResource CaptionTextBlockStyle}"/>
+                            </ui:SimpleStackPanel>
+
+                            <Button Grid.Column="1" Content="Clear" >
+                                <ui:FlyoutService.Flyout>
+                                    <ui:Flyout Placement="TopEdgeAlignedRight" x:Name="FlyoutClearImageCache">
+                                        <ui:SimpleStackPanel>
+                                            <TextBlock Text="Icons will be reloaded on app restart. Continue?" Margin="0,0,0,10"/>
+                                            <Button x:Name="BtnClearImageCache" Click="BtnClearImageCache_Click" Content="Yes" HorizontalAlignment="Right"/>
+                                        </ui:SimpleStackPanel>
+                                    </ui:Flyout>
+                                </ui:FlyoutService.Flyout>
+                            </Button>
+                        </Grid>
+                    </ui:ListViewItem>
+                </ui:ListView>
+
+                <TextBlock Text="About" Style="{StaticResource SubtitleTextBlockStyle}" Margin="10,0,0,10"/>
+
+                <ui:SimpleStackPanel Margin="10,0">
+                    <Button x:Name="BtnAboutDev" Content="About the Developer" Click="BtnAboutDev_Click"/>
+                    <Button x:Name="BtnAboutApp" Content="About the App" Click="BtnAboutApp_Click" Margin="0,10,0,0"/>
+                </ui:SimpleStackPanel>
+
+            </ui:SimpleStackPanel>
+
+        </ui:ScrollViewerEx>
+
+
     </Grid>
 </Page>

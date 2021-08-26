@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -20,18 +21,22 @@ namespace DigitalWellbeingWPF.ViewModels
 {
     public class AppUsageViewModel : INotifyPropertyChanged
     {
+        private static readonly TextInfo txtInfo = new CultureInfo("en-US", false).TextInfo;
+
         private const string envFolderPath = @"%USERPROFILE%\.digitalwellbeing\dailylogs\";
         private string folderPath;
 
         private readonly string[] excludeProcesses = new string[]
         {
+            "DigitalWellbeingWPF",
+
             "explorer",
             "SearchHost",
             "Idle",
-
+            "StartMenuExperienceHost",
+            
             // Custom Indicators (from Service)
             "*LAST",
-            "*SHUTDOWN",
         };
 
         private DispatcherTimer refreshTimer;
@@ -112,7 +117,7 @@ namespace DigitalWellbeingWPF.ViewModels
 
         private void InitFormatters()
         {
-            HourFormatter = (hours) => hours.ToString("F0") + " h";
+            HourFormatter = (hours) => hours.ToString("F1") + " h";
             PieChartTooltipFormatter = (chartPoint) => string.Format("{0:F2} min/s ({1:P})", chartPoint.Y, chartPoint.Participation);
         }
 
@@ -121,16 +126,19 @@ namespace DigitalWellbeingWPF.ViewModels
             int refreshInterval = Properties.Settings.Default.RefreshIntervalSeconds;
             TimeSpan intervalDuration = TimeSpan.FromSeconds(refreshInterval);
             refreshTimer = new DispatcherTimer() { Interval = intervalDuration };
-            refreshTimer.Tick += async (s, e) =>
+            refreshTimer.Tick += (s, e) => TryRefreshData();
+        }
+
+        private async void TryRefreshData()
+        {
+            // Refresh Data only if loaded date is set today
+            // Only refresh data when the selected date is today,
+            // Else, no point in auto-refreshing non-changing data.
+            if (DateTime.Now.Date == LoadedDate.Date)
             {
-                // Only refresh data when the selected date is today,
-                // Else, no point in auto-refreshing non-changing data.
-                if (DateTime.Now.Date == LoadedDate.Date)
-                {
-                    List<AppUsage> appUsageList = await GetData(LoadedDate.Date);
-                    UpdatePieChartAndList(appUsageList);
-                }
-            };
+                List<AppUsage> appUsageList = await GetData(LoadedDate.Date);
+                UpdatePieChartAndList(appUsageList);
+            }
         }
 
         public void OnNavigate()
@@ -146,6 +154,8 @@ namespace DigitalWellbeingWPF.ViewModels
             }
             else
             {
+                TryRefreshData();
+
                 try
                 {
                     refreshTimer.Stop();
@@ -225,8 +235,10 @@ namespace DigitalWellbeingWPF.ViewModels
 
                     string[] data = line.Split('\t');
 
+
+
                     string processName = data[1];
-                    string programName = (data[2] == "") ? processName : data[2];
+                    string programName = data[2] != "" ? data[2] : txtInfo.ToTitleCase(processName);
 
                     if (excludeProcesses.Contains(processName)) continue;
 
@@ -400,24 +412,11 @@ namespace DigitalWellbeingWPF.ViewModels
             OnPropertyChanged(nameof(CanGoNext));
             OnPropertyChanged(nameof(CanGoPrev));
         }
-
-        public void OnAppUsageListView_SelectionChanged(AppUsageListItem item)
-        {
-            try
-            {
-                // HighlightChartPoint(item.AppName);
-            }
-            catch
-            {
-                Debug.WriteLine("Series not found in chart.");
-            }
-        }
-
+        
         public AppUsageListItem OnAppUsageChart_SelectionChanged(ChartPoint chartPoint)
         {
             try
             {
-
                 return DayListItems.Single(listItem =>
                 {
                     Debug.WriteLine(listItem);
@@ -433,12 +432,24 @@ namespace DigitalWellbeingWPF.ViewModels
 
         public void WeeklyChart_SelectionChanged(int index)
         {
-            LoadedDate = WeeklyChartLabelDates.ElementAt(index);
+            DateTime selectedDate = WeeklyChartLabelDates.ElementAt(index);
 
-            DayPieChartData.Clear();
-            DayListItems.Clear();
+            // If selected date is already shown (loaded) and it is not the date today
+            // Avoid Refresh, but Refresh if date is today
+            if (selectedDate == LoadedDate && selectedDate != DateTime.Now.Date)
+            {
+                return;
+            }
+            else
+            {
+                LoadedDate = selectedDate;
 
-            UpdatePieChartAndList(WeekAppUsage.ElementAt(index));
+                DayPieChartData.Clear();
+                DayListItems.Clear();
+
+                UpdatePieChartAndList(WeekAppUsage.ElementAt(index));
+            }
+
         }
 
         private void OnPropertyChanged([CallerMemberName] String propertyName = "")

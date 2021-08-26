@@ -1,6 +1,9 @@
-﻿using ModernWpf;
+﻿using DigitalWellbeingWPF.Helpers;
+using ModernWpf;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -106,6 +109,17 @@ namespace DigitalWellbeingWPF.Views
         private void BtnAboutDev_Click(object sender, RoutedEventArgs e)
         {
             new AboutTheDeveloper().ShowDialog();
+        }
+
+        private void BtnClearImageCache_Click(object sender, RoutedEventArgs e)
+        {
+            bool success = IconManager.ClearCachedImages();
+            FlyoutClearImageCache.Hide();
+        }
+
+        private void BtnAboutApp_Click(object sender, RoutedEventArgs e)
+        {
+            new AboutTheApp().ShowDialog();
         }
     }
 }

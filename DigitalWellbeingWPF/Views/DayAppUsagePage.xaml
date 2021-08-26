@@ -47,11 +47,11 @@
             <lvc:CartesianChart.AxisX>
                 <lvc:Axis Labels="{Binding WeeklyChartLabels}">
                     <lvc:Axis.Separator>
-                        <lvc:Separator IsEnabled="False"/>
+                        <lvc:Separator IsEnabled="False" Step="1"/>
                     </lvc:Axis.Separator>
                 </lvc:Axis>
             </lvc:CartesianChart.AxisX>
-            <lvc:CartesianChart.AxisY >
+            <lvc:CartesianChart.AxisY>
                 <lvc:Axis Title="Hours" LabelFormatter="{Binding HourFormatter}"/>
             </lvc:CartesianChart.AxisY>
         </lvc:CartesianChart>
@@ -106,7 +106,7 @@
                     </Grid>
 
                     <!-- Control : List View -->
-                    <ui:ListView x:Name="AppUsageListView" SelectionChanged="AppUsageListView_SelectionChanged" SelectionMode="Single" ItemsSource="{Binding DayListItems}">
+                    <ui:ListView x:Name="AppUsageListView" SelectionMode="Single" ItemsSource="{Binding DayListItems}">
 
                         <ui:ListView.ItemContainerStyle>
                             <Style TargetType="ui:ListViewItem">

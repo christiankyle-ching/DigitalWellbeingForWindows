@@ -57,16 +57,8 @@ namespace DigitalWellbeingWPF.Views
         private void appUsageChart_DataClick(object sender, LiveCharts.ChartPoint chartPoint)
         {
             AppUsageListView.SelectedItem = vm.OnAppUsageChart_SelectionChanged(chartPoint);
-        }
-
-        private void AppUsageListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (e.AddedItems.Count > 0)
-            {
-                vm.OnAppUsageListView_SelectionChanged((AppUsageListItem)e.AddedItems[0]);
-                ModernWpf.Controls.ListViewItem item = (ModernWpf.Controls.ListViewItem)AppUsageListView.ItemContainerGenerator.ContainerFromItem(e.AddedItems[0]);
-                item.Focus();
-            }
+            ModernWpf.Controls.ListViewItem item = (ModernWpf.Controls.ListViewItem)AppUsageListView.ItemContainerGenerator.ContainerFromItem(AppUsageListView.SelectedItem);
+            item.Focus();
         }
 
         private void WeeklyChart_DataClick(object sender, LiveCharts.ChartPoint chartPoint)
