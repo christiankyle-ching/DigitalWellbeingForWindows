@@ -9,6 +9,7 @@
       xmlns:ui="http://schemas.modernwpf.com/2019"
       xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
       mc:Ignorable="d"
+      SizeChanged="Page_SizeChanged"
       d:DesignHeight="450" d:DesignWidth="800"
       Background="{DynamicResource SystemControlPageBackgroundAltHighBrush}"
       Foreground="{DynamicResource SystemControlPageTextBaseHighBrush}">
@@ -64,7 +65,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- First Column : Chart -->
-            <lvc:PieChart x:Name="appUsageChart" Grid.Column="0" LegendLocation="Bottom" Series="{Binding DayPieChartData}" Margin="20" DataClick="appUsageChart_DataClick" ChartLegend="{x:Null}">
+            <lvc:PieChart x:Name="appUsageChart" Grid.Column="0" LegendLocation="Bottom" Series="{Binding DayPieChartData}" Margin="20" DataClick="appUsageChart_DataClick" ChartLegend="{x:Null}" InnerRadius="{Binding PieChartInnerRadius}">
                 <lvc:PieChart.DataTooltip>
                     <lvc:DefaultTooltip SelectionMode="OnlySender">
                         <lvc:DefaultTooltip.Style>

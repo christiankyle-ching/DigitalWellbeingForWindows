@@ -23,7 +23,7 @@
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_System.ValueTuple.dll" Value="System.ValueTuple.dll"/>
     <ROW Property="ALLUSERS" Value="1"/>
     <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
-    <ROW Property="ARPPRODUCTICON" Value="logo.exe" Type="8"/>
+    <ROW Property="ARPPRODUCTICON" Value="applogo.exe" Type="8"/>
     <ROW Property="Manufacturer" Value="ckcdev"/>
     <ROW Property="ProductCode" Value="1033:{88ADCD3B-E694-4FDF-89EC-2BCDAB1FC6FF} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
@@ -167,7 +167,7 @@
     <ROW Feature_="MainFeature" Component_="SHORTCUTDIR"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
-    <ROW Name="logo.exe" SourcePath="..\..\..\..\Digital Wellbeing Logo\logo.ico" Index="0"/>
+    <ROW Name="applogo.exe" SourcePath="..\DigitalWellbeingWPF\Images\app-logo.ico" Index="0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
     <ROW Action="AI_DOWNGRADE" Condition="AI_NEWERPRODUCTFOUND AND (UILevel &lt;&gt; 5)" Sequence="210"/>

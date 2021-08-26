@@ -91,6 +91,17 @@ namespace DigitalWellbeingWPF.ViewModels
         public bool CanGoNext { get => LoadedDate.Date < DateTime.Now.Date; }
         public bool CanGoPrev { get => LoadedDate.Date > DateTime.Now.AddDays(-prevDaysToLoad + 1).Date; }
         public bool IsLoading { get; set; }
+        public double PieChartInnerRadius
+        {
+            get; set;
+        }
+
+        public void OnPageResize(double width, double height)
+        {
+            double area = width * height;
+            PieChartInnerRadius = Math.Sqrt(area / 10);
+            OnPropertyChanged(nameof(PieChartInnerRadius));
+        }
 
         public AppUsageViewModel()
         {
@@ -453,7 +464,8 @@ namespace DigitalWellbeingWPF.ViewModels
             catch (IndexOutOfRangeException)
             {
                 Debug.WriteLine("Element index exceeded in WeeklyChart");
-            } catch { }
+            }
+            catch { }
         }
 
         private void OnPropertyChanged([CallerMemberName] String propertyName = "")

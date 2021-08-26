@@ -65,5 +65,10 @@ namespace DigitalWellbeingWPF.Views
         {
             vm.WeeklyChart_SelectionChanged((int)chartPoint.X);
         }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            vm.OnPageResize(appUsageChart.ActualWidth, appUsageChart.ActualHeight);
+        }
     }
 }
