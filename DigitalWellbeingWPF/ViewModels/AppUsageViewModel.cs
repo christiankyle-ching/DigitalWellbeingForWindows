@@ -28,12 +28,17 @@ namespace DigitalWellbeingWPF.ViewModels
 
         private readonly string[] excludeProcesses = new string[]
         {
+            // Exclude Self
             "DigitalWellbeingWPF",
 
+            // Windows-specific Processes
             "explorer",
             "SearchHost",
             "Idle",
             "StartMenuExperienceHost",
+            "ShellExperienceHost",
+            "dwm",
+            "LockApp",
             
             // Custom Indicators (from Service)
             "*LAST",
@@ -70,9 +75,9 @@ namespace DigitalWellbeingWPF.ViewModels
         {
             get
             {
-                if (Properties.Settings.Default.MinumumDuration.TotalSeconds <= 0) return "";
-
-                return $"Apps that run less than {StringParser.TimeSpanToString(Properties.Settings.Default.MinumumDuration)} are hidden.";
+                return Properties.Settings.Default.MinumumDuration.TotalSeconds <= 0
+                    ? ""
+                    : $"Apps that run less than {StringParser.TimeSpanToString(Properties.Settings.Default.MinumumDuration)} are hidden.";
             }
         }
 
@@ -149,6 +154,9 @@ namespace DigitalWellbeingWPF.ViewModels
             {
                 List<AppUsage> appUsageList = await GetData(LoadedDate.Date);
                 UpdatePieChartAndList(appUsageList);
+
+                // Refresh Bar Graph
+                WeeklyChartData.ElementAt(0).Values[GetDayIndex(LoadedDate.Date)] = TotalDuration.TotalHours;
             }
         }
 
@@ -187,17 +195,18 @@ namespace DigitalWellbeingWPF.ViewModels
             {
                 DateTime minDate = DateTime.Now.AddDays(-prevDaysToLoad);
 
+                List<List<AppUsage>> weekUsage = new List<List<AppUsage>>();
                 ChartValues<double> hours = new ChartValues<double>();
                 List<string> labels = new List<string>();
                 List<DateTime> loadedDates = new List<DateTime>();
 
+                // Load last week's data
                 for (int i = 1; i <= prevDaysToLoad; i++)
                 {
                     DateTime date = minDate.AddDays(i).Date;
 
                     // Store App Usage List
                     List<AppUsage> appUsageList = await GetData(date);
-                    WeekAppUsage.Add(appUsageList);
 
                     // Calculate Total Hours
                     TimeSpan totalDuration = TimeSpan.Zero;
@@ -206,23 +215,33 @@ namespace DigitalWellbeingWPF.ViewModels
                         totalDuration = totalDuration.Add(app.Duration);
                     }
 
+                    WeekAppUsage.Add(appUsageList);
                     hours.Add(totalDuration.TotalHours);
                     labels.Add(date.ToString("ddd"));
                     loadedDates.Add(date);
                 }
 
+                // Add all values at once
+                foreach (List<AppUsage> dayUsage in weekUsage)
+                {
+                    WeekAppUsage.Add(dayUsage);
+                }
                 WeeklyChartData.Add(new ColumnSeries
                 {
                     Values = hours,
                 });
                 WeeklyChartLabels = labels.ToArray();
                 WeeklyChartLabelDates = loadedDates.ToArray();
+
+                WeeklyChart_SelectionChanged(WeekAppUsage.Count - 1);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Load Weekly Data Exception", ex);
+            }
             finally
             {
                 SetLoading(false);
-                WeeklyChart_SelectionChanged(WeekAppUsage.Count - 1);
             }
         }
 
@@ -245,8 +264,6 @@ namespace DigitalWellbeingWPF.ViewModels
                     if (line == "") continue;
 
                     string[] data = line.Split('\t');
-
-
 
                     string processName = data[1];
                     string programName = data[2] != "" ? data[2] : txtInfo.ToTitleCase(processName);
@@ -277,6 +294,11 @@ namespace DigitalWellbeingWPF.ViewModels
             {
                 Debug.WriteLine($"CANNOT FIND: {folderPath}{date:MM-dd-yyyy}.log");
             }
+            catch (IOException)
+            {
+                // TODO : Find another way to retry (dangerous! might stuck in a loop)
+                return await GetData(date);
+            }
 
             return appUsageList;
         }
@@ -288,6 +310,9 @@ namespace DigitalWellbeingWPF.ViewModels
             try
             {
                 TotalDuration = TimeSpan.Zero;
+
+                SeriesCollection tempPieChartData = new SeriesCollection();
+                ObservableCollection<AppUsageListItem> tempListItems = new ObservableCollection<AppUsageListItem>();
 
                 // Calculate Total Duration
                 foreach (AppUsage app in appUsageList)
@@ -308,21 +333,9 @@ namespace DigitalWellbeingWPF.ViewModels
                     // Add Chart Points
                     try
                     {
-                        PieSeries existingData = (PieSeries)DayPieChartData.Single(pieSeries => pieSeries.Title == app.ProcessName);
-                        existingData.Values[0] = app.Duration.TotalMinutes;
-
-                        // Remove if not within MinimumDuration
-                        if (app.Duration <= Properties.Settings.Default.MinumumDuration)
-                        {
-                            DayPieChartData.Remove(existingData);
-                        }
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        // Add record only if higher than MinimumDuration and not currently on the list
                         if (app.Duration > Properties.Settings.Default.MinumumDuration)
                         {
-                            DayPieChartData.Add(new PieSeries()
+                            tempPieChartData.Add(new PieSeries()
                             {
                                 Title = app.ProcessName,
                                 Values = new ChartValues<double> { app.Duration.TotalMinutes },
@@ -331,29 +344,28 @@ namespace DigitalWellbeingWPF.ViewModels
                             });
                         }
                     }
+                    catch (InvalidOperationException) { }
 
                     // Add List Items
                     try
                     {
-                        AppUsageListItem existingListItem = DayListItems.Single(c => c.ProcessName == app.ProcessName);
-                        existingListItem.Duration = app.Duration;
-                        existingListItem.Percentage = percentage;
-                        existingListItem.Refresh();
-
-                        // Remove if not within MinimumDuration
-                        if (app.Duration <= Properties.Settings.Default.MinumumDuration)
-                        {
-                            DayListItems.Remove(existingListItem);
-                        }
-                    }
-                    catch (InvalidOperationException)
-                    {
                         // Add record only if higher than MinimumDuration and not currently on the list
                         if (app.Duration > Properties.Settings.Default.MinumumDuration)
                         {
-                            DayListItems.Add(new AppUsageListItem(app.ProcessName, app.ProgramName, app.Duration, percentage));
+                            tempListItems.Add(new AppUsageListItem(app.ProcessName, app.ProgramName, app.Duration, percentage));
                         }
                     }
+                    catch (InvalidOperationException) { }
+                }
+
+                // Update UI Data
+                DayPieChartData.Clear();
+                DayPieChartData.AddRange(tempPieChartData);
+
+                DayListItems.Clear();
+                foreach (AppUsageListItem item in tempListItems)
+                {
+                    DayListItems.Add(item);
                 }
             }
             catch { }
@@ -455,8 +467,6 @@ namespace DigitalWellbeingWPF.ViewModels
                 {
                     LoadedDate = selectedDate;
 
-                    DayPieChartData.Clear();
-                    DayListItems.Clear();
 
                     UpdatePieChartAndList(WeekAppUsage.ElementAt(index));
                 }

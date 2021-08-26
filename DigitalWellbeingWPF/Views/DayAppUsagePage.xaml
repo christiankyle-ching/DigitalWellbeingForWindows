@@ -65,22 +65,38 @@
             </Grid.ColumnDefinitions>
 
             <!-- First Column : Chart -->
-            <lvc:PieChart x:Name="appUsageChart" Grid.Column="0" LegendLocation="Bottom" Series="{Binding DayPieChartData}" Margin="20" DataClick="appUsageChart_DataClick" ChartLegend="{x:Null}" InnerRadius="{Binding PieChartInnerRadius}">
-                <lvc:PieChart.DataTooltip>
-                    <lvc:DefaultTooltip SelectionMode="OnlySender">
-                        <lvc:DefaultTooltip.Style>
-                            <Style TargetType="lvc:DefaultTooltip">
-                                <Setter Property="Background" Value="{DynamicResource ApplicationPageBackgroundThemeBrush}"/>
-                            </Style>
-                        </lvc:DefaultTooltip.Style>
-                    </lvc:DefaultTooltip>
-                </lvc:PieChart.DataTooltip>
-            </lvc:PieChart>
+            <Grid Margin="20" Grid.Column="0" >
+
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <lvc:PieChart Grid.Row="0" x:Name="appUsageChart" LegendLocation="Bottom" Series="{Binding DayPieChartData}" DataClick="appUsageChart_DataClick" ChartLegend="{x:Null}" InnerRadius="{Binding PieChartInnerRadius}" DisableAnimations="True">
+                    <lvc:PieChart.DataTooltip>
+                        <lvc:DefaultTooltip SelectionMode="OnlySender">
+                            <lvc:DefaultTooltip.Style>
+                                <Style TargetType="lvc:DefaultTooltip">
+                                    <Setter Property="Background" Value="{DynamicResource ApplicationPageBackgroundThemeBrush}"/>
+                                </Style>
+                            </lvc:DefaultTooltip.Style>
+                        </lvc:DefaultTooltip>
+                    </lvc:PieChart.DataTooltip>
+                </lvc:PieChart>
+
+                <TextBlock Grid.Row="1" Text="{Binding StrMinumumDuration}" Style="{StaticResource CaptionTextBlockStyle}" FontSize="10"/>
+
+            </Grid>
 
             <!-- Second Column : Right Side List -->
-            <ui:ScrollViewerEx Grid.Column="1" Padding="0,0,20,0">
+            <Grid Grid.Column="1">
 
-                <ui:SimpleStackPanel>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <ui:SimpleStackPanel Grid.Row="0">
 
                     <!-- Control : Total Time -->
                     <TextBlock 
@@ -106,46 +122,47 @@
                         <Button x:Name="BtnNextDay" Grid.Column="2" Content="&gt;" Click="BtnNextDay_Click" IsEnabled="{Binding CanGoNext}"/>
                     </Grid>
 
-                    <!-- Control : List View -->
-                    <ui:ListView x:Name="AppUsageListView" SelectionMode="Single" ItemsSource="{Binding DayListItems}">
-
-                        <ui:ListView.ItemContainerStyle>
-                            <Style TargetType="ui:ListViewItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                            </Style>
-                        </ui:ListView.ItemContainerStyle>
-
-                        <ui:ListView.ItemTemplate>
-                            <DataTemplate DataType="{x:Type uc:AppUsageListItem}">
-                                <Grid Margin="0,5,0,5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="16"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Image Source="{Binding IconSource}" Grid.Column="0" Height="16" MinWidth="16"/>
-
-                                    <ui:SimpleStackPanel Orientation="Vertical" Grid.Column="1"  Margin="10,0,0,0">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="auto"/>
-                                            </Grid.ColumnDefinitions>
-
-                                            <TextBlock Text="{Binding ProgramName}" VerticalAlignment="Top" Grid.Column="0" Style="{StaticResource BaseTextBlockStyle}"/>
-                                            <TextBlock Text="{Binding StrDuration}" VerticalAlignment="Top" Grid.Column="1" TextAlignment="Right" Style="{StaticResource CaptionTextBlockStyle}" Margin="10,0,0,0"/>
-                                        </Grid>
-                                        <ui:ProgressBar Value="{Binding Percentage}" Margin="0,5,0,5"/>
-                                    </ui:SimpleStackPanel>
-                                </Grid>
-                            </DataTemplate>
-                        </ui:ListView.ItemTemplate>
-
-                    </ui:ListView>
 
                 </ui:SimpleStackPanel>
 
-            </ui:ScrollViewerEx>
+                <!-- Control : List View -->
+                <ui:ListView Grid.Row="1" x:Name="AppUsageListView" SelectionMode="Single" ItemsSource="{Binding DayListItems}">
+
+                    <ui:ListView.ItemContainerStyle>
+                        <Style TargetType="ui:ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ui:ListView.ItemContainerStyle>
+
+                    <ui:ListView.ItemTemplate>
+                        <DataTemplate DataType="{x:Type uc:AppUsageListItem}">
+                            <Grid Margin="0,5,0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Image Source="{Binding IconSource}" Grid.Column="0" Height="16" MinWidth="16"/>
+
+                                <ui:SimpleStackPanel Orientation="Vertical" Grid.Column="1"  Margin="10,0,0,0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Text="{Binding ProgramName}" VerticalAlignment="Top" Grid.Column="0" Style="{StaticResource BaseTextBlockStyle}"/>
+                                        <TextBlock Text="{Binding StrDuration}" VerticalAlignment="Top" Grid.Column="1" TextAlignment="Right" Style="{StaticResource CaptionTextBlockStyle}" Margin="10,0,0,0"/>
+                                    </Grid>
+                                    <ui:ProgressBar Value="{Binding Percentage}" Margin="0,5,0,5"/>
+                                </ui:SimpleStackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ui:ListView.ItemTemplate>
+
+                </ui:ListView>
+
+            </Grid>
 
         </Grid>
 

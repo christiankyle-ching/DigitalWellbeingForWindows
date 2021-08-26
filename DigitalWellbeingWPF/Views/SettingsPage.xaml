@@ -46,11 +46,11 @@
                             </ui:SimpleStackPanel>
 
                             <ui:SimpleStackPanel Orientation="Horizontal" Grid.Column ="1">
-                                <ui:NumberBox x:Name="MinDuration_Hours" VerticalAlignment="Center" Maximum="23" Minimum="0" ValueChanged="MinDuration_ValueChanged" SpinButtonPlacementMode="Compact" SmallChange="1" LargeChange="3" PlaceholderText="hh"/>
+                                <ui:NumberBox x:Name="MinDuration_Hours" VerticalAlignment="Center" Maximum="23" Minimum="0" LostFocus="MinDuration_LostFocus" SpinButtonPlacementMode="Compact" SmallChange="1" LargeChange="3" PlaceholderText="hh"/>
                                 <Label Content="hr" VerticalAlignment="Center" Margin="10,0,10,0"/>
-                                <ui:NumberBox x:Name="MinDuration_Minutes" VerticalAlignment="Center" Maximum="59" Minimum="0" ValueChanged="MinDuration_ValueChanged" SpinButtonPlacementMode="Compact"  SmallChange="1" LargeChange="5" PlaceholderText="mm"/>
+                                <ui:NumberBox x:Name="MinDuration_Minutes" VerticalAlignment="Center" Maximum="59" Minimum="0" LostFocus="MinDuration_LostFocus" SpinButtonPlacementMode="Compact"  SmallChange="1" LargeChange="5" PlaceholderText="mm"/>
                                 <Label Content="min" VerticalAlignment="Center" Margin="10,0,10,0"/>
-                                <ui:NumberBox x:Name="MinDuration_Seconds" VerticalAlignment="Center" Maximum="59" Minimum="0" ValueChanged="MinDuration_ValueChanged" SpinButtonPlacementMode="Compact"  SmallChange="1" LargeChange="5" PlaceholderText="ss"/>
+                                <ui:NumberBox x:Name="MinDuration_Seconds" VerticalAlignment="Center" Maximum="59" Minimum="0" LostFocus="MinDuration_LostFocus" SpinButtonPlacementMode="Compact"  SmallChange="1" LargeChange="5" PlaceholderText="ss"/>
                                 <Label Content="sec" VerticalAlignment="Center" Margin="10,0,10,0"/>
                             </ui:SimpleStackPanel>
                         </Grid>
@@ -82,11 +82,11 @@
 
                             <ui:SimpleStackPanel Grid.Column="0" Margin="0,0,20,0">
                                 <TextBlock Text="Refresh Interval (Seconds)" Style="{StaticResource BaseTextBlockStyle}"/>
-                                <TextBlock Text="Set interval of auto-refresh in seconds. Can be set to an expression, (60 * 3) for 3 minutes (Minimum: 10, Maximum: 600)." Style="{StaticResource CaptionTextBlockStyle}"/>
+                                <TextBlock Text="Set interval of auto-refresh in seconds. Can be set to an expression, (60 * 3) for 3 minutes (Minimum: 30, Maximum: 600)." Style="{StaticResource CaptionTextBlockStyle}"/>
                             </ui:SimpleStackPanel>
 
                             <ui:SimpleStackPanel Orientation="Horizontal" Grid.Column ="1">
-                                <ui:NumberBox x:Name="RefreshInterval" VerticalAlignment="Center" Maximum="600" Minimum="10" AcceptsExpression="True" ValueChanged="RefreshInterval_ValueChanged" SpinButtonPlacementMode="Compact" SmallChange="1" LargeChange="5" PlaceholderText="10 or (60 * 5)"/>
+                                <ui:NumberBox x:Name="RefreshInterval" VerticalAlignment="Center" Maximum="600" Minimum="30" AcceptsExpression="True" ValueChanged="RefreshInterval_ValueChanged" SpinButtonPlacementMode="Compact" SmallChange="1" LargeChange="5" PlaceholderText="10 or (60 * 5)"/>
                                 <Label Content="sec" VerticalAlignment="Center" Margin="10,0,10,0"/>
                             </ui:SimpleStackPanel>
                         </Grid>

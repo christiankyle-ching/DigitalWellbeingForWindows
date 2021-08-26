@@ -82,16 +82,6 @@ namespace DigitalWellbeingWPF.Views
             }
         }
 
-        private void MinDuration_ValueChanged(ModernWpf.Controls.NumberBox sender, ModernWpf.Controls.NumberBoxValueChangedEventArgs args)
-        {
-            int hrs = (int)MinDuration_Hours.Value;
-            int min = (int)MinDuration_Minutes.Value;
-            int sec = (int)MinDuration_Seconds.Value;
-
-            Properties.Settings.Default.MinumumDuration = new TimeSpan(hrs, min, sec);
-            Properties.Settings.Default.Save();
-        }
-
         private void RefreshInterval_ValueChanged(ModernWpf.Controls.NumberBox sender, ModernWpf.Controls.NumberBoxValueChangedEventArgs args)
         {
             int refreshInterval = (int)sender.Value;
@@ -120,6 +110,24 @@ namespace DigitalWellbeingWPF.Views
         private void BtnAboutApp_Click(object sender, RoutedEventArgs e)
         {
             new AboutTheApp().ShowDialog();
+        }
+
+        private void MinDuration_LostFocus(object sender, RoutedEventArgs e)
+        {
+            int hrs = (int)MinDuration_Hours.Value;
+            int min = (int)MinDuration_Minutes.Value;
+            int sec = (int)MinDuration_Seconds.Value;
+
+            hrs = hrs < 0 ? 0 : hrs;
+            min = min < 0 ? 0 : min;
+            sec = sec < 0 ? 0 : sec;
+
+            MinDuration_Hours.Value = hrs;
+            MinDuration_Minutes.Value = min;
+            MinDuration_Seconds.Value = sec;
+
+            Properties.Settings.Default.MinumumDuration = new TimeSpan(hrs, min, sec);
+            Properties.Settings.Default.Save();
         }
     }
 }
