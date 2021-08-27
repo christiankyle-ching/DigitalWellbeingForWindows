@@ -77,6 +77,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\ApplicationPath.cs" />
     <Compile Include="ViewModels\AppUsageViewModel.cs" />
     <Compile Include="Views\AboutTheApp.xaml.cs">
       <DependentUpon>AboutTheApp.xaml</DependentUpon>

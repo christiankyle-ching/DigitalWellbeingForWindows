@@ -115,10 +115,11 @@
 
                 </ui:ListView>
 
-                <TextBlock Text="Cache" Style="{StaticResource SubtitleTextBlockStyle}" Margin="10,0,0,10"/>
+                <TextBlock Text="Cache &amp; Logs" Style="{StaticResource SubtitleTextBlockStyle}" Margin="10,0,0,10"/>
 
                 <ui:ListView IsSelectionEnabled="False">
-                    <!-- Open Cache Folder -->
+
+                    <!-- Clear Cache Folder -->
                     <ui:ListViewItem>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -143,6 +144,24 @@
                             </Button>
                         </Grid>
                     </ui:ListViewItem>
+
+                    <!-- Open Usage Logs Folder -->
+                    <ui:ListViewItem>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <ui:SimpleStackPanel Grid.Column="0" Margin="0,0,20,0">
+                                <TextBlock Text="Open Usage Logs Folder" Style="{StaticResource BaseTextBlockStyle}"/>
+                            </ui:SimpleStackPanel>
+
+                            <Button Grid.Column="1" Content="Open" x:Name="BtnOpenLogs" Click="BtnOpenLogs_Click"/>
+
+                        </Grid>
+                    </ui:ListViewItem>
+
                 </ui:ListView>
 
                 <TextBlock Text="About" Style="{StaticResource SubtitleTextBlockStyle}" Margin="10,0,0,10"/>

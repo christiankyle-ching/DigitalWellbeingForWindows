@@ -23,7 +23,6 @@ namespace DigitalWellbeingWPF.ViewModels
     {
         private static readonly TextInfo txtInfo = new CultureInfo("en-US", false).TextInfo;
 
-        private const string envFolderPath = @"%USERPROFILE%\.digitalwellbeing\dailylogs\";
         private string folderPath;
 
         private readonly string[] excludeProcesses = new string[]
@@ -110,7 +109,7 @@ namespace DigitalWellbeingWPF.ViewModels
 
         public AppUsageViewModel()
         {
-            folderPath = Environment.ExpandEnvironmentVariables(envFolderPath);
+            folderPath = ApplicationPath.LogsFolder;
 
             InitCollections();
             InitFormatters();

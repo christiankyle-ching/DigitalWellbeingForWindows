@@ -129,5 +129,10 @@ namespace DigitalWellbeingWPF.Views
             Properties.Settings.Default.MinumumDuration = new TimeSpan(hrs, min, sec);
             Properties.Settings.Default.Save();
         }
+
+        private void BtnOpenLogs_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(ApplicationPath.LogsFolder);
+        }
     }
 }
