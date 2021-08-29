@@ -44,16 +44,6 @@ namespace DigitalWellbeingWPF.Views
             vm.LoadNextDay();
         }
 
-        public void RefreshWithSettings()
-        {
-            vm.OnNavigate();
-        }
-
-        private void BtnRefresh_Click(object sender, RoutedEventArgs e)
-        {
-            vm.ManualRefresh();
-        }
-
         private void appUsageChart_DataClick(object sender, LiveCharts.ChartPoint chartPoint)
         {
             AppUsageListView.SelectedItem = vm.OnAppUsageChart_SelectionChanged(chartPoint);
@@ -69,6 +59,20 @@ namespace DigitalWellbeingWPF.Views
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             vm.OnPageResize(appUsageChart.ActualWidth, appUsageChart.ActualHeight);
+        }
+
+        private void AppUsageListMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            string processName = ((MenuItem)sender).Tag.ToString();
+            Properties.Settings.Default.UserExcludedProcesses.Add(processName);
+            Properties.Settings.Default.Save();
+
+            vm.OnExcludeApp(processName);
+        }
+
+        public void OnNavigate()
+        {
+            vm.OnNavigate();
         }
     }
 }

@@ -8,9 +8,7 @@
         xmlns:ui="http://schemas.modernwpf.com/2019"
         ui:WindowHelper.UseModernWindowStyle="True" 
         Height="450" Width="800" MinHeight="300" MinWidth="600"
-        Title="Digital Wellbeing For Windows" WindowStartupLocation="CenterScreen"
-        StateChanged="Window_StateChanged"
-        >
+        Title="Digital Wellbeing For Windows" WindowStartupLocation="CenterScreen">
     <Grid>
         <ui:NavigationView x:Name="NavView" SelectionChanged="NavView_SelectionChanged" IsBackButtonVisible="Collapsed" PaneTitle="Digital Wellbeing For Windows">
 

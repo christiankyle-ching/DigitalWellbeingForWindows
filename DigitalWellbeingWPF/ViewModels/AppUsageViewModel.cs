@@ -38,10 +38,14 @@ namespace DigitalWellbeingWPF.ViewModels
             "ShellExperienceHost",
             "dwm",
             "LockApp",
+            "msiexec",
+            "ApplicationFrameHost",
             
             // Custom Indicators (from Service)
             "*LAST",
         };
+
+        private string[] userExcludedProcesses;
 
         private DispatcherTimer refreshTimer;
 
@@ -107,6 +111,8 @@ namespace DigitalWellbeingWPF.ViewModels
             OnPropertyChanged(nameof(PieChartInnerRadius));
         }
 
+        public bool IsWeeklyDataLoaded = false;
+
         public AppUsageViewModel()
         {
             folderPath = ApplicationPath.UsageLogsFolder;
@@ -114,21 +120,16 @@ namespace DigitalWellbeingWPF.ViewModels
             InitCollections();
             InitFormatters();
 
-            bool loadedWeeklyData = false;
+            LoadUserExcludedProcesses();
 
-            do
+            try
             {
-                try
-                {
-                    LoadWeeklyData();
-                    loadedWeeklyData = true;
-                }
-                catch (Exception)
-                {
-                    // TODO : Find another way to retry loading data
-                    // (dangerous! might stuck in a loop)
-                }
-            } while (!loadedWeeklyData);
+                LoadWeeklyData();
+            }
+            catch (Exception)
+            {
+                // TODO : Find a way to retry loading data
+            }
 
             InitAutoRefreshTimer();
         }
@@ -142,6 +143,11 @@ namespace DigitalWellbeingWPF.ViewModels
 
             DayPieChartData = new SeriesCollection();
             DayListItems = new ObservableCollection<AppUsageListItem>();
+        }
+
+        private void LoadUserExcludedProcesses()
+        {
+            userExcludedProcesses = Properties.Settings.Default.UserExcludedProcesses.Cast<string>().ToArray();
         }
 
         private void InitFormatters()
@@ -160,6 +166,9 @@ namespace DigitalWellbeingWPF.ViewModels
 
         private async void TryRefreshData()
         {
+            // If weekly data not loaded yet, do not refresh
+            if (!IsWeeklyDataLoaded) return;
+
             // Refresh Data only if loaded date is set today
             // Only refresh data when the selected date is today,
             // Else, no point in auto-refreshing non-changing data.
@@ -182,8 +191,25 @@ namespace DigitalWellbeingWPF.ViewModels
 
         public void OnNavigate()
         {
+            ReloadSettings();
             TryRefreshData();
+        }
 
+        public void OnExcludeApp(string processName)
+        {
+            try
+            {
+                PieSeries pieChartSeries = (PieSeries)DayPieChartData.Single(pieSeries => pieSeries.Title == processName);
+                AppUsageListItem listItem = DayListItems.Single(item => item.ProcessName == processName);
+
+                DayPieChartData.Remove(pieChartSeries);
+                DayListItems.Remove(listItem);
+            }
+            catch { }
+        }
+
+        private void ReloadSettings()
+        {
             // Apply new settings
             bool enableAutoRefresh = Properties.Settings.Default.EnableAutoRefresh;
             if (enableAutoRefresh)
@@ -205,6 +231,8 @@ namespace DigitalWellbeingWPF.ViewModels
                     AppLogger.WriteLine("No Timer");
                 }
             }
+
+            LoadUserExcludedProcesses();
         }
 
         private async void LoadWeeklyData()
@@ -232,10 +260,13 @@ namespace DigitalWellbeingWPF.ViewModels
                     TimeSpan totalDuration = TimeSpan.Zero;
                     foreach (AppUsage app in appUsageList)
                     {
+                        if (excludeProcesses.Contains(app.ProcessName)) continue;
+                        if (userExcludedProcesses.Contains(app.ProcessName)) continue;
+
                         totalDuration = totalDuration.Add(app.Duration);
                     }
 
-                    WeekAppUsage.Add(appUsageList);
+                    weekUsage.Add(appUsageList);
                     hours.Add(totalDuration.TotalHours);
                     labels.Add(date.ToString("ddd"));
                     loadedDates.Add(date);
@@ -252,6 +283,8 @@ namespace DigitalWellbeingWPF.ViewModels
                 });
                 WeeklyChartLabels = labels.ToArray();
                 WeeklyChartLabelDates = loadedDates.ToArray();
+
+                IsWeeklyDataLoaded = true;
 
                 WeeklyChart_SelectionChanged(WeekAppUsage.Count - 1);
             }
@@ -292,8 +325,6 @@ namespace DigitalWellbeingWPF.ViewModels
                     string processName = data[1];
                     string programName = data[2] != "" ? data[2] : txtInfo.ToTitleCase(processName);
 
-                    if (excludeProcesses.Contains(processName)) continue;
-
                     DateTime startTime = DateTime.Parse(data[0]);
                     DateTime endTime = DateTime.Parse(lines[i + 1].Split('\t')[0]);
 
@@ -311,8 +342,6 @@ namespace DigitalWellbeingWPF.ViewModels
                         existingRecord.Duration = existingRecord.Duration.Add(duration);
                     }
                 }
-
-                appUsageList.Sort((a, b) => a.Duration.CompareTo(b.Duration) * -1);
             }
             catch (FileNotFoundException)
             {
@@ -324,8 +353,6 @@ namespace DigitalWellbeingWPF.ViewModels
             }
             catch (IOException)
             {
-
-
                 AppLogger.WriteLine("Can't read, file is still being used");
                 throw; // triggers catch in LoadWeeklyData()
             }
@@ -334,6 +361,7 @@ namespace DigitalWellbeingWPF.ViewModels
                 AppLogger.WriteLine(ex.Message);
             }
 
+            appUsageList.Sort((a, b) => a.Duration.CompareTo(b.Duration) * -1);
             return appUsageList;
         }
 
@@ -351,12 +379,18 @@ namespace DigitalWellbeingWPF.ViewModels
                 // Calculate Total Duration
                 foreach (AppUsage app in appUsageList)
                 {
+                    if (excludeProcesses.Contains(app.ProcessName)) continue;
+                    if (userExcludedProcesses.Contains(app.ProcessName)) continue;
+
                     TotalDuration = TotalDuration.Add(app.Duration);
                 }
 
                 // Add List Items and Chart Items
                 foreach (AppUsage app in appUsageList)
                 {
+                    if (excludeProcesses.Contains(app.ProcessName)) continue;
+                    if (userExcludedProcesses.Contains(app.ProcessName)) continue;
+
                     int percentage = (int)Math.Round(app.Duration.TotalSeconds / TotalDuration.TotalSeconds * 100);
 
                     string durationStr = StringParser.TimeSpanToString(app.Duration);
@@ -433,16 +467,6 @@ namespace DigitalWellbeingWPF.ViewModels
             }
         }
 
-        public void OpenLogsFolder()
-        {
-            Process.Start($"explorer.exe", folderPath);
-        }
-
-        public void ManualRefresh()
-        {
-            UpdatePieChartAndList(WeekAppUsage.ElementAt(GetDayIndex(LoadedDate)));
-        }
-
         public void LoadPreviousDay()
         {
             WeeklyChart_SelectionChanged(GetDayIndex(LoadedDate.AddDays(-1)));
@@ -498,8 +522,6 @@ namespace DigitalWellbeingWPF.ViewModels
                 else
                 {
                     LoadedDate = selectedDate;
-
-
                     UpdatePieChartAndList(WeekAppUsage.ElementAt(index));
                 }
             }

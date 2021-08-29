@@ -38,18 +38,6 @@ namespace DigitalWellbeingWPF
 
             // Navigate to Home
             this.NavView.SelectedItem = this.NavView.MenuItems[0];
-
-            // Setup Tray Icon
-            //string exePath = System.Reflection.Assembly.GetEntryAssembly().ManifestModule.Name;
-            //trayIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(exePath);
-            //trayIcon.Visible = false;
-            //trayIcon.Text = "Digital Wellbeing For Windows is running in the background.";
-            //trayIcon.DoubleClick += (sender, args) =>
-            //{
-            //    this.Show();
-            //    trayIcon.Visible = false;
-            //    this.WindowState = WindowState.Normal;
-            //};
         }
 
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -59,6 +47,7 @@ namespace DigitalWellbeingWPF
             if (args.IsSettingsSelected)
             {
                 NavView.Header = "Settings";
+                settingsPage.OnNavigate();
                 ContentFrame.Content = settingsPage;
                 return;
             }
@@ -68,23 +57,14 @@ namespace DigitalWellbeingWPF
                 case "home":
                     NavView.Header = "App Usage (Last 7 Days)";
                     ContentFrame.Content = usagePage;
-                    usagePage.RefreshWithSettings();
+                    usagePage.OnNavigate();
                     break;
                 default:
                     NavView.Header = "App Usage (Last 7 Days)";
                     ContentFrame.Content = usagePage;
-                    usagePage.RefreshWithSettings();
+                    usagePage.OnNavigate();
                     break;
             }
-        }
-
-        private void Window_StateChanged(object sender, EventArgs e)
-        {
-            //if (this.WindowState == WindowState.Minimized)
-            //{
-            //    trayIcon.Visible = true;
-            //    this.Hide();
-            //}
         }
     }
 }

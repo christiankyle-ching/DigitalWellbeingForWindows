@@ -43,6 +43,11 @@ namespace DigitalWellbeingWPF.Views
             RefreshInterval.NumberFormatter = formatter;
         }
 
+        public void OnNavigate()
+        {
+            LoadExcludedProcessItems();
+        }
+
         private void LoadCurrentSettings()
         {
             TimeSpan minDuration = Properties.Settings.Default.MinumumDuration;
@@ -54,6 +59,20 @@ namespace DigitalWellbeingWPF.Views
             RefreshInterval.Value = Properties.Settings.Default.RefreshIntervalSeconds;
 
             CBTheme.SelectedItem = CBTheme.FindName($"CBTheme_{Properties.Settings.Default.ThemeMode}");
+
+            LoadExcludedProcessItems();
+        }
+
+        private void LoadExcludedProcessItems()
+        {
+            ExcludedAppList.Items.Clear();
+
+            string[] excludedProcesses = Properties.Settings.Default.UserExcludedProcesses.Cast<string>().ToArray();
+
+            foreach (string processName in excludedProcesses)
+            {
+                ExcludedAppList.Items.Add(processName);
+            }
         }
 
         private void CBTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -133,6 +152,18 @@ namespace DigitalWellbeingWPF.Views
         private void BtnOpenLogs_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(ApplicationPath.UsageLogsFolder);
+        }
+
+        private void ExcludedAppList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ListView list = (ListView)sender;
+
+            string processName = list.SelectedItem.ToString();
+
+            Properties.Settings.Default.UserExcludedProcesses.Remove(processName);
+            Properties.Settings.Default.Save();
+
+            list.Items.Remove(list.SelectedItem);
         }
     }
 }

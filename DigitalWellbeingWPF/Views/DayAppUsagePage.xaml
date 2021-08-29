@@ -53,7 +53,7 @@
                 </lvc:Axis>
             </lvc:CartesianChart.AxisX>
             <lvc:CartesianChart.AxisY>
-                <lvc:Axis Title="Hours" LabelFormatter="{Binding HourFormatter}"/>
+                <lvc:Axis Title="Hours" LabelFormatter="{Binding HourFormatter}" MinValue="0"/>
             </lvc:CartesianChart.AxisY>
         </lvc:CartesianChart>
 
@@ -140,11 +140,12 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="16"/>
                                     <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
 
                                 <Image Source="{Binding IconSource}" Grid.Column="0" Height="16" MinWidth="16"/>
 
-                                <ui:SimpleStackPanel Orientation="Vertical" Grid.Column="1"  Margin="10,0,0,0">
+                                <ui:SimpleStackPanel Orientation="Vertical" Grid.Column="1"  Margin="10,0">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
@@ -156,6 +157,26 @@
                                     </Grid>
                                     <ui:ProgressBar Value="{Binding Percentage}" Margin="0,5,0,5"/>
                                 </ui:SimpleStackPanel>
+
+                                <Button Grid.Column="2" Width="32" Height="32" Margin="0,0,10,0" >
+                                    <Button.Content>
+                                        <Label Content="•••" FontSize="8" RenderTransformOrigin="0.5,0.5" >
+                                            <Label.RenderTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform/>
+                                                    <SkewTransform/>
+                                                    <RotateTransform Angle="90"/>
+                                                    <TranslateTransform/>
+                                                </TransformGroup>
+                                            </Label.RenderTransform>
+                                        </Label>
+                                    </Button.Content>
+                                    <ui:FlyoutService.Flyout>
+                                        <ui:MenuFlyout Placement="BottomEdgeAlignedRight">
+                                            <MenuItem Header="Exclude" Click="AppUsageListMenuItem_Click" Tag="{Binding ProcessName}"/>
+                                        </ui:MenuFlyout>
+                                    </ui:FlyoutService.Flyout>
+                                </Button>
                             </Grid>
                         </DataTemplate>
                     </ui:ListView.ItemTemplate>

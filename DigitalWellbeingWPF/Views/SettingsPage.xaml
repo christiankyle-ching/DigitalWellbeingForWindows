@@ -22,11 +22,34 @@
     </Page.Resources>
 
     <Grid>
-
-
         <ui:ScrollViewerEx>
 
             <ui:SimpleStackPanel>
+
+                <TextBlock Text="Usage Data" Style="{StaticResource SubtitleTextBlockStyle}" Margin="10,0,0,10"/>
+
+                <ui:ListView IsSelectionEnabled="False">
+
+                    <!-- Refresh Interval -->
+                    <ui:ListViewItem>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <ui:SimpleStackPanel Grid.Column="0" Margin="0,0,20,0">
+                                <TextBlock Text="Excluded Apps" Style="{StaticResource BaseTextBlockStyle}"/>
+                                <TextBlock Text="Add back excluded apps from the list. Double-click on an app name to add it back." Style="{StaticResource CaptionTextBlockStyle}"/>
+                            </ui:SimpleStackPanel>
+
+                            <ListView Grid.Column="1" x:Name="ExcludedAppList" SelectionMode="Single" MouseDoubleClick="ExcludedAppList_MouseDoubleClick" 
+                                      Height="150" Margin="0,0,10,0" 
+                                      BorderThickness="1" BorderBrush="{DynamicResource SystemControlBackgroundBaseLowRevealBackgroundBrush}"/>
+                        </Grid>
+                    </ui:ListViewItem>
+
+                </ui:ListView>
 
                 <TextBlock Text="Display" Style="{StaticResource SubtitleTextBlockStyle}" Margin="10,0,0,10"/>
 
