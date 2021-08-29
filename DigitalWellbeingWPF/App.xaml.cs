@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,15 +18,33 @@ namespace DigitalWellbeingWPF
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            Process process = Process.GetCurrentProcess();
+            Process thisProcess = Process.GetCurrentProcess();
 
-            int processCount = Process.GetProcesses().Where(p => p.ProcessName == process.ProcessName).Count();
+            IEnumerable<Process> similarAppProcesses = Process.GetProcesses().Where(p => p.ProcessName == thisProcess.ProcessName);
 
-            if (processCount > 1)
+            if (similarAppProcesses.Count() > 1)
             {
-                MessageBox.Show("Application is already running...");
-                App.Current.Shutdown();
+                try
+                {
+                    IntPtr existingProcessHnd = similarAppProcesses.Single(p => thisProcess.Id != p.Id).MainWindowHandle;
+                    bool isSet = SetForegroundWindow(existingProcessHnd);
+                    if (!isSet) { ShowMessageBox();  }
+                    App.Current.Shutdown();
+                }
+                catch
+                {
+                    Debug.WriteLine("Didn't catch the existing process.");
+                    ShowMessageBox();
+                }
             }
         }
+
+        private void ShowMessageBox()
+        {
+            MessageBox.Show("Application is already running...");
+        }
+
+        [DllImport("user32.dll")]
+        static extern bool SetForegroundWindow(IntPtr hWnd);
     }
 }
