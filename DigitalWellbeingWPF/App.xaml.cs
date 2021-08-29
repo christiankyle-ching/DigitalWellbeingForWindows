@@ -27,8 +27,9 @@ namespace DigitalWellbeingWPF
             {
                 try
                 {
-                    IntPtr existingProcessHnd = similarAppProcesses.Single(p => thisProcess.Id != p.Id).MainWindowHandle;
-                    bool isSet = SetForegroundWindow(existingProcessHnd);
+                    IntPtr existingProcessHWnd = similarAppProcesses.Single(p => thisProcess.Id != p.Id).MainWindowHandle;
+                    ShowWindow(existingProcessHWnd, 9);
+                    bool isSet = SetForegroundWindow(existingProcessHWnd);
                     if (!isSet) { ShowMessageBox();  }
                     App.Current.Shutdown();
                 }
@@ -47,5 +48,8 @@ namespace DigitalWellbeingWPF
 
         [DllImport("user32.dll")]
         static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
     }
 }

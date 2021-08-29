@@ -46,9 +46,27 @@ namespace DigitalWellbeingWPF.Views
 
         private void appUsageChart_DataClick(object sender, LiveCharts.ChartPoint chartPoint)
         {
-            AppUsageListView.SelectedItem = vm.OnAppUsageChart_SelectionChanged(chartPoint);
-            ModernWpf.Controls.ListViewItem item = (ModernWpf.Controls.ListViewItem)AppUsageListView.ItemContainerGenerator.ContainerFromItem(AppUsageListView.SelectedItem);
-            item.Focus();
+            AppUsageListItem existingListItem = vm.OnAppUsageChart_SelectionChanged(chartPoint);
+
+            AppUsageListItem listItem;
+            ModernWpf.Controls.ListViewItem listViewItemElement;
+
+            Debug.WriteLine(AppUsageViewModel.MaximumChartSeries);
+            Debug.WriteLine(AppUsageListView.Items.Count);
+
+            if (existingListItem == null && chartPoint.SeriesView.Title == "Other Apps" && AppUsageListView.Items.Count > AppUsageViewModel.MaximumChartSeries)
+            {
+                listItem = (AppUsageListItem)AppUsageListView.Items[AppUsageViewModel.MaximumChartSeries];
+                listViewItemElement = (ModernWpf.Controls.ListViewItem)AppUsageListView.ItemContainerGenerator.ContainerFromItem(listItem);
+            }
+            else
+            {
+                listItem = existingListItem;
+                listViewItemElement = (ModernWpf.Controls.ListViewItem)AppUsageListView.ItemContainerGenerator.ContainerFromItem(existingListItem);
+            }
+
+            AppUsageListView.SelectedItem = listItem;
+            listViewItemElement.Focus();
         }
 
         private void WeeklyChart_DataClick(object sender, LiveCharts.ChartPoint chartPoint)

@@ -93,11 +93,12 @@ namespace DigitalWellbeingWPF.ViewModels
         public ObservableCollection<AppUsageListItem> DayListItems { get; set; } // List Items
 
         // Getters
-        private readonly int prevDaysToLoad = 7;
+        private static readonly int PrevDaysToLoad = 7;
+        public static readonly int MaximumChartSeries = 4; // Number of processes to show before aggregating others to "Other Apps"
         public event PropertyChangedEventHandler PropertyChanged;
         public bool HasData { get => DayPieChartData.Count > 0; }
         public bool CanGoNext { get => LoadedDate.Date < DateTime.Now.Date; }
-        public bool CanGoPrev { get => LoadedDate.Date > DateTime.Now.AddDays(-prevDaysToLoad + 1).Date; }
+        public bool CanGoPrev { get => LoadedDate.Date > DateTime.Now.AddDays(-PrevDaysToLoad + 1).Date; }
         public bool IsLoading { get; set; }
         public double PieChartInnerRadius
         {
@@ -241,7 +242,7 @@ namespace DigitalWellbeingWPF.ViewModels
 
             try
             {
-                DateTime minDate = DateTime.Now.AddDays(-prevDaysToLoad);
+                DateTime minDate = DateTime.Now.AddDays(-PrevDaysToLoad);
 
                 List<List<AppUsage>> weekUsage = new List<List<AppUsage>>();
                 ChartValues<double> hours = new ChartValues<double>();
@@ -249,7 +250,7 @@ namespace DigitalWellbeingWPF.ViewModels
                 List<DateTime> loadedDates = new List<DateTime>();
 
                 // Load last week's data
-                for (int i = 1; i <= prevDaysToLoad; i++)
+                for (int i = 1; i <= PrevDaysToLoad; i++)
                 {
                     DateTime date = minDate.AddDays(i).Date;
 
@@ -373,6 +374,14 @@ namespace DigitalWellbeingWPF.ViewModels
             {
                 TotalDuration = TimeSpan.Zero;
 
+                PieSeries otherProcessesSeries = new PieSeries()
+                {
+                    Title = "Other Apps",
+                    LabelPoint = PieChartTooltipFormatter,
+                    StrokeThickness = 0,
+                };
+                double otherProcessesTotalMinutes = 0;
+
                 SeriesCollection tempPieChartData = new SeriesCollection();
                 ObservableCollection<AppUsageListItem> tempListItems = new ObservableCollection<AppUsageListItem>();
 
@@ -399,9 +408,13 @@ namespace DigitalWellbeingWPF.ViewModels
                     if (durationStr != "") { label += $" ({durationStr})"; }
 
                     // Add Chart Points
-                    try
+                    if (app.Duration > Properties.Settings.Default.MinumumDuration)
                     {
-                        if (app.Duration > Properties.Settings.Default.MinumumDuration)
+                        if (tempPieChartData.Count >= MaximumChartSeries)
+                        {
+                            otherProcessesTotalMinutes += app.Duration.TotalMinutes;
+                        }
+                        else
                         {
                             tempPieChartData.Add(new PieSeries()
                             {
@@ -412,19 +425,17 @@ namespace DigitalWellbeingWPF.ViewModels
                             });
                         }
                     }
-                    catch (InvalidOperationException) { }
 
-                    // Add List Items
-                    try
+                    // Add List Item
+                    if (app.Duration > Properties.Settings.Default.MinumumDuration)
                     {
-                        // Add record only if higher than MinimumDuration and not currently on the list
-                        if (app.Duration > Properties.Settings.Default.MinumumDuration)
-                        {
-                            tempListItems.Add(new AppUsageListItem(app.ProcessName, app.ProgramName, app.Duration, percentage));
-                        }
+                        tempListItems.Add(new AppUsageListItem(app.ProcessName, app.ProgramName, app.Duration, percentage));
                     }
-                    catch (InvalidOperationException) { }
                 }
+
+                // Add Chart Point (Other Processes)
+                otherProcessesSeries.Values = new ChartValues<double> { otherProcessesTotalMinutes };
+                tempPieChartData.Add(otherProcessesSeries);
 
                 // Update UI Data
                 DayPieChartData.Clear();
