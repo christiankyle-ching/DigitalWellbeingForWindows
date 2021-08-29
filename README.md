@@ -5,6 +5,7 @@ An App Usage tracker for Windows 10 inspired by Digital Wellbeing in Android.
 - View past week's total usage time (last 7 days)
 - View daily app usage time (Pie Chart and List)
 - Set a filter to hide apps that are run less than the set time limit
+- Set a filter of apps to exclude
 - Auto-Refresh data on intervals
 
 ## Solution Projects (Folders)
