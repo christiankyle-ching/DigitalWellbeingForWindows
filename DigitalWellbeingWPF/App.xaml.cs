@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DigitalWellbeingWPF.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -33,7 +34,7 @@ namespace DigitalWellbeingWPF
                 }
                 catch
                 {
-                    Debug.WriteLine("Didn't catch the existing process.");
+                    AppLogger.WriteLine("Didn't catch the existing process.");
                     ShowMessageBox();
                 }
             }

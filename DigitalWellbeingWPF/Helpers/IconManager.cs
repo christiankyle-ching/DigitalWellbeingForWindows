@@ -39,11 +39,11 @@ namespace DigitalWellbeingWPF.Helpers
                 }
                 catch (Win32Exception)
                 {
-                    Debug.WriteLine($"Not enough permissions. Run as Administrator.");
+                    AppLogger.WriteLine($"Not enough permissions. Run as Administrator.");
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"ICON - NOT FOUND: {ex}");
+                    AppLogger.WriteLine($"ICON - NOT FOUND: {ex}");
                 }
 
             }
@@ -66,7 +66,7 @@ namespace DigitalWellbeingWPF.Helpers
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"CACHE - FAILED: {ex}");
+                AppLogger.WriteLine($"CACHE - FAILED: {ex}");
             }
         }
 
@@ -84,7 +84,7 @@ namespace DigitalWellbeingWPF.Helpers
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"CACHE - NOT FOUND: {ex}");
+                AppLogger.WriteLine($"CACHE - NOT FOUND: {ex}");
             }
 
             return null;
@@ -99,7 +99,7 @@ namespace DigitalWellbeingWPF.Helpers
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                AppLogger.WriteLine(ex.Message);
                 return false;
             }
         }

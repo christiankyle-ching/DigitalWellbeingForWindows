@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Environment;
 
 namespace DigitalWellbeingService.NET4._6
 {
@@ -14,14 +15,18 @@ namespace DigitalWellbeingService.NET4._6
     {
         private static readonly string IND_LAST = "*LAST";
 
-        private const string envFolderPath = @"%USERPROFILE%\.digitalwellbeing\dailylogs\";
+        private readonly SpecialFolder applicationPath = SpecialFolder.LocalApplicationData;
+        private readonly string applicationFolderName = "digital-wellbeing";
+        private readonly string dailyLogsFolderName = "dailylogs";
+
         private string folderPath;
 
         private uint lastProcessId = 0;
 
         public ActivityLogger()
         {
-            folderPath = Environment.ExpandEnvironmentVariables(envFolderPath);
+            folderPath = GetFolderPath(applicationPath) + $@"\{applicationFolderName}\{dailyLogsFolderName}\";
+            Debug.WriteLine(folderPath);
         }
 
         public void OnTimer()

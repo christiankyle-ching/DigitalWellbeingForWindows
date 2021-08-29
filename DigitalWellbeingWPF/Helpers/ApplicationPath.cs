@@ -9,18 +9,25 @@ namespace DigitalWellbeingWPF.Helpers
 {
     public static class ApplicationPath
     {
-        public static string LogsFolder
-        {
-            get => Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\.digitalwellbeing\dailylogs\");
-        }
-
         static readonly SpecialFolder applicationPath = SpecialFolder.LocalApplicationData;
         static readonly string applicationFolderName = "digital-wellbeing";
         static readonly string imageCacheFolderName = "processicons";
+        static readonly string dailyLogsFolderName = "dailylogs";
+        static readonly string internalLogsFolder = "internal-logs";
 
         private static string GetApplicationLocation
         {
             get => GetFolderPath(applicationPath) + $@"\{applicationFolderName}";
+        }
+
+        public static string UsageLogsFolder
+        {
+            get => GetApplicationLocation + $@"\{dailyLogsFolderName}\";
+        }
+
+        public static string InternalLogsFolder
+        {
+            get => GetApplicationLocation + $@"\{internalLogsFolder}\";
         }
 
         public static string GetImageCacheLocation(string appName = "")

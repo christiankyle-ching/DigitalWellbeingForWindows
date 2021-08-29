@@ -109,7 +109,7 @@ namespace DigitalWellbeingWPF.ViewModels
 
         public AppUsageViewModel()
         {
-            folderPath = ApplicationPath.LogsFolder;
+            folderPath = ApplicationPath.UsageLogsFolder;
 
             InitCollections();
             InitFormatters();
@@ -123,9 +123,10 @@ namespace DigitalWellbeingWPF.ViewModels
                     LoadWeeklyData();
                     loadedWeeklyData = true;
                 }
-                catch (IOException)
+                catch (Exception)
                 {
-                    // Retry Loading Weekly Data
+                    // TODO : Find another way to retry loading data
+                    // (dangerous! might stuck in a loop)
                 }
             } while (!loadedWeeklyData);
 
@@ -174,7 +175,7 @@ namespace DigitalWellbeingWPF.ViewModels
                 }
                 catch
                 {
-                    Debug.WriteLine("Skip Refresh");
+                    AppLogger.WriteLine("Skip Refresh");
                 }
             }
         }
@@ -201,7 +202,7 @@ namespace DigitalWellbeingWPF.ViewModels
                 catch (NullReferenceException)
                 {
                     // No timer to start with
-                    Debug.WriteLine("No Timer");
+                    AppLogger.WriteLine("No Timer");
                 }
             }
         }
@@ -260,7 +261,7 @@ namespace DigitalWellbeingWPF.ViewModels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Load Weekly Data Exception", ex);
+                AppLogger.WriteLine($"Load Weekly Data Exception {ex}");
             }
             finally
             {
@@ -315,14 +316,22 @@ namespace DigitalWellbeingWPF.ViewModels
             }
             catch (FileNotFoundException)
             {
-                Debug.WriteLine($"CANNOT FIND: {folderPath}{date:MM-dd-yyyy}.log");
+                AppLogger.WriteLine($"CANNOT FIND: {folderPath}{date:MM-dd-yyyy}.log");
+            }
+            catch (DirectoryNotFoundException)
+            {
+                Directory.CreateDirectory(folderPath);
             }
             catch (IOException)
             {
-                // TODO : Find another way to retry (dangerous! might stuck in a loop)
-                Debug.WriteLine("Can't read, file is still being used");
-                //return await GetData(date);
-                throw;
+
+
+                AppLogger.WriteLine("Can't read, file is still being used");
+                throw; // triggers catch in LoadWeeklyData()
+            }
+            catch (Exception ex)
+            {
+                AppLogger.WriteLine(ex.Message);
             }
 
             return appUsageList;
@@ -465,8 +474,6 @@ namespace DigitalWellbeingWPF.ViewModels
             {
                 return DayListItems.Single(listItem =>
                 {
-                    Debug.WriteLine(listItem);
-                    Debug.WriteLine(chartPoint);
                     return listItem.ProcessName == chartPoint.SeriesView.Title;
                 });
             }
@@ -498,7 +505,7 @@ namespace DigitalWellbeingWPF.ViewModels
             }
             catch (IndexOutOfRangeException)
             {
-                Debug.WriteLine("Element index exceeded in WeeklyChart");
+                AppLogger.WriteLine("Element index exceeded in WeeklyChart");
             }
             catch { }
         }

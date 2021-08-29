@@ -132,7 +132,7 @@ namespace DigitalWellbeingWPF.Views
 
         private void BtnOpenLogs_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(ApplicationPath.LogsFolder);
+            Process.Start(ApplicationPath.UsageLogsFolder);
         }
     }
 }
