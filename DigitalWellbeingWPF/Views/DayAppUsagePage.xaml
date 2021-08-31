@@ -72,7 +72,7 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
-                <lvc:PieChart Grid.Row="0" x:Name="appUsageChart" LegendLocation="Bottom" Series="{Binding DayPieChartData}" DataClick="appUsageChart_DataClick" ChartLegend="{x:Null}" InnerRadius="{Binding PieChartInnerRadius}" DisableAnimations="True">
+                <lvc:PieChart Grid.Row="0" x:Name="appUsageChart" LegendLocation="Bottom" Series="{Binding DayPieChartData}" DataClick="AppUsageChart_DataClick" ChartLegend="{x:Null}" InnerRadius="{Binding PieChartInnerRadius}" DisableAnimations="True">
                     <lvc:PieChart.DataTooltip>
                         <lvc:DefaultTooltip SelectionMode="OnlySender">
                             <lvc:DefaultTooltip.Style>

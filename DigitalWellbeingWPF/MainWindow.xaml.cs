@@ -1,4 +1,5 @@
 ﻿using DigitalWellbeingWPF.Helpers;
+using DigitalWellbeingWPF.ViewModels;
 using DigitalWellbeingWPF.Views;
 using ModernWpf.Controls;
 using System;
@@ -27,8 +28,8 @@ namespace DigitalWellbeingWPF
     public partial class MainWindow : Window
     {
         // Pages
-        DayAppUsagePage usagePage = new DayAppUsagePage();
-        SettingsPage settingsPage = new SettingsPage();
+        private readonly DayAppUsagePage usagePage = new DayAppUsagePage();
+        private readonly SettingsPage settingsPage = new SettingsPage();
 
         //NotifyIcon trayIcon = new NotifyIcon();
 
@@ -55,12 +56,12 @@ namespace DigitalWellbeingWPF
             switch (selectedNavItem.Tag)
             {
                 case "home":
-                    NavView.Header = "App Usage (Last 7 Days)";
+                    NavView.Header = $"App Usage (Last {AppUsageViewModel.PrevDaysToLoad} Days)";
                     ContentFrame.Content = usagePage;
                     usagePage.OnNavigate();
                     break;
                 default:
-                    NavView.Header = "App Usage (Last 7 Days)";
+                    NavView.Header = $"App Usage (Last {AppUsageViewModel.PrevDaysToLoad} Days)";
                     ContentFrame.Content = usagePage;
                     usagePage.OnNavigate();
                     break;

@@ -21,38 +21,26 @@ namespace DigitalWellbeingWPF.ViewModels
 {
     public class AppUsageViewModel : INotifyPropertyChanged
     {
+        #region Configurations
+        public static readonly int PrevDaysToLoad = 7;
+        // Number of processes to show before aggregating others to "Other Apps"
+        public static readonly int MaximumChartSeries = 4;
+        #endregion
+
+        #region Temporary 
         private static readonly TextInfo txtInfo = new CultureInfo("en-US", false).TextInfo;
 
-        private string folderPath;
-
-        private readonly string[] excludeProcesses = new string[]
-        {
-            // Exclude Self
-            "DigitalWellbeingWPF",
-
-            // Windows-specific Processes
-            "explorer",
-            "SearchHost",
-            "Idle",
-            "StartMenuExperienceHost",
-            "ShellExperienceHost",
-            "dwm",
-            "LockApp",
-            "msiexec",
-            "ApplicationFrameHost",
-            
-            // Custom Indicators (from Service)
-            "*LAST",
-        };
-
-        private string[] userExcludedProcesses;
+        private readonly string folderPath = ApplicationPath.UsageLogsFolder;
 
         private DispatcherTimer refreshTimer;
+        #endregion
 
-        // Formatters
+        #region Formatters
         public Func<double, string> HourFormatter { get; set; }
         private Func<ChartPoint, string> PieChartTooltipFormatter { get; set; }
+        #endregion
 
+        #region String Bindings
         // Loaded Date
         public DateTime LoadedDate = DateTime.Now.Date;
         public string StrLoadedDate
@@ -83,8 +71,9 @@ namespace DigitalWellbeingWPF.ViewModels
                     : $"Apps that run less than {StringParser.TimeSpanToString(Properties.Settings.Default.MinumumDuration)} are hidden.";
             }
         }
+        #endregion
 
-        // Collections
+        #region Collections
         public ObservableCollection<List<AppUsage>> WeekAppUsage { get; set; } // Week's App Usage
         public SeriesCollection WeeklyChartData { get; set; } // Week's App Usage
         public DateTime[] WeeklyChartLabelDates { get; set; }
@@ -92,9 +81,30 @@ namespace DigitalWellbeingWPF.ViewModels
         public SeriesCollection DayPieChartData { get; set; } // Pie Chart Data
         public ObservableCollection<AppUsageListItem> DayListItems { get; set; } // List Items
 
-        // Getters
-        private static readonly int PrevDaysToLoad = 7;
-        public static readonly int MaximumChartSeries = 4; // Number of processes to show before aggregating others to "Other Apps"
+        // Excluded Processes
+        private readonly string[] excludeProcesses = new string[]
+        {
+            // Exclude Self
+            "DigitalWellbeingWPF",
+
+            // Windows-specific Processes
+            "explorer",
+            "SearchHost",
+            "Idle",
+            "StartMenuExperienceHost",
+            "ShellExperienceHost",
+            "dwm",
+            "LockApp",
+            "msiexec",
+            "ApplicationFrameHost",
+            
+            // Custom Indicators (from Service)
+            "*LAST",
+        };
+        private string[] userExcludedProcesses;
+        #endregion
+
+        #region Getters with Bindings
         public event PropertyChangedEventHandler PropertyChanged;
         public bool HasData { get => DayPieChartData.Count > 0; }
         public bool CanGoNext { get => LoadedDate.Date < DateTime.Now.Date; }
@@ -113,11 +123,10 @@ namespace DigitalWellbeingWPF.ViewModels
         }
 
         public bool IsWeeklyDataLoaded = false;
+        #endregion
 
         public AppUsageViewModel()
         {
-            folderPath = ApplicationPath.UsageLogsFolder;
-
             InitCollections();
             InitFormatters();
 
@@ -135,6 +144,7 @@ namespace DigitalWellbeingWPF.ViewModels
             InitAutoRefreshTimer();
         }
 
+        #region Init Functions
         private void InitCollections()
         {
             WeekAppUsage = new ObservableCollection<List<AppUsage>>();
@@ -144,11 +154,6 @@ namespace DigitalWellbeingWPF.ViewModels
 
             DayPieChartData = new SeriesCollection();
             DayListItems = new ObservableCollection<AppUsageListItem>();
-        }
-
-        private void LoadUserExcludedProcesses()
-        {
-            userExcludedProcesses = Properties.Settings.Default.UserExcludedProcesses.Cast<string>().ToArray();
         }
 
         private void InitFormatters()
@@ -165,75 +170,9 @@ namespace DigitalWellbeingWPF.ViewModels
             refreshTimer.Tick += (s, e) => TryRefreshData();
         }
 
-        private async void TryRefreshData()
+        private void LoadUserExcludedProcesses()
         {
-            // If weekly data not loaded yet, do not refresh
-            if (!IsWeeklyDataLoaded) return;
-
-            // Refresh Data only if loaded date is set today
-            // Only refresh data when the selected date is today,
-            // Else, no point in auto-refreshing non-changing data.
-            if (DateTime.Now.Date == LoadedDate.Date)
-            {
-                try
-                {
-                    List<AppUsage> appUsageList = await GetData(LoadedDate.Date);
-                    UpdatePieChartAndList(appUsageList);
-
-                    // Refresh Bar Graph
-                    WeeklyChartData.ElementAt(0).Values[GetDayIndex(LoadedDate.Date)] = TotalDuration.TotalHours;
-                }
-                catch
-                {
-                    AppLogger.WriteLine("Skip Refresh");
-                }
-            }
-        }
-
-        public void OnNavigate()
-        {
-            ReloadSettings();
-            TryRefreshData();
-        }
-
-        public void OnExcludeApp(string processName)
-        {
-            try
-            {
-                PieSeries pieChartSeries = (PieSeries)DayPieChartData.Single(pieSeries => pieSeries.Title == processName);
-                AppUsageListItem listItem = DayListItems.Single(item => item.ProcessName == processName);
-
-                DayPieChartData.Remove(pieChartSeries);
-                DayListItems.Remove(listItem);
-            }
-            catch { }
-        }
-
-        private void ReloadSettings()
-        {
-            // Apply new settings
-            bool enableAutoRefresh = Properties.Settings.Default.EnableAutoRefresh;
-            if (enableAutoRefresh)
-            {
-                if (!refreshTimer.IsEnabled)
-                {
-                    refreshTimer.Start();
-                }
-            }
-            else
-            {
-                try
-                {
-                    refreshTimer.Stop();
-                }
-                catch (NullReferenceException)
-                {
-                    // No timer to start with
-                    AppLogger.WriteLine("No Timer");
-                }
-            }
-
-            LoadUserExcludedProcesses();
+            userExcludedProcesses = Properties.Settings.Default.UserExcludedProcesses.Cast<string>().ToArray();
         }
 
         private async void LoadWeeklyData()
@@ -261,8 +200,7 @@ namespace DigitalWellbeingWPF.ViewModels
                     TimeSpan totalDuration = TimeSpan.Zero;
                     foreach (AppUsage app in appUsageList)
                     {
-                        if (excludeProcesses.Contains(app.ProcessName)) continue;
-                        if (userExcludedProcesses.Contains(app.ProcessName)) continue;
+                        if (IsProcessExcluded(app.ProcessName)) continue;
 
                         totalDuration = totalDuration.Add(app.Duration);
                     }
@@ -301,6 +239,230 @@ namespace DigitalWellbeingWPF.ViewModels
             {
                 SetLoading(false);
             }
+        }
+        #endregion
+
+        #region Events
+        public void OnNavigate()
+        {
+            ReloadSettings();
+            TryRefreshData();
+        }
+
+        public void OnExcludeApp(string processName)
+        {
+            try
+            {
+                PieSeries pieChartSeries = (PieSeries)DayPieChartData.Single(pieSeries => pieSeries.Title == processName);
+                AppUsageListItem listItem = DayListItems.Single(item => item.ProcessName == processName);
+
+                DayPieChartData.Remove(pieChartSeries);
+                DayListItems.Remove(listItem);
+            }
+            catch { }
+        }
+
+        public AppUsageListItem OnAppUsageChart_SelectionChanged(ChartPoint chartPoint)
+        {
+            try
+            {
+                return DayListItems.Single(listItem =>
+                {
+                    return listItem.ProcessName == chartPoint.SeriesView.Title;
+                });
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public void WeeklyChart_SelectionChanged(int index)
+        {
+            try
+            {
+                DateTime selectedDate = WeeklyChartLabelDates.ElementAt(index);
+
+                // If selected date is already shown (loaded) and it is not the date today
+                // Avoid Refresh, but Refresh if date is today
+                if (selectedDate == LoadedDate && selectedDate != DateTime.Now.Date)
+                {
+                    return;
+                }
+                else
+                {
+                    LoadedDate = selectedDate;
+                    UpdatePieChartAndList(WeekAppUsage.ElementAt(index));
+                }
+            }
+            catch (IndexOutOfRangeException)
+            {
+                AppLogger.WriteLine("Element index exceeded in WeeklyChart");
+            }
+            catch { }
+        }
+        #endregion
+
+        private async void TryRefreshData()
+        {
+            // If weekly data not loaded yet, do not refresh
+            if (!IsWeeklyDataLoaded) return;
+
+            // Refresh Data only if loaded date is set today
+            // Only refresh data when the selected date is today,
+            // Else, no point in auto-refreshing non-changing data.
+            if (DateTime.Now.Date == LoadedDate.Date)
+            {
+                try
+                {
+                    List<AppUsage> appUsageList = await GetData(LoadedDate.Date);
+                    UpdatePieChartAndList(appUsageList);
+
+                    // Refresh Bar Graph
+                    WeeklyChartData.ElementAt(0).Values[GetDayIndex(LoadedDate.Date)] = TotalDuration.TotalHours;
+                }
+                catch
+                {
+                    AppLogger.WriteLine("Skip Refresh");
+                }
+            }
+        }
+
+        private void ReloadSettings()
+        {
+            // Apply new settings
+            bool enableAutoRefresh = Properties.Settings.Default.EnableAutoRefresh;
+            if (enableAutoRefresh)
+            {
+                if (!refreshTimer.IsEnabled)
+                {
+                    refreshTimer.Start();
+                }
+            }
+            else
+            {
+                try
+                {
+                    refreshTimer.Stop();
+                }
+                catch (NullReferenceException)
+                {
+                    // No timer to start with
+                    AppLogger.WriteLine("No Timer");
+                }
+            }
+
+            LoadUserExcludedProcesses();
+        }
+
+        #region Functions
+        public void LoadPreviousDay()
+        {
+            WeeklyChart_SelectionChanged(GetDayIndex(LoadedDate.AddDays(-1)));
+        }
+
+        public void LoadNextDay()
+        {
+            WeeklyChart_SelectionChanged(GetDayIndex(LoadedDate.AddDays(1)));
+        }
+
+        private void UpdatePieChartAndList(List<AppUsage> appUsageList)
+        {
+            SetLoading(true);
+
+            try
+            {
+                TotalDuration = TimeSpan.Zero;
+
+                PieSeries otherProcessesSeries = new PieSeries()
+                {
+                    Title = "Other Apps",
+                    LabelPoint = PieChartTooltipFormatter,
+                    StrokeThickness = 0,
+                };
+                double otherProcessesTotalMinutes = 0;
+
+                SeriesCollection tempPieChartData = new SeriesCollection();
+                ObservableCollection<AppUsageListItem> tempListItems = new ObservableCollection<AppUsageListItem>();
+
+                // Calculate Total Duration
+                foreach (AppUsage app in appUsageList)
+                {
+                    if (IsProcessExcluded(app.ProcessName)) continue;
+
+                    TotalDuration = TotalDuration.Add(app.Duration);
+                }
+
+                // Add List Items and Chart Items
+                foreach (AppUsage app in appUsageList)
+                {
+                    if (IsProcessExcluded(app.ProcessName)) continue;
+
+                    int percentage = (int)Math.Round(app.Duration.TotalSeconds / TotalDuration.TotalSeconds * 100);
+
+                    string durationStr = StringParser.TimeSpanToString(app.Duration);
+
+                    string label = app.ProcessName;
+                    if (durationStr != "") { label += $" ({durationStr})"; }
+
+                    // Add Chart Points
+                    if (app.Duration > Properties.Settings.Default.MinumumDuration)
+                    {
+                        if (tempPieChartData.Count >= MaximumChartSeries)
+                        {
+                            otherProcessesTotalMinutes += app.Duration.TotalMinutes;
+                        }
+                        else
+                        {
+                            tempPieChartData.Add(new PieSeries()
+                            {
+                                Title = app.ProcessName,
+                                Values = new ChartValues<double> { app.Duration.TotalMinutes },
+                                LabelPoint = PieChartTooltipFormatter,
+                                StrokeThickness = 0,
+                            });
+                        }
+                    }
+
+                    // Add List Item
+                    if (app.Duration > Properties.Settings.Default.MinumumDuration)
+                    {
+                        tempListItems.Add(new AppUsageListItem(app.ProcessName, app.ProgramName, app.Duration, percentage));
+                    }
+                }
+
+                // Add Chart Point (Other Processes)
+                otherProcessesSeries.Values = new ChartValues<double> { otherProcessesTotalMinutes };
+                tempPieChartData.Add(otherProcessesSeries);
+
+                // Update UI Data
+                DayPieChartData.Clear();
+                DayPieChartData.AddRange(tempPieChartData);
+
+                DayListItems.Clear();
+                foreach (AppUsageListItem item in tempListItems)
+                {
+                    DayListItems.Add(item);
+                }
+            }
+            catch { }
+            finally
+            {
+                NotifyChange();
+                SetLoading(false);
+            }
+        }
+        #endregion
+
+        #region Getters
+        private int GetDayIndex(DateTime date)
+        {
+            return Array.FindIndex(WeeklyChartLabelDates, labelDates => labelDates.Date == date.Date);
+        }
+
+        private bool IsProcessExcluded(string processName)
+        {
+            return (excludeProcesses.Contains(processName) || userExcludedProcesses.Contains(processName));
         }
 
         public async Task<List<AppUsage>> GetData(DateTime date)
@@ -365,96 +527,9 @@ namespace DigitalWellbeingWPF.ViewModels
             appUsageList.Sort((a, b) => a.Duration.CompareTo(b.Duration) * -1);
             return appUsageList;
         }
+        #endregion
 
-        private void UpdatePieChartAndList(List<AppUsage> appUsageList)
-        {
-            SetLoading(true);
-
-            try
-            {
-                TotalDuration = TimeSpan.Zero;
-
-                PieSeries otherProcessesSeries = new PieSeries()
-                {
-                    Title = "Other Apps",
-                    LabelPoint = PieChartTooltipFormatter,
-                    StrokeThickness = 0,
-                };
-                double otherProcessesTotalMinutes = 0;
-
-                SeriesCollection tempPieChartData = new SeriesCollection();
-                ObservableCollection<AppUsageListItem> tempListItems = new ObservableCollection<AppUsageListItem>();
-
-                // Calculate Total Duration
-                foreach (AppUsage app in appUsageList)
-                {
-                    if (excludeProcesses.Contains(app.ProcessName)) continue;
-                    if (userExcludedProcesses.Contains(app.ProcessName)) continue;
-
-                    TotalDuration = TotalDuration.Add(app.Duration);
-                }
-
-                // Add List Items and Chart Items
-                foreach (AppUsage app in appUsageList)
-                {
-                    if (excludeProcesses.Contains(app.ProcessName)) continue;
-                    if (userExcludedProcesses.Contains(app.ProcessName)) continue;
-
-                    int percentage = (int)Math.Round(app.Duration.TotalSeconds / TotalDuration.TotalSeconds * 100);
-
-                    string durationStr = StringParser.TimeSpanToString(app.Duration);
-
-                    string label = app.ProcessName;
-                    if (durationStr != "") { label += $" ({durationStr})"; }
-
-                    // Add Chart Points
-                    if (app.Duration > Properties.Settings.Default.MinumumDuration)
-                    {
-                        if (tempPieChartData.Count >= MaximumChartSeries)
-                        {
-                            otherProcessesTotalMinutes += app.Duration.TotalMinutes;
-                        }
-                        else
-                        {
-                            tempPieChartData.Add(new PieSeries()
-                            {
-                                Title = app.ProcessName,
-                                Values = new ChartValues<double> { app.Duration.TotalMinutes },
-                                LabelPoint = PieChartTooltipFormatter,
-                                StrokeThickness = 0,
-                            });
-                        }
-                    }
-
-                    // Add List Item
-                    if (app.Duration > Properties.Settings.Default.MinumumDuration)
-                    {
-                        tempListItems.Add(new AppUsageListItem(app.ProcessName, app.ProgramName, app.Duration, percentage));
-                    }
-                }
-
-                // Add Chart Point (Other Processes)
-                otherProcessesSeries.Values = new ChartValues<double> { otherProcessesTotalMinutes };
-                tempPieChartData.Add(otherProcessesSeries);
-
-                // Update UI Data
-                DayPieChartData.Clear();
-                DayPieChartData.AddRange(tempPieChartData);
-
-                DayListItems.Clear();
-                foreach (AppUsageListItem item in tempListItems)
-                {
-                    DayListItems.Add(item);
-                }
-            }
-            catch { }
-            finally
-            {
-                NotifyChange();
-                SetLoading(false);
-            }
-        }
-
+        #region Setters
         private void SetLoading(bool value)
         {
             if (value == false)
@@ -477,21 +552,7 @@ namespace DigitalWellbeingWPF.ViewModels
                 OnPropertyChanged(nameof(IsLoading));
             }
         }
-
-        public void LoadPreviousDay()
-        {
-            WeeklyChart_SelectionChanged(GetDayIndex(LoadedDate.AddDays(-1)));
-        }
-
-        public void LoadNextDay()
-        {
-            WeeklyChart_SelectionChanged(GetDayIndex(LoadedDate.AddDays(1)));
-        }
-
-        private int GetDayIndex(DateTime date)
-        {
-            return Array.FindIndex(WeeklyChartLabelDates, labelDates => labelDates.Date == date.Date);
-        }
+        #endregion
 
         public void NotifyChange()
         {
@@ -501,46 +562,6 @@ namespace DigitalWellbeingWPF.ViewModels
             OnPropertyChanged(nameof(HasData));
             OnPropertyChanged(nameof(CanGoNext));
             OnPropertyChanged(nameof(CanGoPrev));
-        }
-
-        public AppUsageListItem OnAppUsageChart_SelectionChanged(ChartPoint chartPoint)
-        {
-            try
-            {
-                return DayListItems.Single(listItem =>
-                {
-                    return listItem.ProcessName == chartPoint.SeriesView.Title;
-                });
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        public void WeeklyChart_SelectionChanged(int index)
-        {
-            try
-            {
-                DateTime selectedDate = WeeklyChartLabelDates.ElementAt(index);
-
-                // If selected date is already shown (loaded) and it is not the date today
-                // Avoid Refresh, but Refresh if date is today
-                if (selectedDate == LoadedDate && selectedDate != DateTime.Now.Date)
-                {
-                    return;
-                }
-                else
-                {
-                    LoadedDate = selectedDate;
-                    UpdatePieChartAndList(WeekAppUsage.ElementAt(index));
-                }
-            }
-            catch (IndexOutOfRangeException)
-            {
-                AppLogger.WriteLine("Element index exceeded in WeeklyChart");
-            }
-            catch { }
         }
 
         private void OnPropertyChanged([CallerMemberName] String propertyName = "")

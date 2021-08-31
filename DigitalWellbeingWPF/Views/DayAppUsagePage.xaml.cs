@@ -25,7 +25,7 @@ namespace DigitalWellbeingWPF.Views
     /// </summary>
     public partial class DayAppUsagePage : Page
     {
-        AppUsageViewModel vm;
+        private readonly AppUsageViewModel vm;
 
         public DayAppUsagePage()
         {
@@ -44,7 +44,7 @@ namespace DigitalWellbeingWPF.Views
             vm.LoadNextDay();
         }
 
-        private void appUsageChart_DataClick(object sender, LiveCharts.ChartPoint chartPoint)
+        private void AppUsageChart_DataClick(object sender, LiveCharts.ChartPoint chartPoint)
         {
             AppUsageListItem existingListItem = vm.OnAppUsageChart_SelectionChanged(chartPoint);
 
