@@ -25,10 +25,10 @@
     <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
     <ROW Property="ARPPRODUCTICON" Value="applogo.exe" Type="8"/>
     <ROW Property="Manufacturer" Value="ckcdev"/>
-    <ROW Property="ProductCode" Value="1033:{9C9E0B18-91C3-450E-BB99-23A15D4C5383} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{1A82D819-1344-41F6-A440-5A53A7DAAC86} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="Digital Wellbeing For Windows"/>
-    <ROW Property="ProductVersion" Value="1.0.2.0" Type="32" TargetFile="DigitalWellbeingWPF.exe"/>
+    <ROW Property="ProductVersion" Value="1.0.3.0" Type="32" TargetFile="DigitalWellbeingWPF.exe"/>
     <ROW Property="REBOOT" MultiBuildValue="DefaultBuild:Force"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{D7DA3A0D-99E1-4FAC-B2CC-FEBB27BCA59A}"/>

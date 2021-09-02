@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,12 @@ namespace DigitalWellbeingWPF.Helpers
             durationStr += (int)duration.TotalSeconds > 0 ? $"{duration.Seconds}s " : "";
 
             return durationStr.Trim();
+        }
+
+        private static readonly TextInfo txtInfo = new CultureInfo("en-US", false).TextInfo;
+        public static string FormatProcessName(string processName)
+        {
+            return processName.Any(char.IsUpper) ? processName : txtInfo.ToTitleCase(processName);
         }
     }
 }

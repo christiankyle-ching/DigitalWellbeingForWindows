@@ -27,8 +27,6 @@ namespace DigitalWellbeingWPF.ViewModels
         #endregion
 
         #region Temporary 
-        private static readonly TextInfo txtInfo = new CultureInfo("en-US", false).TextInfo;
-
         private readonly string folderPath = ApplicationPath.UsageLogsFolder;
 
         private DispatcherTimer refreshTimer;
@@ -484,7 +482,7 @@ namespace DigitalWellbeingWPF.ViewModels
                     string[] data = line.Split('\t');
 
                     string processName = data[1];
-                    string programName = data[2] != "" ? data[2] : txtInfo.ToTitleCase(processName);
+                    string programName = data[2] != "" ? data[2] : StringParser.FormatProcessName(processName);
 
                     DateTime startTime = DateTime.Parse(data[0]);
                     DateTime endTime = DateTime.Parse(lines[i + 1].Split('\t')[0]);
