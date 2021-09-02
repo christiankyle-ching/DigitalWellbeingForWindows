@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         ui:WindowHelper.UseModernWindowStyle="True" 
-        Title="About the Developer"
+        Title="About the App"
         Height="250" Width="450" ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen">
     <Grid Margin="20">
@@ -31,6 +31,7 @@
 
         <ui:SimpleStackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button x:Name="BtnGithub" Content="Github" Margin="0,0,30,0" Click="BtnGithub_Click"/>
+            <Button x:Name="BtnCheckUpdates" Content="Check Updates" Margin="0,0,30,0" Click="BtnCheckUpdates_Click"/>
             <Button x:Name="BtnWebsite" Content="Website" Click="BtnWebsite_Click"/>
         </ui:SimpleStackPanel>
 

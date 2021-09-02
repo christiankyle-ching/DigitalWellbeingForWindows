@@ -22,6 +22,7 @@ namespace DigitalWellbeingWPF.Views
     public partial class AboutTheApp : Window
     {
         private readonly string githubLink = "https://github.com/christiankyle-ching/DigitalWellbeingForWindows";
+        private readonly string updateLink = "https://github.com/christiankyle-ching/DigitalWellbeingForWindows/releases";
         private readonly string websiteLink = "https://christiankyleching.vercel.app/works.html?scrollTo=digital-wellbeing-windows";
 
         public AboutTheApp()
@@ -39,6 +40,11 @@ namespace DigitalWellbeingWPF.Views
         private void BtnWebsite_Click(object sender, RoutedEventArgs e)
         {
             _ = Process.Start(websiteLink);
+        }
+
+        private void BtnCheckUpdates_Click(object sender, RoutedEventArgs e)
+        {
+            _ = Process.Start(updateLink);
         }
     }
 }
