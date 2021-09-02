@@ -7,6 +7,7 @@ An App Usage tracker for Windows 10 inspired by Digital Wellbeing in Android.
 - Set a filter to hide apps that are run less than the set time limit
 - Set a filter of apps to exclude
 - Auto-Refresh data on intervals
+- Single installation, but different users have their own usage data
 
 ## Solution Projects (Folders)
 - `DigitalWellbeingService.NET4.6` - A console application that monitors current active process.
