@@ -23,8 +23,7 @@ namespace DigitalWellbeingWPF.ViewModels
     {
         #region Configurations
         public static readonly int PrevDaysToLoad = 7;
-        // Number of processes to show before aggregating others to "Other Apps"
-        public static readonly int MaximumChartSeries = 4;
+        public static readonly int MinimumPieChartPercentage = 10;
         #endregion
 
         #region Temporary 
@@ -37,7 +36,7 @@ namespace DigitalWellbeingWPF.ViewModels
 
         #region Formatters
         public Func<double, string> HourFormatter { get; set; }
-        private Func<ChartPoint, string> PieChartTooltipFormatter { get; set; }
+        private Func<ChartPoint, string> PieChartLabelFormatter { get; set; }
         #endregion
 
         #region String Bindings
@@ -159,7 +158,8 @@ namespace DigitalWellbeingWPF.ViewModels
         private void InitFormatters()
         {
             HourFormatter = (hours) => hours.ToString("F1") + " h";
-            PieChartTooltipFormatter = (chartPoint) => string.Format("{0:F2} min/s ({1:P})", chartPoint.Y, chartPoint.Participation);
+            //PieChartLabelFormatter = (chartPoint) => string.Format("{0:F2} min/s", chartPoint.Y);
+            PieChartLabelFormatter = (chartPoint) => string.Format("{0}", chartPoint.SeriesView.Title);
         }
 
         private void InitAutoRefreshTimer()
@@ -377,8 +377,7 @@ namespace DigitalWellbeingWPF.ViewModels
                 PieSeries otherProcessesSeries = new PieSeries()
                 {
                     Title = "Other Apps",
-                    LabelPoint = PieChartTooltipFormatter,
-                    StrokeThickness = 0,
+                    LabelPoint = PieChartLabelFormatter,
                 };
                 double otherProcessesTotalMinutes = 0;
 
@@ -408,7 +407,7 @@ namespace DigitalWellbeingWPF.ViewModels
                     // Add Chart Points
                     if (app.Duration > Properties.Settings.Default.MinumumDuration)
                     {
-                        if (tempPieChartData.Count >= MaximumChartSeries)
+                        if (percentage <= MinimumPieChartPercentage)
                         {
                             otherProcessesTotalMinutes += app.Duration.TotalMinutes;
                         }
@@ -418,8 +417,7 @@ namespace DigitalWellbeingWPF.ViewModels
                             {
                                 Title = app.ProcessName,
                                 Values = new ChartValues<double> { app.Duration.TotalMinutes },
-                                LabelPoint = PieChartTooltipFormatter,
-                                StrokeThickness = 0,
+                                LabelPoint = PieChartLabelFormatter,
                             });
                         }
                     }

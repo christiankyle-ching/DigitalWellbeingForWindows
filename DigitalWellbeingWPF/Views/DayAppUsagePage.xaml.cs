@@ -51,12 +51,9 @@ namespace DigitalWellbeingWPF.Views
             AppUsageListItem listItem;
             ModernWpf.Controls.ListViewItem listViewItemElement;
 
-            Debug.WriteLine(AppUsageViewModel.MaximumChartSeries);
-            Debug.WriteLine(AppUsageListView.Items.Count);
-
-            if (existingListItem == null && chartPoint.SeriesView.Title == "Other Apps" && AppUsageListView.Items.Count > AppUsageViewModel.MaximumChartSeries)
+            if (existingListItem == null && chartPoint.SeriesView.Title == "Other Apps")
             {
-                listItem = (AppUsageListItem)AppUsageListView.Items[AppUsageViewModel.MaximumChartSeries];
+                listItem = AppUsageListView.Items.Cast<AppUsageListItem>().ToArray().First(item => item.Percentage <= AppUsageViewModel.MinimumPieChartPercentage);
                 listViewItemElement = (ModernWpf.Controls.ListViewItem)AppUsageListView.ItemContainerGenerator.ContainerFromItem(listItem);
             }
             else

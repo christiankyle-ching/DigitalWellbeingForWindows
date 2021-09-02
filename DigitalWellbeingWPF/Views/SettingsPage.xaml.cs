@@ -25,7 +25,7 @@ namespace DigitalWellbeingWPF.Views
     /// </summary>
     public partial class SettingsPage : Page
     {
-        private ApplicationTheme? systemTheme;
+        private readonly ApplicationTheme? systemTheme;
 
         public SettingsPage()
         {
@@ -122,7 +122,7 @@ namespace DigitalWellbeingWPF.Views
 
         private void BtnClearImageCache_Click(object sender, RoutedEventArgs e)
         {
-            bool success = IconManager.ClearCachedImages();
+            _ = IconManager.ClearCachedImages();
             FlyoutClearImageCache.Hide();
         }
 
@@ -164,6 +164,12 @@ namespace DigitalWellbeingWPF.Views
             Properties.Settings.Default.Save();
 
             list.Items.Remove(list.SelectedItem);
+        }
+
+        private void BtnFocusAssist_Click(object sender, RoutedEventArgs e)
+        {
+            _ = Process.Start("ms-settings:quiethours");
+            _ = Process.Start("ms-settings:quietmomentshome");
         }
     }
 }

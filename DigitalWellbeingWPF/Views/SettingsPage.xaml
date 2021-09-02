@@ -13,10 +13,13 @@
 
     <Page.Resources>
         <ResourceDictionary>
-            <Style x:Name="SettingListItemStyle" TargetType="ui:ListViewItem">
+            <Style x:Key="SettingListItemStyle" TargetType="ui:ListViewItem">
                 <Setter Property="Padding" Value="12,10"/>
                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            </Style>
+            <Style x:Key="SettingListViewStyle" TargetType="ui:ListView">
+                <Setter Property="IsSelectionEnabled" Value="False"/>
             </Style>
         </ResourceDictionary>
     </Page.Resources>
@@ -26,12 +29,13 @@
 
             <ui:SimpleStackPanel>
 
+                <!-- USAGE DATA -->
                 <TextBlock Text="Usage Data" Style="{StaticResource SubtitleTextBlockStyle}" Margin="10,0,0,10"/>
 
-                <ui:ListView IsSelectionEnabled="False">
+                <ui:ListView Style="{StaticResource SettingListViewStyle}">
 
                     <!-- Refresh Interval -->
-                    <ui:ListViewItem>
+                    <ui:ListViewItem Style="{StaticResource SettingListItemStyle}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -51,12 +55,13 @@
 
                 </ui:ListView>
 
+                <!-- DISPLAY -->
                 <TextBlock Text="Display" Style="{StaticResource SubtitleTextBlockStyle}" Margin="10,0,0,10"/>
 
-                <ui:ListView IsSelectionEnabled="False">
+                <ui:ListView Style="{StaticResource SettingListViewStyle}">
 
                     <!-- Minimum Duration -->
-                    <ui:ListViewItem>
+                    <ui:ListViewItem Style="{StaticResource SettingListItemStyle}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -80,7 +85,7 @@
                     </ui:ListViewItem>
 
                     <!-- Refresh Interval -->
-                    <ui:ListViewItem>
+                    <ui:ListViewItem Style="{StaticResource SettingListItemStyle}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -96,7 +101,7 @@
                         </Grid>
                     </ui:ListViewItem>
 
-                    <ui:ListViewItem IsEnabled="{Binding ElementName=EnableAutoRefresh, Path=IsOn}">
+                    <ui:ListViewItem Style="{StaticResource SettingListItemStyle}" IsEnabled="{Binding ElementName=EnableAutoRefresh, Path=IsOn}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -116,7 +121,7 @@
                     </ui:ListViewItem>
 
                     <!-- Theme Mode -->
-                    <ui:ListViewItem >
+                    <ui:ListViewItem Style="{StaticResource SettingListItemStyle}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -138,12 +143,38 @@
 
                 </ui:ListView>
 
+                <!-- NOTIFICATION -->
+                <TextBlock Text="Notifications" Style="{StaticResource SubtitleTextBlockStyle}" Margin="10,0,0,10"/>
+
+                <ui:ListView Style="{StaticResource SettingListViewStyle}">
+
+                    <!-- Focus Assist -->
+                    <ui:ListViewItem Style="{StaticResource SettingListItemStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <ui:SimpleStackPanel Grid.Column="0" Margin="0,0,20,0">
+                                <TextBlock Text="Focus Assist" Style="{StaticResource BaseTextBlockStyle}"/>
+                                <TextBlock Text="Open Focus Assist in Settings." Style="{StaticResource CaptionTextBlockStyle}"/>
+                            </ui:SimpleStackPanel>
+
+                            <Button Grid.Column="1" Name="BtnFocusAssist" Click="BtnFocusAssist_Click" Content="Open"/>
+                        </Grid>
+                    </ui:ListViewItem>
+
+                </ui:ListView>
+
+
+                <!-- CACHE & LOGS -->
                 <TextBlock Text="Cache &amp; Logs" Style="{StaticResource SubtitleTextBlockStyle}" Margin="10,0,0,10"/>
 
-                <ui:ListView IsSelectionEnabled="False">
+                <ui:ListView Style="{StaticResource SettingListViewStyle}">
 
                     <!-- Clear Cache Folder -->
-                    <ui:ListViewItem>
+                    <ui:ListViewItem Style="{StaticResource SettingListItemStyle}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -169,7 +200,7 @@
                     </ui:ListViewItem>
 
                     <!-- Open Usage Logs Folder -->
-                    <ui:ListViewItem>
+                    <ui:ListViewItem Style="{StaticResource SettingListItemStyle}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -187,6 +218,7 @@
 
                 </ui:ListView>
 
+                <!-- ABOUT -->
                 <TextBlock Text="About" Style="{StaticResource SubtitleTextBlockStyle}" Margin="10,0,0,10"/>
 
                 <ui:SimpleStackPanel Margin="10,0">
@@ -197,7 +229,6 @@
             </ui:SimpleStackPanel>
 
         </ui:ScrollViewerEx>
-
 
     </Grid>
 </Page>

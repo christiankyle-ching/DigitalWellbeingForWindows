@@ -31,8 +31,6 @@ namespace DigitalWellbeingWPF
         private readonly DayAppUsagePage usagePage = new DayAppUsagePage();
         private readonly SettingsPage settingsPage = new SettingsPage();
 
-        //NotifyIcon trayIcon = new NotifyIcon();
-
         public MainWindow()
         {
             InitializeComponent();
