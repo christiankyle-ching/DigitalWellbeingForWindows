@@ -15,6 +15,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace DigitalWellbeingWPF.ViewModels
@@ -103,7 +104,6 @@ namespace DigitalWellbeingWPF.ViewModels
 
         #region Getters with Bindings
         public event PropertyChangedEventHandler PropertyChanged;
-        public bool HasData { get => DayPieChartData.Count > 0; }
         public bool CanGoNext { get => LoadedDate.Date < DateTime.Now.Date; }
         public bool CanGoPrev { get => LoadedDate.Date > DateTime.Now.AddDays(-PrevDaysToLoad + 1).Date; }
         public bool IsLoading { get; set; }
@@ -372,6 +372,13 @@ namespace DigitalWellbeingWPF.ViewModels
             {
                 TotalDuration = TimeSpan.Zero;
 
+                PieSeries noDataSeries = new PieSeries()
+                {
+                    Title = "No Data",
+                    Fill = Brushes.LightGray,
+                    Values = new ChartValues<double> { 1 },
+                    LabelPoint = PieChartLabelFormatter,
+                };
                 PieSeries otherProcessesSeries = new PieSeries()
                 {
                     Title = "Other Apps",
@@ -428,12 +435,22 @@ namespace DigitalWellbeingWPF.ViewModels
                 }
 
                 // Add Chart Point (Other Processes)
-                otherProcessesSeries.Values = new ChartValues<double> { otherProcessesTotalMinutes };
-                tempPieChartData.Add(otherProcessesSeries);
+                if (otherProcessesTotalMinutes > 0)
+                {
+                    otherProcessesSeries.Values = new ChartValues<double> { otherProcessesTotalMinutes };
+                    tempPieChartData.Add(otherProcessesSeries);
+                }
 
                 // Update UI Data
                 DayPieChartData.Clear();
-                DayPieChartData.AddRange(tempPieChartData);
+                if (tempPieChartData.Count > 0)
+                {
+                    DayPieChartData.AddRange(tempPieChartData);
+                }
+                else
+                {
+                    DayPieChartData.Add(noDataSeries);
+                }
 
                 DayListItems.Clear();
                 foreach (AppUsageListItem item in tempListItems)
@@ -555,7 +572,6 @@ namespace DigitalWellbeingWPF.ViewModels
             OnPropertyChanged(nameof(StrLoadedDate));
             OnPropertyChanged(nameof(StrTotalDuration));
             OnPropertyChanged(nameof(StrMinumumDuration));
-            OnPropertyChanged(nameof(HasData));
             OnPropertyChanged(nameof(CanGoNext));
             OnPropertyChanged(nameof(CanGoPrev));
         }

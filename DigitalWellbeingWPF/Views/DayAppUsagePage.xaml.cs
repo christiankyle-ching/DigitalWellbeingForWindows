@@ -1,4 +1,5 @@
-﻿using DigitalWellbeingWPF.Models.UserControls;
+﻿using DigitalWellbeingWPF.Helpers;
+using DigitalWellbeingWPF.Models.UserControls;
 using DigitalWellbeingWPF.ViewModels;
 using LiveCharts;
 using LiveCharts.Wpf;
@@ -48,22 +49,40 @@ namespace DigitalWellbeingWPF.Views
         {
             AppUsageListItem existingListItem = vm.OnAppUsageChart_SelectionChanged(chartPoint);
 
-            AppUsageListItem listItem;
-            ModernWpf.Controls.ListViewItem listViewItemElement;
+            AppUsageListItem listItem = null;
+            ModernWpf.Controls.ListViewItem listViewItemElement = null;
 
-            if (existingListItem == null && chartPoint.SeriesView.Title == "Other Apps")
+            try
             {
-                listItem = AppUsageListView.Items.Cast<AppUsageListItem>().ToArray().First(item => item.Percentage <= AppUsageViewModel.MinimumPieChartPercentage);
-                listViewItemElement = (ModernWpf.Controls.ListViewItem)AppUsageListView.ItemContainerGenerator.ContainerFromItem(listItem);
-            }
-            else
-            {
-                listItem = existingListItem;
-                listViewItemElement = (ModernWpf.Controls.ListViewItem)AppUsageListView.ItemContainerGenerator.ContainerFromItem(existingListItem);
-            }
+                if (existingListItem == null && chartPoint.SeriesView.Title == "Other Apps")
+                {
+                    if (chartPoint.SeriesView.Title == "Other Apps")
+                    {
+                        listItem = AppUsageListView.Items.Cast<AppUsageListItem>().ToArray().First(item => item.Percentage <= AppUsageViewModel.MinimumPieChartPercentage);
+                        listViewItemElement = (ModernWpf.Controls.ListViewItem)AppUsageListView.ItemContainerGenerator.ContainerFromItem(listItem);
+                    }
+                    else if (chartPoint.SeriesView.Title == "No Data" && chartPoint.Y == 1.0)
+                    {
+                        return; // No Data
+                    }
+                }
+                else
+                {
+                    listItem = existingListItem;
+                    listViewItemElement = (ModernWpf.Controls.ListViewItem)AppUsageListView.ItemContainerGenerator.ContainerFromItem(existingListItem);
+                }
 
-            AppUsageListView.SelectedItem = listItem;
-            listViewItemElement.Focus();
+                AppUsageListView.SelectedItem = listItem;
+                listViewItemElement.Focus();
+            }
+            catch (NullReferenceException)
+            {
+                // Cannot focus on any list item.
+            }
+            catch (Exception ex)
+            {
+                AppLogger.WriteLine(ex);
+            }
         }
 
         private void WeeklyChart_DataClick(object sender, LiveCharts.ChartPoint chartPoint)

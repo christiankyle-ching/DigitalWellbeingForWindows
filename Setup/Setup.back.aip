@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<DOCUMENT Type="Advanced Installer" CreateVersion="18.5" version="18.6.1" Modules="simple" RootPath="." Language="en" Id="{557D84C5-7AD9-417B-8CD4-58E518DF102B}">
+<DOCUMENT Type="Advanced Installer" CreateVersion="18.5" version="18.5" Modules="simple" RootPath="." Language="en" Id="{557D84C5-7AD9-417B-8CD4-58E518DF102B}">
   <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
     <ROW Property="AI_BITMAP_DISPLAY_MODE" Value="0"/>
     <ROW Property="AI_CURRENT_YEAR" Value="2021" ValueLocId="-"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingService.NET4.6.exe" Value="..\DigitalWellbeingService.NET4.6\bin\Debug"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingService.NET4.6.exe.config" Value="..\DigitalWellbeingService.NET4.6\bin\Debug"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingWPF.exe" Value="..\DigitalWellbeingWPF\bin\Debug"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingWPF.exe.config" Value="..\DigitalWellbeingWPF\bin\Debug"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingService.NET4.6.exe" Value="..\DigitalWellbeingService.NET4.6\bin\Release"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingService.NET4.6.exe.config" Value="..\DigitalWellbeingService.NET4.6\bin\Release"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingWPF.exe" Value="..\DigitalWellbeingWPF\bin\Release"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingWPF.exe.config" Value="..\DigitalWellbeingWPF\bin\Release"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_LiveCharts.Wpf.dll_1" Value="..\packages\LiveCharts.Wpf.0.9.7\lib\net45"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_LiveCharts.dll_1" Value="..\packages\LiveCharts.0.9.7\lib\net45"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_ModernWpf.Controls.dll_1" Value="..\packages\ModernWpfUI.0.9.4\lib\net45"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_ModernWpf.dll_1" Value="..\packages\ModernWpfUI.0.9.4\lib\net45"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_System.ValueTuple.dll" Value="..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_System.ValueTuple.dll" Value="..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0"/>
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeingService.NET4.6.exe" Value="DigitalWellbeingService.NET4.6.exe"/>
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeingService.NET4.6.exe.config" Value="DigitalWellbeingService.NET4.6.exe.config"/>
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeingWPF.exe" Value="DigitalWellbeingWPF.exe"/>
