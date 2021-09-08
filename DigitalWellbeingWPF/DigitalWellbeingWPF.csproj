@@ -79,6 +79,7 @@
     </ApplicationDefinition>
     <Compile Include="Helpers\ApplicationPath.cs" />
     <Compile Include="Helpers\AppLogger.cs" />
+    <Compile Include="Helpers\Updater.cs" />
     <Compile Include="ViewModels\AppUsageViewModel.cs" />
     <Compile Include="Views\AboutTheApp.xaml.cs">
       <DependentUpon>AboutTheApp.xaml</DependentUpon>

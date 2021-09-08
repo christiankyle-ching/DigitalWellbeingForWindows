@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DigitalWellbeingWPF.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace DigitalWellbeingWPF.Views
     /// </summary>
     public partial class AboutTheApp : Window
     {
+        private readonly int currentVersion;
         private readonly string githubLink = "https://github.com/christiankyle-ching/DigitalWellbeingForWindows";
         private readonly string updateLink = "https://github.com/christiankyle-ching/DigitalWellbeingForWindows/releases";
         private readonly string websiteLink = "https://christiankyleching.vercel.app/works.html?scrollTo=digital-wellbeing-windows";
@@ -29,7 +31,21 @@ namespace DigitalWellbeingWPF.Views
         {
             InitializeComponent();
 
-            TxtVersion.Text = $"Version {Assembly.GetExecutingAssembly().GetName().Version.ToString()}";
+            string strVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            TxtVersion.Text = $"Version {strVersion}";
+
+            currentVersion = Updater.ParseVersion(strVersion);
+            CheckForUpdates();
+        }
+
+        private async void CheckForUpdates()
+        {
+            string latestVersion = await Updater.GetLatestVersion();
+
+            if (Updater.IsUpdateAvailable(currentVersion, Updater.ParseVersion(latestVersion)))
+            {
+                TxtVersion.Text += $"\nUpdate Available ({latestVersion})";
+            }
         }
 
         private void BtnGithub_Click(object sender, RoutedEventArgs e)
