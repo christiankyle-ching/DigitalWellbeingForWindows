@@ -167,6 +167,9 @@
   <ItemGroup>
     <Resource Include="Images\Icons\Ellipsis_16x.png" />
   </ItemGroup>
+  <ItemGroup>
+    <SplashScreen Include="Images\splash.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Runtime.WindowsRuntime.4.6.0\build\net451\System.Runtime.WindowsRuntime.targets" Condition="Exists('..\packages\System.Runtime.WindowsRuntime.4.6.0\build\net451\System.Runtime.WindowsRuntime.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
