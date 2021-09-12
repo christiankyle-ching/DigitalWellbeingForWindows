@@ -81,12 +81,6 @@
     <Compile Include="Helpers\AppLogger.cs" />
     <Compile Include="Helpers\Updater.cs" />
     <Compile Include="ViewModels\AppUsageViewModel.cs" />
-    <Compile Include="Views\AboutTheApp.xaml.cs">
-      <DependentUpon>AboutTheApp.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\AboutTheDeveloper.xaml.cs">
-      <DependentUpon>AboutTheDeveloper.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\DayAppUsagePage.xaml.cs">
       <DependentUpon>DayAppUsagePage.xaml</DependentUpon>
     </Compile>
@@ -112,14 +106,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Resource>
-    <Page Include="Views\AboutTheApp.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\AboutTheDeveloper.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\DayAppUsagePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

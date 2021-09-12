@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -41,6 +42,8 @@ namespace DigitalWellbeingWPF.Views
             MinDuration_Seconds.NumberFormatter = formatter;
 
             RefreshInterval.NumberFormatter = formatter;
+
+            LoadAboutApp();
         }
 
         public void OnNavigate()
@@ -115,20 +118,10 @@ namespace DigitalWellbeingWPF.Views
             Properties.Settings.Default.Save();
         }
 
-        private void BtnAboutDev_Click(object sender, RoutedEventArgs e)
-        {
-            new AboutTheDeveloper().ShowDialog();
-        }
-
         private void BtnClearImageCache_Click(object sender, RoutedEventArgs e)
         {
             _ = IconManager.ClearCachedImages();
             FlyoutClearImageCache.Hide();
-        }
-
-        private void BtnAboutApp_Click(object sender, RoutedEventArgs e)
-        {
-            new AboutTheApp().ShowDialog();
         }
 
         private void MinDuration_LostFocus(object sender, RoutedEventArgs e)
@@ -171,5 +164,48 @@ namespace DigitalWellbeingWPF.Views
             _ = Process.Start("ms-settings:quiethours");
             _ = Process.Start("ms-settings:quietmomentshome");
         }
+
+
+        #region About App
+        private int currentVersion;
+        private int latestVersion;
+        private string strLatestVersion;
+
+        private void LoadAboutApp()
+        {
+            LoadLinks();
+
+            Assembly app = Assembly.GetExecutingAssembly();
+
+            // Get Copyright
+            object[] attribs = app.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), true);
+            TxtCopyright.Text = (attribs.Length > 0) ? ((AssemblyCopyrightAttribute)attribs[0]).Copyright : "";
+
+            // Get Version
+            string strVersion = app.GetName().Version.ToString();
+            TxtCurrentVersion.Text = $"App version {strVersion}";
+
+            currentVersion = Updater.ParseVersion(strVersion);
+            CheckForUpdates();
+        }
+
+        private async void CheckForUpdates()
+        {
+            strLatestVersion = await Updater.GetLatestVersion();
+            latestVersion = Updater.ParseVersion(strLatestVersion);
+
+            if (Updater.IsUpdateAvailable(currentVersion, latestVersion))
+            {
+                TxtLatestVersion.Text = $" (Update Available {strLatestVersion})";
+            }
+        }
+
+        private void LoadLinks()
+        {
+            LinkSource.NavigateUri = new Uri(Updater.appGithubLink);
+            LinkUpdate.NavigateUri = new Uri(Updater.appReleasesLink);
+            LinkDeveloper.NavigateUri = new Uri(Updater.appWebsiteLink);
+        }
+        #endregion
     }
 }
