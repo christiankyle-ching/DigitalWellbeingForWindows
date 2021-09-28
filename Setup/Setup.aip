@@ -11,7 +11,7 @@
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_LiveCharts.dll_1" Value="..\packages\LiveCharts.0.9.7\lib\net45"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_ModernWpf.Controls.dll_1" Value="..\packages\ModernWpfUI.0.9.4\lib\net45"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_ModernWpf.dll_1" Value="..\packages\ModernWpfUI.0.9.4\lib\net45"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_System.ValueTuple.dll" Value="..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_System.ValueTuple.dll" Value="..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin"/>
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeingService.NET4.6.exe" Value="DigitalWellbeingService.NET4.6.exe"/>
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeingService.NET4.6.exe.config" Value="DigitalWellbeingService.NET4.6.exe.config"/>
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeingWPF.exe" Value="DigitalWellbeingWPF.exe"/>
@@ -28,7 +28,7 @@
     <ROW Property="ProductCode" Value="1033:{1A82D819-1344-41F6-A440-5A53A7DAAC86} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="Digital Wellbeing For Windows"/>
-    <ROW Property="ProductVersion" Value="1.0.3.0" Type="32" TargetFile="DigitalWellbeingWPF.exe"/>
+    <ROW Property="ProductVersion" Value="1.0.4.0" Type="32" TargetFile="DigitalWellbeingWPF.exe"/>
     <ROW Property="REBOOT" MultiBuildValue="DefaultBuild:Force"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{D7DA3A0D-99E1-4FAC-B2CC-FEBB27BCA59A}"/>
