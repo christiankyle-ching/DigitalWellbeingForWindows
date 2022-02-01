@@ -12,7 +12,7 @@ namespace DigitalWellbeingWPF.Helpers
     {
         public static void WriteLine(object logObj, bool logToFile = true)
         {
-            string path = $"{ApplicationPath.InternalLogsFolder}{DateTime.Now:mm-dd-yyyy}.log";
+            string path = $"{ApplicationPath.InternalLogsFolder}{DateTime.Now:MM-dd-yyyy}.log";
 
             try
             {
