@@ -2,16 +2,16 @@
 <DOCUMENT Type="Advanced Installer" CreateVersion="18.5" version="18.6.1" Modules="simple" RootPath="." Language="en" Id="{557D84C5-7AD9-417B-8CD4-58E518DF102B}">
   <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
     <ROW Property="AI_BITMAP_DISPLAY_MODE" Value="0"/>
-    <ROW Property="AI_CURRENT_YEAR" Value="2021" ValueLocId="-"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingService.NET4.6.exe" Value="..\DigitalWellbeingService.NET4.6\bin\Debug"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingService.NET4.6.exe.config" Value="..\DigitalWellbeingService.NET4.6\bin\Debug"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingWPF.exe" Value="..\DigitalWellbeingWPF\bin\Debug"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingWPF.exe.config" Value="..\DigitalWellbeingWPF\bin\Debug"/>
+    <ROW Property="AI_CURRENT_YEAR" Value="2022" ValueLocId="-"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingService.NET4.6.exe" Value="..\DigitalWellbeingService.NET4.6\bin\Release"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingService.NET4.6.exe.config" Value="..\DigitalWellbeingService.NET4.6\bin\Release"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingWPF.exe" Value="..\DigitalWellbeingWPF\bin\Release"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingWPF.exe.config" Value="..\DigitalWellbeingWPF\bin\Release"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_LiveCharts.Wpf.dll_1" Value="..\packages\LiveCharts.Wpf.0.9.7\lib\net45"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_LiveCharts.dll_1" Value="..\packages\LiveCharts.0.9.7\lib\net45"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_ModernWpf.Controls.dll_1" Value="..\packages\ModernWpfUI.0.9.4\lib\net45"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_ModernWpf.dll_1" Value="..\packages\ModernWpfUI.0.9.4\lib\net45"/>
-    <ROW Property="AI_PROPPATH_DIR_PERBUILD_System.ValueTuple.dll" Value="..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_System.ValueTuple.dll" Value="..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0"/>
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeingService.NET4.6.exe" Value="DigitalWellbeingService.NET4.6.exe"/>
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeingService.NET4.6.exe.config" Value="DigitalWellbeingService.NET4.6.exe.config"/>
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeingWPF.exe" Value="DigitalWellbeingWPF.exe"/>
@@ -25,10 +25,10 @@
     <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
     <ROW Property="ARPPRODUCTICON" Value="applogo.exe" Type="8"/>
     <ROW Property="Manufacturer" Value="ckcdev"/>
-    <ROW Property="ProductCode" Value="1033:{1A82D819-1344-41F6-A440-5A53A7DAAC86} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{37F46967-8466-48B1-9C70-C56D5CD7B54B} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="Digital Wellbeing For Windows"/>
-    <ROW Property="ProductVersion" Value="1.0.4.0" Type="32" TargetFile="DigitalWellbeingWPF.exe"/>
+    <ROW Property="ProductVersion" Value="1.0.5.0" Type="32" TargetFile="DigitalWellbeingWPF.exe"/>
     <ROW Property="REBOOT" MultiBuildValue="DefaultBuild:Force"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{D7DA3A0D-99E1-4FAC-B2CC-FEBB27BCA59A}"/>
@@ -93,7 +93,7 @@
     <ROW BootstrOptKey="GlobalOptions" DownloadFolder="[AppDataFolder][|Manufacturer]\[|ProductName]\prerequisites" Options="2"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
-    <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" PackageFileName="Digital Wellbeing Installer [|ProductVersion]" Languages="en" InstallationType="4" UseLargeSchema="true"/>
+    <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" PackageFolder="..\..\..\Desktop\Builds" PackageFileName="Digital Wellbeing Installer [|ProductVersion]" Languages="en" InstallationType="4" UseLargeSchema="true"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.DictionaryComponent">
     <ROW Path="&lt;AI_DICTS&gt;ui.ail"/>

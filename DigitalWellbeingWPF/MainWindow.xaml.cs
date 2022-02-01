@@ -87,10 +87,10 @@ namespace DigitalWellbeingWPF
         private void MinimizeToTray()
         {
             this.Hide();
-            Notifier.ShowTrayIcon(RestoreWindow);
+            Notifier.ShowTrayIcon((s, e) => RestoreWindow());
         }
 
-        private void RestoreWindow(object sender, EventArgs args)
+        private void RestoreWindow()
         {
             this.Show();
             this.WindowState = WindowState.Normal;

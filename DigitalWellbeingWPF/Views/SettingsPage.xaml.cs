@@ -217,6 +217,7 @@ namespace DigitalWellbeingWPF.Views
             if (Updater.IsUpdateAvailable(currentVersion, latestVersion))
             {
                 TxtLatestVersion.Text = $" (Update Available {strLatestVersion})";
+                Notifier.ShowNotification(App.APPNAME, $"Update Available: {strLatestVersion}");
             }
         }
 
