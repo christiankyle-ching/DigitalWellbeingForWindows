@@ -14,6 +14,7 @@ namespace DigitalWellbeingWPF.Helpers
         static readonly string imageCacheFolderName = "processicons";
         static readonly string dailyLogsFolderName = "dailylogs";
         static readonly string internalLogsFolder = "internal-logs";
+        static readonly string settingsFolder = "settings";
 
         private static string GetApplicationLocation
         {
@@ -23,6 +24,11 @@ namespace DigitalWellbeingWPF.Helpers
         public static string UsageLogsFolder
         {
             get => GetApplicationLocation + $@"\{dailyLogsFolderName}\";
+        }
+
+        public static string SettingsFolder
+        {
+            get => GetApplicationLocation + $@"\{settingsFolder}\";
         }
 
         public static string InternalLogsFolder

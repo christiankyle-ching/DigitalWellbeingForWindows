@@ -95,13 +95,17 @@ namespace DigitalWellbeingWPF.Views
             vm.OnPageResize(appUsageChart.ActualWidth, appUsageChart.ActualHeight);
         }
 
-        private void AppUsageListMenuItem_Click(object sender, RoutedEventArgs e)
+        private void AppUsageListMenuItem_ExcludeItem(object sender, RoutedEventArgs e)
         {
             string processName = ((MenuItem)sender).Tag.ToString();
             Properties.Settings.Default.UserExcludedProcesses.Add(processName);
             Properties.Settings.Default.Save();
+        }
 
-            vm.OnExcludeApp(processName);
+        private void AppUsageListMenuItem_SetTimeLimit(object sender, RoutedEventArgs e)
+        {
+            string processName = ((MenuItem)sender).Tag.ToString();
+            vm.OnSetTimeLimit(processName);
         }
 
         public void OnNavigate()

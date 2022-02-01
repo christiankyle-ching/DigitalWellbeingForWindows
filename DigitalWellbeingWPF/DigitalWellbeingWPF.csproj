@@ -81,8 +81,12 @@
     <Compile Include="Helpers\ApplicationPath.cs" />
     <Compile Include="Helpers\AppLogger.cs" />
     <Compile Include="Helpers\Notifier.cs" />
+    <Compile Include="Helpers\SettingsManager.cs" />
     <Compile Include="Helpers\Updater.cs" />
     <Compile Include="ViewModels\AppUsageViewModel.cs" />
+    <Compile Include="Views\SetTimeLimitWindow.xaml.cs">
+      <DependentUpon>SetTimeLimitWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DayAppUsagePage.xaml.cs">
       <DependentUpon>DayAppUsagePage.xaml</DependentUpon>
     </Compile>
@@ -108,6 +112,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Resource>
+    <Page Include="Views\SetTimeLimitWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DayAppUsagePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

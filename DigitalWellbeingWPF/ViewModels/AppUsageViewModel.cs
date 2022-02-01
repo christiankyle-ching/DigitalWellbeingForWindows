@@ -1,6 +1,7 @@
 ﻿using DigitalWellbeingWPF.Helpers;
 using DigitalWellbeingWPF.Models;
 using DigitalWellbeingWPF.Models.UserControls;
+using DigitalWellbeingWPF.Views;
 using LiveCharts;
 using LiveCharts.Configurations;
 using LiveCharts.Wpf;
@@ -139,6 +140,7 @@ namespace DigitalWellbeingWPF.ViewModels
             }
 
             InitAutoRefreshTimer();
+            InitNotifierTimer();
         }
 
         #region Init Functions
@@ -257,7 +259,16 @@ namespace DigitalWellbeingWPF.ViewModels
                 DayPieChartData.Remove(pieChartSeries);
                 DayListItems.Remove(listItem);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+        public void OnSetTimeLimit(string processName)
+        {
+            SetTimeLimitWindow window = new SetTimeLimitWindow(processName);
+            window.ShowDialog();
         }
 
         public AppUsageListItem OnAppUsageChart_SelectionChanged(ChartPoint chartPoint)
@@ -580,5 +591,53 @@ namespace DigitalWellbeingWPF.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        #region Notifier
+
+        private DispatcherTimer notifierTimer;
+        private List<string> notifiedApps = new List<string>();
+
+        private void InitNotifierTimer()
+        {
+            int refreshInterval = 5;
+            TimeSpan intervalDuration = TimeSpan.FromSeconds(refreshInterval);
+
+            notifierTimer = new DispatcherTimer() { Interval = intervalDuration };
+            notifierTimer.Tick += (s, e) => CheckForExceedingAppTimeLimits();
+
+            notifierTimer.Start();
+        }
+
+        private async void CheckForExceedingAppTimeLimits()
+        {
+            List<AppUsage> todayUsage = await GetData(DateTime.Now);
+            var _limits = SettingsManager.appTimeLimits;
+
+            foreach (AppUsage app in todayUsage)
+            {
+                if (_limits.ContainsKey(app.ProcessName))
+                {
+                    if (app.Duration.TotalMinutes > _limits[app.ProcessName])
+                    {
+                        if (notifiedApps.Contains(app.ProcessName))
+                        {
+                            // Skip notifying for apps already notified
+                            continue;
+                        }
+                        else
+                        {
+                            TimeSpan timeLimit = TimeSpan.FromMinutes(_limits[app.ProcessName]);
+                            Notifier.ShowNotification(
+                                $"Time Limit Exceeded: {app.ProgramName}",
+                                $"Time limit for {app.ProgramName} exceeded ({timeLimit.Hours}h {timeLimit.Minutes}m).");
+
+                            notifiedApps.Add(app.ProcessName);
+                        }
+                    }
+                }
+            }
+        }
+
+        #endregion
     }
 }
