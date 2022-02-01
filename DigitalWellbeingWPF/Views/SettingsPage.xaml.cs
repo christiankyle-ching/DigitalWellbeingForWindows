@@ -149,14 +149,21 @@ namespace DigitalWellbeingWPF.Views
 
         private void ExcludedAppList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            ListView list = (ListView)sender;
+            try
+            {
+                ListView list = (ListView)sender;
 
-            string processName = list.SelectedItem.ToString();
+                string processName = list.SelectedItem.ToString();
 
-            Properties.Settings.Default.UserExcludedProcesses.Remove(processName);
-            Properties.Settings.Default.Save();
+                Properties.Settings.Default.UserExcludedProcesses.Remove(processName);
+                Properties.Settings.Default.Save();
 
-            list.Items.Remove(list.SelectedItem);
+                list.Items.Remove(list.SelectedItem);
+            }
+            catch (NullReferenceException ex)
+            {
+                Console.WriteLine($"No item selected: {ex}");
+            }
         }
 
         private void BtnFocusAssist_Click(object sender, RoutedEventArgs e)
