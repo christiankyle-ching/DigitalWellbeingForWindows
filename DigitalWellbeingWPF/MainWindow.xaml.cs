@@ -95,6 +95,9 @@ namespace DigitalWellbeingWPF
             this.Show();
             this.WindowState = WindowState.Normal;
             Notifier.HideTrayIcon();
+
+            // Trigger refresh
+            usagePage.OnNavigate();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

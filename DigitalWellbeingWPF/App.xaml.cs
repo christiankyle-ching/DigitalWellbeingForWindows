@@ -24,8 +24,12 @@ namespace DigitalWellbeingWPF
 
         public App()
         {
+            // Global Exception Handling
             AppDomain currentDomain = AppDomain.CurrentDomain;
             currentDomain.UnhandledException += new UnhandledExceptionEventHandler(GlobalExceptionHandler);
+
+            // Init Notifier
+            Notifier.InitNotifierTimer();
         }
 
         private void Application_Startup(object sender, StartupEventArgs e)

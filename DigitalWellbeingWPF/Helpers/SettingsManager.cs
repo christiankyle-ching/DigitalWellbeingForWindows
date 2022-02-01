@@ -38,6 +38,10 @@ namespace DigitalWellbeingWPF.Helpers
 
                         appTimeLimits.Add(processName, timeLimitInMins);
                     }
+                    catch (IndexOutOfRangeException)
+                    {
+                        // No indicated cells, possibly last line in txt
+                    }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex);

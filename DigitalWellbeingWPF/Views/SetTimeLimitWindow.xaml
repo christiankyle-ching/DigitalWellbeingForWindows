@@ -7,7 +7,8 @@
         xmlns:ui="http://schemas.modernwpf.com/2019"
         ui:WindowHelper.UseModernWindowStyle="True" 
         mc:Ignorable="d"
-        Title="Add Time Limit" Height="150" Width="500"
+        Title="Add Time Limit" Height="175" Width="500"
+        ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource SystemControlPageBackgroundAltHighBrush}"
         Foreground="{DynamicResource SystemControlPageTextBaseHighBrush}">
@@ -26,7 +27,12 @@
     </Window.Resources>
 
     <Grid>
-        <ui:SimpleStackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <ui:SimpleStackPanel Grid.Row="0">
             <!-- TIME LIMIT -->
             <!-- Minimum Duration -->
             <ui:ListViewItem Style="{StaticResource SettingListItemStyle}">
@@ -49,13 +55,11 @@
                     </ui:SimpleStackPanel>
                 </Grid>
             </ui:ListViewItem>
+        </ui:SimpleStackPanel>
 
-            <ui:SimpleStackPanel Orientation="Horizontal" Spacing="20" HorizontalAlignment="Right" Margin="20,0">
-                <Button Content="Cancel" x:Name="BtnCancel" Click="BtnCancel_Click" />
-                <Button Content="Apply" x:Name="BtnApply" Click="BtnApply_Click" />
-            </ui:SimpleStackPanel>
-
-
+        <ui:SimpleStackPanel Grid.Row="1"  Orientation="Horizontal" Spacing="20" HorizontalAlignment="Right" Margin="20">
+            <Button Content="Cancel" x:Name="BtnCancel" Click="BtnCancel_Click" />
+            <Button Content="Apply" x:Name="BtnApply" Click="BtnApply_Click" />
         </ui:SimpleStackPanel>
     </Grid>
 </Window>

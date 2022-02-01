@@ -49,6 +49,7 @@ namespace DigitalWellbeingWPF.Views
         public void OnNavigate()
         {
             LoadExcludedProcessItems();
+            LoadAppTimeLimits();
         }
 
         private void LoadCurrentSettings()
@@ -64,6 +65,7 @@ namespace DigitalWellbeingWPF.Views
             CBTheme.SelectedItem = CBTheme.FindName($"CBTheme_{Properties.Settings.Default.ThemeMode}");
 
             LoadExcludedProcessItems();
+            LoadAppTimeLimits();
         }
 
         private void LoadExcludedProcessItems()
@@ -75,6 +77,17 @@ namespace DigitalWellbeingWPF.Views
             foreach (string processName in excludedProcesses)
             {
                 ExcludedAppList.Items.Add(processName);
+            }
+        }
+
+        private void LoadAppTimeLimits()
+        {
+            AppTimeLimitsList.Items.Clear();
+
+            foreach (KeyValuePair<string, int> timeLimit in SettingsManager.appTimeLimits)
+            {
+                TimeSpan time = TimeSpan.FromMinutes(timeLimit.Value);
+                AppTimeLimitsList.Items.Add($"{timeLimit.Key}{SEPARATOR}{time.Hours}h {time.Minutes}m");
             }
         }
 
@@ -214,5 +227,27 @@ namespace DigitalWellbeingWPF.Views
             LinkDeveloper.NavigateUri = new Uri(Updater.appWebsiteLink);
         }
         #endregion
+
+        const string SEPARATOR = "    /    ";
+
+        private void AppTimeLimitsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                ListView list = (ListView)sender;
+
+                string processName = list.SelectedItem.ToString().Split(new[] { SEPARATOR }, StringSplitOptions.None)[0];
+
+                SetTimeLimitWindow window = new SetTimeLimitWindow(processName);
+                window.ShowDialog();
+
+                LoadAppTimeLimits();
+                Notifier.ResetNotificationForApp(processName);
+            }
+            catch (NullReferenceException ex)
+            {
+                Console.WriteLine($"No item selected: {ex}");
+            }
+        }
     }
 }

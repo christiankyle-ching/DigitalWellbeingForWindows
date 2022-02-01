@@ -29,7 +29,7 @@ namespace DigitalWellbeingWPF.ViewModels
         #endregion
 
         #region Temporary 
-        private readonly string folderPath = ApplicationPath.UsageLogsFolder;
+        private readonly static string folderPath = ApplicationPath.UsageLogsFolder;
 
         private DispatcherTimer refreshTimer;
         #endregion
@@ -81,7 +81,7 @@ namespace DigitalWellbeingWPF.ViewModels
         public ObservableCollection<AppUsageListItem> DayListItems { get; set; } // List Items
 
         // Excluded Processes
-        private readonly string[] excludeProcesses = new string[]
+        private static readonly string[] excludeProcesses = new string[]
         {
             // Exclude Self
             "DigitalWellbeingWPF",
@@ -100,7 +100,7 @@ namespace DigitalWellbeingWPF.ViewModels
             // Custom Indicators (from Service)
             "*LAST",
         };
-        private string[] userExcludedProcesses;
+        private static string[] userExcludedProcesses;
         #endregion
 
         #region Getters with Bindings
@@ -140,7 +140,6 @@ namespace DigitalWellbeingWPF.ViewModels
             }
 
             InitAutoRefreshTimer();
-            InitNotifierTimer();
         }
 
         #region Init Functions
@@ -269,6 +268,8 @@ namespace DigitalWellbeingWPF.ViewModels
         {
             SetTimeLimitWindow window = new SetTimeLimitWindow(processName);
             window.ShowDialog();
+
+            Notifier.ResetNotificationForApp(processName);
         }
 
         public AppUsageListItem OnAppUsageChart_SelectionChanged(ChartPoint chartPoint)
@@ -484,12 +485,12 @@ namespace DigitalWellbeingWPF.ViewModels
             return Array.FindIndex(WeeklyChartLabelDates, labelDates => labelDates.Date == date.Date);
         }
 
-        private bool IsProcessExcluded(string processName)
+        public static bool IsProcessExcluded(string processName)
         {
-            return (excludeProcesses.Contains(processName) || userExcludedProcesses.Contains(processName));
+            return excludeProcesses.Contains(processName) || userExcludedProcesses.Contains(processName);
         }
 
-        public async Task<List<AppUsage>> GetData(DateTime date)
+        public static async Task<List<AppUsage>> GetData(DateTime date)
         {
             List<AppUsage> appUsageList = new List<AppUsage>();
 
@@ -592,52 +593,5 @@ namespace DigitalWellbeingWPF.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        #region Notifier
-
-        private DispatcherTimer notifierTimer;
-        private List<string> notifiedApps = new List<string>();
-
-        private void InitNotifierTimer()
-        {
-            int refreshInterval = 5;
-            TimeSpan intervalDuration = TimeSpan.FromSeconds(refreshInterval);
-
-            notifierTimer = new DispatcherTimer() { Interval = intervalDuration };
-            notifierTimer.Tick += (s, e) => CheckForExceedingAppTimeLimits();
-
-            notifierTimer.Start();
-        }
-
-        private async void CheckForExceedingAppTimeLimits()
-        {
-            List<AppUsage> todayUsage = await GetData(DateTime.Now);
-            var _limits = SettingsManager.appTimeLimits;
-
-            foreach (AppUsage app in todayUsage)
-            {
-                if (_limits.ContainsKey(app.ProcessName))
-                {
-                    if (app.Duration.TotalMinutes > _limits[app.ProcessName])
-                    {
-                        if (notifiedApps.Contains(app.ProcessName))
-                        {
-                            // Skip notifying for apps already notified
-                            continue;
-                        }
-                        else
-                        {
-                            TimeSpan timeLimit = TimeSpan.FromMinutes(_limits[app.ProcessName]);
-                            Notifier.ShowNotification(
-                                $"Time Limit Exceeded: {app.ProgramName}",
-                                $"Time limit for {app.ProgramName} exceeded ({timeLimit.Hours}h {timeLimit.Minutes}m).");
-
-                            notifiedApps.Add(app.ProcessName);
-                        }
-                    }
-                }
-            }
-        }
-
-        #endregion
     }
 }

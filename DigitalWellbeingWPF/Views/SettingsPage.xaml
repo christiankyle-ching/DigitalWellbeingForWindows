@@ -55,6 +55,31 @@
 
                 </ui:ListView>
 
+                <!-- APP TIME LIMITS DATA -->
+
+                <ui:ListView Style="{StaticResource SettingListViewStyle}">
+
+                    <!-- Refresh Interval -->
+                    <ui:ListViewItem Style="{StaticResource SettingListItemStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <ui:SimpleStackPanel Grid.Column="0" Margin="0,0,20,0">
+                                <TextBlock Text="Time Limits per App" Style="{StaticResource BaseTextBlockStyle}"/>
+                                <TextBlock Text="Double-click on an app name to set its time limit." Style="{StaticResource CaptionTextBlockStyle}"/>
+                            </ui:SimpleStackPanel>
+
+                            <ListView Grid.Column="1" x:Name="AppTimeLimitsList" SelectionMode="Single" MouseDoubleClick="AppTimeLimitsList_MouseDoubleClick" 
+                                      Height="150" Margin="0,0,10,0" 
+                                      BorderThickness="1" BorderBrush="{DynamicResource SystemControlBackgroundBaseLowRevealBackgroundBrush}"/>
+                        </Grid>
+                    </ui:ListViewItem>
+
+                </ui:ListView>
+
                 <!-- DISPLAY -->
                 <TextBlock Text="Display" Style="{StaticResource SubtitleTextBlockStyle}" Margin="10,0,0,10"/>
 
@@ -166,7 +191,6 @@
                     </ui:ListViewItem>
 
                 </ui:ListView>
-
 
                 <!-- CACHE & LOGS -->
                 <TextBlock Text="Cache &amp; Logs" Style="{StaticResource SubtitleTextBlockStyle}" Margin="10,0,0,10"/>
