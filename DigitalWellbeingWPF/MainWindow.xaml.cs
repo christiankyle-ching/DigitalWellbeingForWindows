@@ -7,13 +7,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -65,5 +65,57 @@ namespace DigitalWellbeingWPF
                     break;
             }
         }
+
+        #region Notifications
+
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            switch (this.WindowState)
+            {
+                case WindowState.Normal:
+                    break;
+                case WindowState.Minimized:
+                    MinimizeToTray();
+                    break;
+                case WindowState.Maximized:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void MinimizeToTray()
+        {
+            this.Hide();
+            Notifier.ShowTrayIcon(RestoreWindow);
+        }
+
+        private void RestoreWindow(object sender, EventArgs args)
+        {
+            this.Show();
+            this.WindowState = WindowState.Normal;
+            Notifier.HideTrayIcon();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            MessageBoxResult res = MessageBox.Show(
+                "Are you sure you want to exit the app? Notifications won't work.",
+                App.APPNAME,
+                MessageBoxButton.OKCancel,
+                MessageBoxImage.Warning,
+                MessageBoxResult.Cancel);
+
+            if (res == MessageBoxResult.OK)
+            {
+                Application.Current.Shutdown();
+            }
+            else
+            {
+                e.Cancel = true;
+            }
+        }
+
+        #endregion
     }
 }

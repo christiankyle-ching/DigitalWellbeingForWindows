@@ -19,8 +19,8 @@ namespace DigitalWellbeingWPF
     /// </summary>
     public partial class App : Application
     {
-        const string APPNAME = "Digital Wellbeing for Windows";
-        const string APP_GITHUBISSUE_URL = "https://github.com/christiankyle-ching/DigitalWellbeingForWindows/issues/new?";
+        public static string APPNAME = "Digital Wellbeing for Windows";
+        static string APP_GITHUBISSUE_URL = "https://github.com/christiankyle-ching/DigitalWellbeingForWindows/issues/new?";
 
         public App()
         {
