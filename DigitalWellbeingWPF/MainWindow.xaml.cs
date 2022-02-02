@@ -1,4 +1,5 @@
-﻿using DigitalWellbeingWPF.Helpers;
+﻿using DigitalWellbeing.Core;
+using DigitalWellbeingWPF.Helpers;
 using DigitalWellbeingWPF.ViewModels;
 using DigitalWellbeingWPF.Views;
 using ModernWpf.Controls;
@@ -6,10 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -19,6 +20,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace DigitalWellbeingWPF
 {
@@ -37,6 +39,12 @@ namespace DigitalWellbeingWPF
 
             // Navigate to Home
             this.NavView.SelectedItem = this.NavView.MenuItems[0];
+
+            // Init Notifier
+            Notifier.InitNotifierTimer();
+
+            // Check Autorun File
+            InitAutoRun();
         }
 
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -84,13 +92,13 @@ namespace DigitalWellbeingWPF
             }
         }
 
-        private void MinimizeToTray()
+        public void MinimizeToTray()
         {
             this.Hide();
             Notifier.ShowTrayIcon((s, e) => RestoreWindow());
         }
 
-        private void RestoreWindow()
+        public void RestoreWindow()
         {
             this.Show();
             this.WindowState = WindowState.Normal;
@@ -120,5 +128,38 @@ namespace DigitalWellbeingWPF
         }
 
         #endregion
+
+        private DispatcherTimer autorunTimer;
+        private readonly int AUTORUN_DELAY = 2;
+
+        private void InitAutoRun()
+        {
+            autorunTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(AUTORUN_DELAY) };
+            autorunTimer.Tick += (s, e) => CheckAutoRun();
+
+            autorunTimer.Start();
+        }
+
+        private void CheckAutoRun()
+        {
+            Console.WriteLine("Checking AutoRun");
+
+            string path = ApplicationPath.autorunFilePath;
+
+            if (File.Exists(path))
+            {
+                // TODO
+                // Do things here that would only run on login / startup,
+                // and NOT on consecutive opens of the app
+
+                MainWindow mWindow = Application.Current.MainWindow as MainWindow;
+                mWindow.MinimizeToTray();
+
+                File.Delete(path);
+            }
+
+            // Run only once
+            autorunTimer.Stop();
+        }
     }
 }

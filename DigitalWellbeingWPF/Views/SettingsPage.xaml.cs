@@ -1,4 +1,6 @@
-﻿using DigitalWellbeingWPF.Helpers;
+﻿using DigitalWellbeing.Core;
+using DigitalWellbeingWPF.Helpers;
+using Microsoft.Win32;
 using ModernWpf;
 using System;
 using System.Collections.Generic;
@@ -58,6 +60,8 @@ namespace DigitalWellbeingWPF.Views
             MinDuration_Hours.Value = minDuration.Hours;
             MinDuration_Minutes.Value = minDuration.Minutes;
             MinDuration_Seconds.Value = minDuration.Seconds;
+
+            EnableRunOnStartup.IsOn = SettingsManager.IsRunningOnStartup();
 
             EnableAutoRefresh.IsOn = Properties.Settings.Default.EnableAutoRefresh;
             RefreshInterval.Value = Properties.Settings.Default.RefreshIntervalSeconds;
@@ -249,6 +253,11 @@ namespace DigitalWellbeingWPF.Views
             {
                 Console.WriteLine($"No item selected: {ex}");
             }
+        }
+
+        private void EnableRunOnStartup_Toggled(object sender, RoutedEventArgs e)
+        {
+            SettingsManager.SetRunOnStartup(EnableRunOnStartup.IsOn);
         }
     }
 }

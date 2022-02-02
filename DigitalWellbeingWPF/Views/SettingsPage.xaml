@@ -32,9 +32,25 @@
                 <!-- USAGE DATA -->
                 <TextBlock Text="Usage Data" Style="{StaticResource SubtitleTextBlockStyle}" Margin="10,0,0,10"/>
 
+                <ui:ListViewItem Style="{StaticResource SettingListItemStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <ui:SimpleStackPanel Grid.Column="0" Margin="0,0,20,0">
+                            <TextBlock Text="Run on Startup" Style="{StaticResource BaseTextBlockStyle}"/>
+                            <TextBlock Text="Runs this app on startup to enable alert notifications." Style="{StaticResource CaptionTextBlockStyle}"/>
+                        </ui:SimpleStackPanel>
+
+                        <ui:ToggleSwitch x:Name="EnableRunOnStartup" Toggled="EnableRunOnStartup_Toggled" Grid.Column="1"/>
+                    </Grid>
+                </ui:ListViewItem>
+
+                <!-- EXCLUDED APPS -->
                 <ui:ListView Style="{StaticResource SettingListViewStyle}">
 
-                    <!-- Refresh Interval -->
                     <ui:ListViewItem Style="{StaticResource SettingListItemStyle}">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -56,7 +72,6 @@
                 </ui:ListView>
 
                 <!-- APP TIME LIMITS DATA -->
-
                 <ui:ListView Style="{StaticResource SettingListViewStyle}">
 
                     <!-- Refresh Interval -->

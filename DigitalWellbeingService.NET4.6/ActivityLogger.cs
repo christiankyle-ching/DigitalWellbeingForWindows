@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DigitalWellbeing.Core;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -15,20 +17,34 @@ namespace DigitalWellbeingService.NET4._6
     {
         private static readonly string IND_LAST = "*LAST";
 
-        private readonly SpecialFolder applicationPath = SpecialFolder.LocalApplicationData;
-        private readonly string applicationFolderName = "digital-wellbeing";
-        private readonly string dailyLogsFolderName = "dailylogs";
-
         private string folderPath;
+        private string autoRunFilePath;
 
         private uint lastProcessId = 0;
 
         public ActivityLogger()
         {
-            folderPath = GetFolderPath(applicationPath) + $@"\{applicationFolderName}\{dailyLogsFolderName}\";
+            folderPath = ApplicationPath.UsageLogsFolder;
+            autoRunFilePath = ApplicationPath.autorunFilePath;
+
             Debug.WriteLine(folderPath);
+            Debug.WriteLine(autoRunFilePath);
+
+            TryCreateAutoRunFile();
         }
 
+        // AutoRun only
+        private void TryCreateAutoRunFile()
+        {
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(ApplicationPath.AUTORUN_REGPATH);
+
+            bool isAutoRun = key.GetValue(ApplicationPath.AUTORUN_REGKEY) != null ? true : false;
+
+            // Create an empty file that UI will check, do startup things (like hiding window) and delete.
+            if (isAutoRun) File.Create(autoRunFilePath).Dispose();
+        }
+
+        // Main Timer Logic
         public void OnTimer()
         {
             IntPtr handle = GetForegroundWindow();

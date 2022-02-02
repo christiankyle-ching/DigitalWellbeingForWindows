@@ -1,4 +1,5 @@
-﻿using DigitalWellbeingWPF.Helpers;
+﻿using DigitalWellbeing.Core;
+using DigitalWellbeingWPF.Helpers;
 using DigitalWellbeingWPF.Models;
 using DigitalWellbeingWPF.Models.UserControls;
 using DigitalWellbeingWPF.Views;

@@ -13,6 +13,7 @@ using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 using static System.Environment;
 using DigitalWellbeingWPF.Helpers;
+using DigitalWellbeing.Core;
 
 namespace DigitalWellbeingWPF.Helpers
 {

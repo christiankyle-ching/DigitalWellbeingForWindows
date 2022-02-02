@@ -1,9 +1,11 @@
-﻿using DigitalWellbeingWPF.Helpers;
+﻿using DigitalWellbeing.Core;
+using DigitalWellbeingWPF.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -28,11 +30,10 @@ namespace DigitalWellbeingWPF
             AppDomain currentDomain = AppDomain.CurrentDomain;
             currentDomain.UnhandledException += new UnhandledExceptionEventHandler(GlobalExceptionHandler);
 
-            // Init Notifier
-            Notifier.InitNotifierTimer();
+            CheckAndShowCurrentApp();
         }
 
-        private void Application_Startup(object sender, StartupEventArgs e)
+        private void CheckAndShowCurrentApp()
         {
             Process thisProcess = Process.GetCurrentProcess();
 
@@ -40,18 +41,19 @@ namespace DigitalWellbeingWPF
 
             if (similarAppProcesses.Count() > 1)
             {
+                //ShowMessage_AlreadyRunning();
+
                 try
                 {
                     IntPtr existingProcessHWnd = similarAppProcesses.Single(p => thisProcess.Id != p.Id).MainWindowHandle;
                     ShowWindow(existingProcessHWnd, 9);
-                    bool isSet = SetForegroundWindow(existingProcessHWnd);
-                    if (!isSet) { ShowMessage_AlreadyRunning(); }
-                    App.Current.Shutdown();
+                    bool success = SetForegroundWindow(existingProcessHWnd);
+                    ShowMessage_AlreadyRunning(success);
                 }
                 catch
                 {
                     AppLogger.WriteLine("Didn't catch the existing process.");
-                    ShowMessage_AlreadyRunning();
+                    ShowMessage_AlreadyRunning(false);
                 }
             }
         }
@@ -59,8 +61,10 @@ namespace DigitalWellbeingWPF
         static void GlobalExceptionHandler(object sender, UnhandledExceptionEventArgs args)
         {
             Exception e = (Exception)args.ExceptionObject;
-            Console.WriteLine("MyHandler caught : " + e.Message);
-            Console.WriteLine("Runtime terminating: {0}", args.IsTerminating);
+
+            AppLogger.WriteLine(
+                $"{e.Message}\n{e.StackTrace}\n" +
+                $"{e.InnerException?.Message}\n{e.InnerException?.StackTrace}");
 
             ShowMessage_ReportBug(e);
         }
@@ -105,13 +109,28 @@ namespace DigitalWellbeingWPF
             }
         }
 
-        private void ShowMessage_AlreadyRunning()
+        private void ShowMessage_AlreadyRunning(bool success)
         {
-            MessageBox.Show(
-                "Application is already running...",
-                APPNAME,
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
+            if (success)
+            {
+                // If window is set, close immediately
+                Environment.Exit(0);
+            }
+            else
+            {
+                MessageBoxResult res = MessageBox.Show(
+                    "Application is already running. Check your notification tray.",
+                    APPNAME,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information,
+                    MessageBoxResult.OK,
+                    MessageBoxOptions.DefaultDesktopOnly);
+
+                if (res != MessageBoxResult.None)
+                {
+                    Environment.Exit(0);
+                }
+            }
         }
 
         [DllImport("user32.dll")]

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Environment;
 
-namespace DigitalWellbeingWPF.Helpers
+namespace DigitalWellbeing.Core
 {
     public static class ApplicationPath
     {
@@ -15,32 +15,48 @@ namespace DigitalWellbeingWPF.Helpers
         static readonly string dailyLogsFolderName = "dailylogs";
         static readonly string internalLogsFolder = "internal-logs";
         static readonly string settingsFolder = "settings";
+        static readonly string autorunFileName = ".autorun";
 
-        private static string GetApplicationLocation
+        public static readonly string AUTORUN_REGPATH = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run";
+#if DEBUG
+        public static readonly string AUTORUN_REGKEY = "DigitalWellbeingWPFDEBUG";
+#else
+        public static readonly string AUTORUN_REGKEY = "DigitalWellbeingWPF";
+#endif
+
+
+
+        private static string APPLOCATION
         {
             get => GetFolderPath(applicationPath) + $@"\{applicationFolderName}";
         }
 
+        public static string autorunFilePath
+        {
+            get => APPLOCATION + $@"\{autorunFileName}";
+        }
+
         public static string UsageLogsFolder
         {
-            get => GetApplicationLocation + $@"\{dailyLogsFolderName}\";
+            get => APPLOCATION + $@"\{dailyLogsFolderName}\";
         }
 
         public static string SettingsFolder
         {
-            get => GetApplicationLocation + $@"\{settingsFolder}\";
+            get => APPLOCATION + $@"\{settingsFolder}\";
         }
 
         public static string InternalLogsFolder
         {
-            get => GetApplicationLocation + $@"\{internalLogsFolder}\";
+            get => APPLOCATION + $@"\{internalLogsFolder}\";
         }
 
         public static string GetImageCacheLocation(string appName = "")
         {
-            string location = GetApplicationLocation + $@"\{imageCacheFolderName}\";
+            string location = APPLOCATION + $@"\{imageCacheFolderName}\";
             if (appName != "") { location += $"{appName}.ico"; }
             return location;
         }
     }
+
 }

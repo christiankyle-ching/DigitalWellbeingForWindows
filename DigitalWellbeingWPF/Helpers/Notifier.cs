@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 namespace DigitalWellbeingWPF.Helpers
@@ -14,13 +15,12 @@ namespace DigitalWellbeingWPF.Helpers
     {
         public static System.Windows.Forms.NotifyIcon trayIcon;
         private static int NOTIFICATION_TIMOUT_SECONDS = 10;
-        private static int CHECK_INTERVAL = 65;
+        private static int CHECK_INTERVAL = 130;
 
         static Notifier()
         {
             trayIcon = new System.Windows.Forms.NotifyIcon();
-            trayIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(
-                Assembly.GetEntryAssembly().ManifestModule.Name);
+            trayIcon.Icon = Properties.Resources.app_logo;
 
             // Always visible for notifications
             trayIcon.Visible = true;
@@ -63,39 +63,48 @@ namespace DigitalWellbeingWPF.Helpers
 
         private static async void CheckForExceedingAppTimeLimits()
         {
-            List<AppUsage> todayUsage = await AppUsageViewModel.GetData(DateTime.Now);
-            var _limits = SettingsManager.appTimeLimits;
-
-            foreach (AppUsage app in todayUsage)
+            try
             {
-                // If excluded, don't bother
-                if (AppUsageViewModel.IsProcessExcluded(app.ProcessName)) continue;
+                List<AppUsage> todayUsage = await AppUsageViewModel.GetData(DateTime.Now);
+                var _limits = SettingsManager.appTimeLimits;
 
-                if (_limits.ContainsKey(app.ProcessName))
+                foreach (AppUsage app in todayUsage)
                 {
-                    if (app.Duration.TotalMinutes > _limits[app.ProcessName])
+                    // If excluded, don't bother
+                    if (AppUsageViewModel.IsProcessExcluded(app.ProcessName)) continue;
+
+                    if (_limits.ContainsKey(app.ProcessName))
                     {
-                        if (notifiedApps.Contains(app.ProcessName))
+                        if (app.Duration.TotalMinutes > _limits[app.ProcessName])
                         {
-                            // Skip notifying for apps already notified
-                            continue;
-                        }
-                        else
-                        {
-                            TimeSpan timeLimit = TimeSpan.FromMinutes(_limits[app.ProcessName]);
-                            Notifier.ShowNotification(
-                                $"App Usage Warning for {app.ProgramName}",
-                                $"Exceeded the time limit ({timeLimit.Hours}h {timeLimit.Minutes}m). Current usage: {app.Duration.Hours}h {app.Duration.Minutes}m.");
+                            if (notifiedApps.Contains(app.ProcessName))
+                            {
+                                // Skip notifying for apps already notified
+                                continue;
+                            }
+                            else
+                            {
+                                TimeSpan timeLimit = TimeSpan.FromMinutes(_limits[app.ProcessName]);
+                                Notifier.ShowNotification(
+                                    $"App Usage Warning for {app.ProgramName}",
+                                    $"Exceeded the time limit ({timeLimit.Hours}h {timeLimit.Minutes}m). Current usage: {app.Duration.Hours}h {app.Duration.Minutes}m.");
 
-                            notifiedApps.Add(app.ProcessName);
+                                notifiedApps.Add(app.ProcessName);
 
-                            // Only one notification per check based on:
-                            // https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.notifyicon.showballoontip?view=netframework-4.6
-                            // See Remarks section
-                            return;
+                                // Only one notification per check based on:
+                                // https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.notifyicon.showballoontip?view=netframework-4.6
+                                // See Remarks section
+                                return;
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                AppLogger.WriteLine(
+                    $"{e.Message}\n{e.StackTrace}\n" +
+                    $"{e.InnerException?.Message}\n{e.InnerException?.StackTrace}");
             }
         }
 

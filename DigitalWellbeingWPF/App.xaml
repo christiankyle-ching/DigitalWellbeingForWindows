@@ -3,10 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:DigitalWellbeingWPF"
              xmlns:ui="http://schemas.modernwpf.com/2019"
-             StartupUri="MainWindow.xaml"
-             Startup="Application_Startup">
+             StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
+            <BitmapImage x:Key="AppIcon" UriSource="./Images/app-logo.ico" />
+            
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemeResources />
                 <ui:XamlControlsResources />

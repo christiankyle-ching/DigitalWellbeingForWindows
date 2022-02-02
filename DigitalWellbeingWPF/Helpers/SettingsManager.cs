@@ -1,9 +1,13 @@
-﻿using System;
+﻿using DigitalWellbeing.Core;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace DigitalWellbeingWPF.Helpers
 {
@@ -109,5 +113,34 @@ namespace DigitalWellbeingWPF.Helpers
 
             SaveAppTimeLimits();
         }
+
+
+        #region Run on Startup
+
+        public static void SetRunOnStartup(bool enabled)
+        {
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(ApplicationPath.AUTORUN_REGPATH, true);
+            Assembly asm = Assembly.GetExecutingAssembly();
+
+            if (enabled)
+            {
+                // Set registry key
+                key.SetValue(ApplicationPath.AUTORUN_REGKEY, asm.Location);
+            }
+            else
+            {
+                key.DeleteValue(ApplicationPath.AUTORUN_REGKEY);
+            }
+        }
+
+        public static bool IsRunningOnStartup()
+        {
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(ApplicationPath.AUTORUN_REGPATH);
+
+            return key.GetValue(ApplicationPath.AUTORUN_REGKEY) != null ? true : false;
+        }
+
+        #endregion
+
     }
 }

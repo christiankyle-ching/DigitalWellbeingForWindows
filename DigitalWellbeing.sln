@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalWellbeingWPF", "Digi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalWellbeingService.NET4.6", "DigitalWellbeingService.NET4.6\DigitalWellbeingService.NET4.6.csproj", "{B4E54005-C6DC-4003-BFFE-01F0514EB985}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalWellbeing.Core", "DigitalWellbeing.Core\DigitalWellbeing.Core.csproj", "{BB50062A-EC3C-4C04-9608-E4ED18543048}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		All|Any CPU = All|Any CPU
@@ -86,6 +88,30 @@ Global
 		{B4E54005-C6DC-4003-BFFE-01F0514EB985}.Release|x64.Build.0 = Release|Any CPU
 		{B4E54005-C6DC-4003-BFFE-01F0514EB985}.Release|x86.ActiveCfg = Release|Any CPU
 		{B4E54005-C6DC-4003-BFFE-01F0514EB985}.Release|x86.Build.0 = Release|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.All|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.All|Any CPU.Build.0 = Debug|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.All|x64.ActiveCfg = Debug|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.All|x64.Build.0 = Debug|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.All|x86.ActiveCfg = Debug|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.All|x86.Build.0 = Debug|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.Debug|x64.Build.0 = Debug|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.Debug|x86.Build.0 = Debug|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.Release - AdvancedInstaller|Any CPU.ActiveCfg = Release|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.Release - AdvancedInstaller|Any CPU.Build.0 = Release|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.Release - AdvancedInstaller|x64.ActiveCfg = Release|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.Release - AdvancedInstaller|x64.Build.0 = Release|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.Release - AdvancedInstaller|x86.ActiveCfg = Release|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.Release - AdvancedInstaller|x86.Build.0 = Release|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.Release|x64.ActiveCfg = Release|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.Release|x64.Build.0 = Release|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.Release|x86.ActiveCfg = Release|Any CPU
+		{BB50062A-EC3C-4C04-9608-E4ED18543048}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

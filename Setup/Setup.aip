@@ -3,6 +3,8 @@
   <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
     <ROW Property="AI_BITMAP_DISPLAY_MODE" Value="0"/>
     <ROW Property="AI_CURRENT_YEAR" Value="2022" ValueLocId="-"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeing.Core.dll" Value="..\DigitalWellbeing.Core\bin\Release"/>
+    <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeing.Core.dll_1" Value="..\DigitalWellbeing.Core\bin\Release"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingService.NET4.6.exe" Value="..\DigitalWellbeingService.NET4.6\bin\Release"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingService.NET4.6.exe.config" Value="..\DigitalWellbeingService.NET4.6\bin\Release"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingWPF.exe" Value="..\DigitalWellbeingWPF\bin\Release"/>
@@ -12,6 +14,8 @@
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_ModernWpf.Controls.dll_1" Value="..\packages\ModernWpfUI.0.9.4\lib\net45"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_ModernWpf.dll_1" Value="..\packages\ModernWpfUI.0.9.4\lib\net45"/>
     <ROW Property="AI_PROPPATH_DIR_PERBUILD_System.ValueTuple.dll" Value="..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0"/>
+    <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeing.Core.dll" Value="DigitalWellbeing.Core.dll"/>
+    <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeing.Core.dll_1" Value="DigitalWellbeing.Core.dll"/>
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeingService.NET4.6.exe" Value="DigitalWellbeingService.NET4.6.exe"/>
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeingService.NET4.6.exe.config" Value="DigitalWellbeingService.NET4.6.exe.config"/>
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeingWPF.exe" Value="DigitalWellbeingWPF.exe"/>
@@ -58,8 +62,9 @@
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
     <ROW Component="APPDIR" ComponentId="{969BD37D-2D77-4BB0-A2EF-FA8AD98ADBB1}" Directory_="APPDIR" Attributes="0"/>
     <ROW Component="DigitalWellbeingService.NET4.6_PrimaryOutput" ComponentId="{FA385C41-DE30-4880-A584-61A0D16BAF7F}" Directory_="DigitalWellbeingService.NET4.6_Dir" Attributes="0" KeyPath="DigitalWellbeingService.NET4.6.exe"/>
+    <ROW Component="DigitalWellbeingService.NET4.6_References" ComponentId="{6B08D105-EC03-4961-BD53-D614C78C9E91}" Directory_="DigitalWellbeingService.NET4.6_Dir" Attributes="0" KeyPath="DigitalWellbeing.Core.dll"/>
     <ROW Component="DigitalWellbeingWPF_PrimaryOutput" ComponentId="{AF6ADD13-3A60-49AC-86E0-67656F4DBB8F}" Directory_="DigitalWellbeingWPF_Dir" Attributes="0" KeyPath="DigitalWellbeingWPF.exe"/>
-    <ROW Component="DigitalWellbeingWPF_References" ComponentId="{474BF6AB-CDBB-490D-8DE8-BD0065D66958}" Directory_="DigitalWellbeingWPF_Dir" Attributes="0" KeyPath="System.ValueTuple.dll"/>
+    <ROW Component="DigitalWellbeingWPF_References" ComponentId="{474BF6AB-CDBB-490D-8DE8-BD0065D66958}" Directory_="DigitalWellbeingWPF_Dir" Attributes="0" KeyPath="DigitalWellbeing.Core.dll_1"/>
     <ROW Component="ProductInformation" ComponentId="{5E6D901E-5FF4-4133-AE16-672B0136950B}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
     <ROW Component="SHORTCUTDIR" ComponentId="{6AE52111-73EE-4078-B8D1-DBAF1C3B8852}" Directory_="SHORTCUTDIR" Attributes="0"/>
   </COMPONENT>
@@ -77,8 +82,12 @@
     <ROW File="DigitalWellbeingService.NET4.6.exe.config" Component_="DigitalWellbeingService.NET4.6_PrimaryOutput" FileName="DIGITA~2.CON|[|AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeingService.NET4.6.exe.config]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_DigitalWellbeingService.NET4.6.exe.config&gt;" SelfReg="false"/>
     <ROW File="DigitalWellbeingWPF.exe" Component_="DigitalWellbeingWPF_PrimaryOutput" FileName="DIGITA~2.EXE|[|AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeingWPF.exe]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_DigitalWellbeingWPF.exe&gt;" SelfReg="false" DigSign="true"/>
     <ROW File="DigitalWellbeingWPF.exe.config" Component_="DigitalWellbeingWPF_PrimaryOutput" FileName="DIGITA~2.CON|[|AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeingWPF.exe.config]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_DigitalWellbeingWPF.exe.config&gt;" SelfReg="false"/>
+    <ROW File="DigitalWellbeing.Core.dll" Component_="DigitalWellbeingService.NET4.6_References" FileName="DIGITA~2.DLL|[|AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeing.Core.dll]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_DigitalWellbeing.Core.dll&gt;" SelfReg="false"/>
+    <ROW File="DigitalWellbeing.Core.dll_1" Component_="DigitalWellbeingWPF_References" FileName="DIGITA~2.DLL|[|AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeing.Core.dll_1]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_DigitalWellbeing.Core.dll_1&gt;" SelfReg="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.AppPathsComponent">
+    <ROW Name="AI_APPPATH_PERBUILD_DigitalWellbeing.Core.dll" Path="[|AI_PROPPATH_DIR_PERBUILD_DigitalWellbeing.Core.dll]\[|AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeing.Core.dll]" Type="2" Content="0"/>
+    <ROW Name="AI_APPPATH_PERBUILD_DigitalWellbeing.Core.dll_1" Path="[|AI_PROPPATH_DIR_PERBUILD_DigitalWellbeing.Core.dll_1]\[|AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeing.Core.dll_1]" Type="2" Content="0"/>
     <ROW Name="AI_APPPATH_PERBUILD_DigitalWellbeingService.NET4.6.exe" Path="[|AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingService.NET4.6.exe]\[|AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeingService.NET4.6.exe]" Type="2" Content="0"/>
     <ROW Name="AI_APPPATH_PERBUILD_DigitalWellbeingService.NET4.6.exe.config" Path="[|AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingService.NET4.6.exe.config]\[|AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeingService.NET4.6.exe.config]" Type="2" Content="0"/>
     <ROW Name="AI_APPPATH_PERBUILD_DigitalWellbeingWPF.exe" Path="[|AI_PROPPATH_DIR_PERBUILD_DigitalWellbeingWPF.exe]\[|AI_PROPPATH_FILENAME_PERBUILD_DigitalWellbeingWPF.exe]" Type="2" Content="0"/>
@@ -165,6 +174,7 @@
     <ROW Feature_="MainFeature" Component_="DigitalWellbeingService.NET4.6_PrimaryOutput"/>
     <ROW Feature_="MainFeature" Component_="DigitalWellbeingWPF_PrimaryOutput"/>
     <ROW Feature_="MainFeature" Component_="SHORTCUTDIR"/>
+    <ROW Feature_="MainFeature" Component_="DigitalWellbeingService.NET4.6_References"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
     <ROW Name="applogo.exe" SourcePath="..\DigitalWellbeingWPF\Images\app-logo.ico" Index="0"/>
@@ -217,5 +227,7 @@
     <ROW ProjectId="{42c7648f-81bf-46e3-818c-01b7a2f46b41}" ProjectName="DigitalWellbeingWPF" OutputGroup="PrimaryOutput" OutputFile="DigitalWellbeingWPF.exe.config"/>
     <ROW ProjectId="{b4e54005-c6dc-4003-bffe-01f0514eb985}" ProjectName="DigitalWellbeingService.NET4.6" OutputGroup="PrimaryOutput" OutputFile="DigitalWellbeingService.NET4.6.exe"/>
     <ROW ProjectId="{b4e54005-c6dc-4003-bffe-01f0514eb985}" ProjectName="DigitalWellbeingService.NET4.6" OutputGroup="PrimaryOutput" OutputFile="DigitalWellbeingService.NET4.6.exe.config"/>
+    <ROW ProjectId="{b4e54005-c6dc-4003-bffe-01f0514eb985}" ProjectName="DigitalWellbeingService.NET4.6" OutputGroup="References" OutputFile="DigitalWellbeing.Core.dll"/>
+    <ROW ProjectId="{42c7648f-81bf-46e3-818c-01b7a2f46b41}" ProjectName="DigitalWellbeingWPF" OutputGroup="References" OutputFile="DigitalWellbeing.Core.dll_1"/>
   </COMPONENT>
 </DOCUMENT>
