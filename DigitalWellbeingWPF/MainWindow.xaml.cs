@@ -114,7 +114,7 @@ namespace DigitalWellbeingWPF
                 "Are you sure you want to exit the app? Notifications won't work.",
                 App.APPNAME,
                 MessageBoxButton.OKCancel,
-                MessageBoxImage.Warning,
+                MessageBoxImage.None,
                 MessageBoxResult.Cancel);
 
             if (res == MessageBoxResult.OK)

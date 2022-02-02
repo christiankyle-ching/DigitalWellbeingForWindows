@@ -6,8 +6,6 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            <BitmapImage x:Key="AppIcon" UriSource="./Images/app-logo.ico" />
-            
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemeResources />
                 <ui:XamlControlsResources />
