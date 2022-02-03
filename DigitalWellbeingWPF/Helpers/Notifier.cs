@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
@@ -14,6 +15,7 @@ namespace DigitalWellbeingWPF.Helpers
     public static class Notifier
     {
         public static System.Windows.Forms.NotifyIcon trayIcon;
+        private static System.Windows.Forms.ContextMenuStrip ctx;
         private static int NOTIFICATION_TIMOUT_SECONDS = 10;
         private static int CHECK_INTERVAL = 130;
 
@@ -22,8 +24,31 @@ namespace DigitalWellbeingWPF.Helpers
             trayIcon = new System.Windows.Forms.NotifyIcon();
             trayIcon.Icon = Properties.Resources.app_logo;
 
+            ctx = new System.Windows.Forms.ContextMenuStrip();
+            trayIcon.ContextMenuStrip = ctx;
+
+            MainWindow mWindow = Application.Current.MainWindow as MainWindow;
+
+            // Context Menu : Open App
+            ctx.Items.Add("Open", null, (s, e) =>
+            {
+                mWindow.RestoreWindow();
+            });
+
+            // Context Menu : Settings
+            ctx.Items.Add("Settings", null, (s, e) =>
+            {
+                mWindow.GoToSettings();
+            });
+
+            // Context Menu : Exit App
+            ctx.Items.Add("Exit", null, (s, e) =>
+            {
+                mWindow.Close();
+            });
+
             // Always visible for notifications
-            trayIcon.Visible = true;
+            //trayIcon.Visible = true;
         }
 
         public static void ShowNotification(string title, string message, System.Windows.Forms.ToolTipIcon icon = System.Windows.Forms.ToolTipIcon.None)

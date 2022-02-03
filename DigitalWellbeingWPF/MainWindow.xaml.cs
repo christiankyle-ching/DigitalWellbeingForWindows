@@ -74,6 +74,12 @@ namespace DigitalWellbeingWPF
             }
         }
 
+        public void GoToSettings()
+        {
+            RestoreWindow();
+            NavView.SelectedItem = NavView.SettingsItem;
+        }
+
         #region Notifications
 
         private void Window_StateChanged(object sender, EventArgs e)
