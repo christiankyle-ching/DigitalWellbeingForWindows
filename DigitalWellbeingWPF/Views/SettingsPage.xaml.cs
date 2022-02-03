@@ -29,6 +29,7 @@ namespace DigitalWellbeingWPF.Views
     public partial class SettingsPage : Page
     {
         private readonly ApplicationTheme? systemTheme;
+        private int UPDATE_CHECK_DELAY = 20;
 
         public SettingsPage()
         {
@@ -215,13 +216,22 @@ namespace DigitalWellbeingWPF.Views
 
         private async void CheckForUpdates()
         {
+            await Task.Delay(UPDATE_CHECK_DELAY * 1000);
+
             strLatestVersion = await Updater.GetLatestVersion();
             latestVersion = Updater.ParseVersion(strLatestVersion);
 
             if (Updater.IsUpdateAvailable(currentVersion, latestVersion))
             {
                 TxtLatestVersion.Text = $" (Update Available {strLatestVersion})";
-                Notifier.ShowNotification(App.APPNAME, $"Update Available: {strLatestVersion}");
+                Notifier.ShowNotification(
+                    App.APPNAME,
+                    $"Update Available: {strLatestVersion}",
+                    (s, e) =>
+                    {
+                        (Application.Current.MainWindow as MainWindow).GoToSettings();
+                    }
+                    );
             }
         }
 

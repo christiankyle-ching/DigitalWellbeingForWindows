@@ -50,7 +50,7 @@ namespace DigitalWellbeingWPF.Helpers
 
             if (strVersion == string.Empty) return version;
 
-            strVersion = Regex.Replace(strVersion, "[^0-9.]", ""); // Remove all non-numbers and period
+            strVersion = Regex.Replace(strVersion, "[^0-9]", ""); // Remove all non-numbers
 
             if (int.TryParse(strVersion, out version))
             {

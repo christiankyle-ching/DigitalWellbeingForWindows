@@ -19,6 +19,8 @@ namespace DigitalWellbeingWPF.Helpers
         private static int NOTIFICATION_TIMOUT_SECONDS = 10;
         private static int CHECK_INTERVAL = 130;
 
+        private static EventHandler defaultNotificationHandler;
+
         static Notifier()
         {
             trayIcon = new System.Windows.Forms.NotifyIcon();
@@ -47,28 +49,30 @@ namespace DigitalWellbeingWPF.Helpers
                 mWindow.Close();
             });
 
-            // Always visible for notifications
-            //trayIcon.Visible = true;
+            // Always visible for notifications to work
+            trayIcon.Visible = true;
         }
 
-        public static void ShowNotification(string title, string message, System.Windows.Forms.ToolTipIcon icon = System.Windows.Forms.ToolTipIcon.None)
+        public static void ShowNotification(string title, string message, EventHandler clickHandler = null, System.Windows.Forms.ToolTipIcon icon = System.Windows.Forms.ToolTipIcon.None)
         {
             trayIcon.BalloonTipTitle = title;
             trayIcon.BalloonTipText = message;
             trayIcon.BalloonTipIcon = icon;
+
+            trayIcon.BalloonTipClicked += clickHandler ?? defaultNotificationHandler;
+
             trayIcon.ShowBalloonTip(NOTIFICATION_TIMOUT_SECONDS * 1000);
         }
 
-        public static void ShowTrayIcon(EventHandler handler)
+        public static void SetDoubleClickHandler(EventHandler doubleClickHandler)
         {
-            trayIcon.DoubleClick += handler;
-            trayIcon.BalloonTipClicked += handler;
-            trayIcon.Visible = true;
+            trayIcon.DoubleClick += doubleClickHandler;
         }
 
-        public static void HideTrayIcon()
+        public static void SetDefaultNotificationHandler(EventHandler baloonTipHandlerClick)
         {
-            trayIcon.Visible = false;
+            defaultNotificationHandler = baloonTipHandlerClick;
+            trayIcon.BalloonTipClicked += baloonTipHandlerClick;
         }
 
         #region App Time Limit Checker

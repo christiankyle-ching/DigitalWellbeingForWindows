@@ -42,6 +42,8 @@ namespace DigitalWellbeingWPF
 
             // Init Notifier
             Notifier.InitNotifierTimer();
+            // Set Default Click Handler for any Notification
+            Notifier.SetDefaultNotificationHandler((s, e) => RestoreWindow());
 
             // Check Autorun File
             InitAutoRun();
@@ -101,14 +103,13 @@ namespace DigitalWellbeingWPF
         public void MinimizeToTray()
         {
             this.Hide();
-            Notifier.ShowTrayIcon((s, e) => RestoreWindow());
+            Notifier.SetDoubleClickHandler((s, e) => RestoreWindow());
         }
 
         public void RestoreWindow()
         {
             this.Show();
             this.WindowState = WindowState.Normal;
-            Notifier.HideTrayIcon();
 
             // Trigger refresh
             usagePage.OnNavigate();
