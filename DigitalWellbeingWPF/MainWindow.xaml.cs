@@ -130,11 +130,15 @@ namespace DigitalWellbeingWPF
         #endregion
 
         private DispatcherTimer autorunTimer;
-        private readonly int AUTORUN_DELAY = 2;
+        private readonly int AUTORUN_CHECK_INTERVAL = 5;
+        private readonly int AUTORUN_CHECK_MAX_RETRY = 3;
+        private int autorunCheckCount = 0;
+
+        private string autorunFilePath = ApplicationPath.autorunFilePath;
 
         private void InitAutoRun()
         {
-            autorunTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(AUTORUN_DELAY) };
+            autorunTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(AUTORUN_CHECK_INTERVAL) };
             autorunTimer.Tick += (s, e) => CheckAutoRun();
 
             autorunTimer.Start();
@@ -142,11 +146,13 @@ namespace DigitalWellbeingWPF
 
         private void CheckAutoRun()
         {
-            Console.WriteLine("Checking AutoRun");
+            if (autorunCheckCount >= AUTORUN_CHECK_MAX_RETRY)
+            {
+                autorunTimer.Stop();
+                return;
+            }
 
-            string path = ApplicationPath.autorunFilePath;
-
-            if (File.Exists(path))
+            if (File.Exists(autorunFilePath))
             {
                 // TODO
                 // Do things here that would only run on login / startup,
@@ -155,11 +161,12 @@ namespace DigitalWellbeingWPF
                 MainWindow mWindow = Application.Current.MainWindow as MainWindow;
                 mWindow.MinimizeToTray();
 
-                File.Delete(path);
+                File.Delete(autorunFilePath);
             }
 
-            // Run only once
-            autorunTimer.Stop();
+            // Increase Check Count
+            autorunCheckCount++;
+            Console.WriteLine($"Checked Autorun: {autorunCheckCount}");
         }
     }
 }
