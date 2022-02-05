@@ -47,14 +47,14 @@ namespace DigitalWellbeingService.NET4._6
         // Main Timer Logic
         public void OnTimer()
         {
-            IntPtr handle = GetForegroundWindow();
-            uint currProcessId = GetForegroundProcessId(handle);
+            IntPtr handle = ForegroundWindowManager.GetForegroundWindow();
+            uint currProcessId = ForegroundWindowManager.GetForegroundProcessId(handle);
             Process proc = Process.GetProcessById((int)currProcessId);
 
             if (IsProcessChanged(currProcessId))
             {
-                string newProcessName = GetActiveProcessName(proc);
-                string newProgramName = GetActiveProgramName(proc);
+                string newProcessName = ForegroundWindowManager.GetActiveProcessName(proc);
+                string newProgramName = ForegroundWindowManager.GetActiveProgramName(proc);
 
                 if (newProgramName == null && newProcessName == null)
                 {
@@ -148,52 +148,9 @@ namespace DigitalWellbeingService.NET4._6
             }
         }
 
-        private uint GetForegroundProcessId(IntPtr handle)
-        {
-            GetWindowThreadProcessId(handle, out uint processId);
-
-            return processId;
-        }
-
-        private string GetActiveProcessName(Process p)
-        {
-
-
-            try
-            {
-                return p.ProcessName;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        private string GetActiveProgramName(Process p)
-        {
-            try
-            {
-                return p.MainModule.FileVersionInfo.ProductName;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
         private bool IsProcessChanged(uint processId)
         {
             return processId != lastProcessId;
         }
-
-        [DllImport("user32.dll")]
-        static extern IntPtr GetForegroundWindow();
-
-        [DllImport("user32.dll")]
-        static extern IntPtr GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
-
-        [DllImport("user32.dll")]
-        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
-
     }
 }
