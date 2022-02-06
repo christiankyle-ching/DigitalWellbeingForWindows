@@ -10,6 +10,7 @@
         Title="Add Time Limit" Height="175" Width="500"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
+        Topmost="True"
         Background="{DynamicResource SystemControlPageBackgroundAltHighBrush}"
         Foreground="{DynamicResource SystemControlPageTextBaseHighBrush}">
 

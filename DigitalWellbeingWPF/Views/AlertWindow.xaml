@@ -10,6 +10,7 @@
         Title="Time Limit Reached" Height="175" Width="350"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
+        Topmost="True"
         Background="{DynamicResource SystemControlPageBackgroundAltHighBrush}"
         Foreground="{DynamicResource SystemControlPageTextBaseHighBrush}"
         Closing="Window_Closing">
