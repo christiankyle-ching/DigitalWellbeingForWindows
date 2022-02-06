@@ -1,0 +1,42 @@
+﻿<Window x:Class="DigitalWellbeingWPF.Views.AlertWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DigitalWellbeingWPF.Views"
+        mc:Ignorable="d"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        ui:WindowHelper.UseModernWindowStyle="True"
+        Title="Time Limit Reached" Height="175" Width="350"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource SystemControlPageBackgroundAltHighBrush}"
+        Foreground="{DynamicResource SystemControlPageTextBaseHighBrush}"
+        Closing="Window_Closing">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Maintain <Run> tag formatting because any newline will show as space -->
+        <TextBlock Grid.Row="0" TextWrapping="Wrap" FontSize="14">
+            <Run 
+                Text="You have exceeded the time limit for " /><Run 
+                x:Name="ProgramName" FontWeight="Bold"/><Run
+                Text="("/><Run
+                x:Name="ProcessName" /><Run
+                Text=")"/><Run
+                Text=". Your current usage time is "/><Run
+                x:Name="UsageTime" FontWeight="Bold"/><Run
+                Text=" and your time limit is up to "/><Run
+                x:Name="TimeLimit" FontWeight="Bold"/><Run
+                Text="."/>
+        </TextBlock>
+
+        <ui:SimpleStackPanel Grid.Row="1" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="20">
+            <Button x:Name="BtnCloseApp" Content="Close the App" Click="BtnCloseApp_Click" />
+            <Button x:Name="BtnOK" Content="OK, Thanks!" Click="BtnOK_Click" Style="{StaticResource AccentButtonStyle}"/>
+        </ui:SimpleStackPanel>
+    </Grid>
+</Window>
