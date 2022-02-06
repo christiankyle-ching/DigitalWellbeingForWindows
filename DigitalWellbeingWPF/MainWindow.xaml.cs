@@ -1,5 +1,6 @@
 ﻿using DigitalWellbeing.Core;
 using DigitalWellbeingWPF.Helpers;
+using DigitalWellbeingWPF.Models;
 using DigitalWellbeingWPF.ViewModels;
 using DigitalWellbeingWPF.Views;
 using ModernWpf.Controls;
@@ -100,6 +101,28 @@ namespace DigitalWellbeingWPF
             }
         }
 
+        public void ShowAlertUsage(AppUsage app, TimeSpan timeLimit, bool warnOnly = false)
+        {
+            if (warnOnly)
+            {
+                Notifier.ShowNotification(
+                    $"Warning for {app.ProgramName}",
+                    $"You have less than 15m using this app. " +
+                    $"You've been using this app for {StringParser.TimeSpanToShortString(app.Duration)}."
+                    );
+            }
+            else
+            {
+                RestoreWindow();
+
+                AlertWindow alertWnd = new AlertWindow(app, timeLimit);
+                alertWnd.WindowState = WindowState.Normal;
+                bool? closed = alertWnd.ShowDialog();
+
+                if (closed ?? true) MinimizeToTray();
+            }
+        }
+
         public void MinimizeToTray()
         {
             this.Hide();
@@ -110,6 +133,10 @@ namespace DigitalWellbeingWPF
         {
             this.Show();
             this.WindowState = WindowState.Normal;
+
+            // Try Set Foreground, if other apps are on top
+            IntPtr currAppHnd = Process.GetCurrentProcess().MainWindowHandle;
+            ForegroundWindowManager.SetForegroundWindow(currAppHnd);
 
             // Trigger refresh
             usagePage.OnNavigate();

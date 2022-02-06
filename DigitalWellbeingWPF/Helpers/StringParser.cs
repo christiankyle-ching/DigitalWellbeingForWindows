@@ -23,5 +23,10 @@ namespace DigitalWellbeingWPF.Helpers
         {
             return processName.Any(char.IsUpper) ? processName : txtInfo.ToTitleCase(processName);
         }
+
+        public static string TimeSpanToShortString(TimeSpan duration)
+        {
+            return $"{duration.Hours}h {duration.Minutes}m";
+        }
     }
 }

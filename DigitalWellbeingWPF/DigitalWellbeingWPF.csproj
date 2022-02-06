@@ -83,6 +83,9 @@
     <Compile Include="Helpers\SettingsManager.cs" />
     <Compile Include="Helpers\Updater.cs" />
     <Compile Include="ViewModels\AppUsageViewModel.cs" />
+    <Compile Include="Views\AlertWindow.xaml.cs">
+      <DependentUpon>AlertWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SetTimeLimitWindow.xaml.cs">
       <DependentUpon>SetTimeLimitWindow.xaml</DependentUpon>
     </Compile>
@@ -111,6 +114,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Resource>
+    <Page Include="Views\AlertWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SetTimeLimitWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

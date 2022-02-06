@@ -2,6 +2,7 @@
 using DigitalWellbeingWPF.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -9,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using DigitalWellbeing.Core;
+using DigitalWellbeingWPF.Views;
 
 namespace DigitalWellbeingWPF.Helpers
 {
@@ -17,7 +20,8 @@ namespace DigitalWellbeingWPF.Helpers
         public static System.Windows.Forms.NotifyIcon trayIcon;
         private static System.Windows.Forms.ContextMenuStrip ctx;
         private static int NOTIFICATION_TIMOUT_SECONDS = 10;
-        private static int CHECK_INTERVAL = 130;
+        private static int CHECK_INTERVAL = 10;
+        private static TimeSpan warningLimit = TimeSpan.FromMinutes(15);
 
         private static EventHandler defaultNotificationHandler;
 
@@ -79,6 +83,7 @@ namespace DigitalWellbeingWPF.Helpers
 
         private static DispatcherTimer notifierTimer;
         private static List<string> notifiedApps = new List<string>();
+        private static List<string> warnNotifiedApps = new List<string>();
 
         public static void InitNotifierTimer()
         {
@@ -92,54 +97,56 @@ namespace DigitalWellbeingWPF.Helpers
 
         private static async void CheckForExceedingAppTimeLimits()
         {
+            // Get Source Data
+            List<AppUsage> todayUsage = await AppUsageViewModel.GetData(DateTime.Now);
+            var _limits = SettingsManager.appTimeLimits;
+
+            // Get Active Process / Program
+            IntPtr _hnd = ForegroundWindowManager.GetForegroundWindow();
+            uint _procId = ForegroundWindowManager.GetForegroundProcessId(_hnd);
+            Process _proc = Process.GetProcessById((int)_procId);
+            string activeProcessName = ForegroundWindowManager.GetActiveProcessName(_proc);
+
             try
             {
-                List<AppUsage> todayUsage = await AppUsageViewModel.GetData(DateTime.Now);
-                var _limits = SettingsManager.appTimeLimits;
+                AppUsage currApp = todayUsage.Single(app => app.ProcessName == activeProcessName);
 
-                foreach (AppUsage app in todayUsage)
+                // Skip if already notified
+                if (notifiedApps.Contains(currApp.ProcessName)) return;
+
+                // If app has time limit
+                if (_limits.ContainsKey(currApp.ProcessName))
                 {
-                    // If excluded, don't bother
-                    if (AppUsageViewModel.IsProcessExcluded(app.ProcessName)) continue;
+                    TimeSpan timeLimit = TimeSpan.FromMinutes(_limits[currApp.ProcessName]);
 
-                    if (_limits.ContainsKey(app.ProcessName))
+                    bool reachedWarnLimit = currApp.Duration > (timeLimit - warningLimit);
+                    bool reachedTimeLimit = currApp.Duration > timeLimit;
+
+                    if (reachedTimeLimit && !notifiedApps.Contains(currApp.ProcessName))
                     {
-                        if (app.Duration.TotalMinutes > _limits[app.ProcessName])
-                        {
-                            if (notifiedApps.Contains(app.ProcessName))
-                            {
-                                // Skip notifying for apps already notified
-                                continue;
-                            }
-                            else
-                            {
-                                TimeSpan timeLimit = TimeSpan.FromMinutes(_limits[app.ProcessName]);
-                                Notifier.ShowNotification(
-                                    $"App Usage Warning for {app.ProgramName}",
-                                    $"Exceeded the time limit ({timeLimit.Hours}h {timeLimit.Minutes}m). Current usage: {app.Duration.Hours}h {app.Duration.Minutes}m.");
+                        warnNotifiedApps.Add(currApp.ProcessName);
+                        notifiedApps.Add(currApp.ProcessName);
 
-                                notifiedApps.Add(app.ProcessName);
+                        (Application.Current.MainWindow as MainWindow).ShowAlertUsage(currApp, timeLimit);
+                    }
+                    else if (reachedWarnLimit && !warnNotifiedApps.Contains(currApp.ProcessName))
+                    {
+                        warnNotifiedApps.Add(currApp.ProcessName);
 
-                                // Only one notification per check based on:
-                                // https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.notifyicon.showballoontip?view=netframework-4.6
-                                // See Remarks section
-                                return;
-                            }
-                        }
+                        (Application.Current.MainWindow as MainWindow).ShowAlertUsage(currApp, timeLimit, true);
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                AppLogger.WriteLine(
-                    $"{e.Message}\n{e.StackTrace}\n" +
-                    $"{e.InnerException?.Message}\n{e.InnerException?.StackTrace}");
+                Console.WriteLine(ex);
             }
         }
 
         public static void ResetNotificationForApp(string processName)
         {
-            notifiedApps.Remove(processName);
+            notifiedApps.RemoveAll(p => p == processName);
+            warnNotifiedApps.RemoveAll(p => p == processName);
         }
         #endregion
     }

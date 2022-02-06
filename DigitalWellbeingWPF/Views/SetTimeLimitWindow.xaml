@@ -4,9 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DigitalWellbeingWPF.Views"
-        xmlns:ui="http://schemas.modernwpf.com/2019"
-        ui:WindowHelper.UseModernWindowStyle="True" 
         mc:Ignorable="d"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        ui:WindowHelper.UseModernWindowStyle="True"
         Title="Add Time Limit" Height="175" Width="500"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
@@ -59,7 +59,7 @@
 
         <ui:SimpleStackPanel Grid.Row="1"  Orientation="Horizontal" Spacing="20" HorizontalAlignment="Right" Margin="20">
             <Button Content="Cancel" x:Name="BtnCancel" Click="BtnCancel_Click" />
-            <Button Content="Apply" x:Name="BtnApply" Click="BtnApply_Click" />
+            <Button Content="Apply" x:Name="BtnApply" Click="BtnApply_Click" Style="{StaticResource AccentButtonStyle}"/>
         </ui:SimpleStackPanel>
     </Grid>
 </Window>
