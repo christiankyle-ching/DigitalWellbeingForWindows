@@ -131,14 +131,7 @@ namespace DigitalWellbeingWPF.ViewModels
 
             LoadUserExcludedProcesses();
 
-            try
-            {
-                LoadWeeklyData();
-            }
-            catch (Exception)
-            {
-                // TODO : Find a way to retry loading data
-            }
+            LoadWeeklyData();
 
             InitAutoRefreshTimer();
         }
@@ -212,24 +205,14 @@ namespace DigitalWellbeingWPF.ViewModels
                 }
 
                 // Add all values at once
-                foreach (List<AppUsage> dayUsage in weekUsage)
-                {
-                    WeekAppUsage.Add(dayUsage);
-                }
-                WeeklyChartData.Add(new ColumnSeries
-                {
-                    Values = hours,
-                });
-                WeeklyChartLabels = labels.ToArray();
-                WeeklyChartLabelDates = loadedDates.ToArray();
+                foreach (List<AppUsage> dayUsage in weekUsage) { WeekAppUsage.Add(dayUsage); } // AppUsage
+                WeeklyChartData.Add(new ColumnSeries { Values = hours }); // Bar Chart : Data
+                WeeklyChartLabels = labels.ToArray(); // Bar Chart : Labels
+                WeeklyChartLabelDates = loadedDates.ToArray(); // Bar Chart : Labels as DateTime for selections
 
                 IsWeeklyDataLoaded = true;
 
                 WeeklyChart_SelectionChanged(WeekAppUsage.Count - 1);
-            }
-            catch (IOException)
-            {
-                throw;
             }
             catch (Exception ex)
             {
@@ -253,14 +236,17 @@ namespace DigitalWellbeingWPF.ViewModels
         {
             try
             {
-                PieSeries pieChartSeries = (PieSeries)DayPieChartData.Single(pieSeries => pieSeries.Title == processName);
+                // Remove List Item
                 AppUsageListItem listItem = DayListItems.Single(item => item.ProcessName == processName);
-
-                DayPieChartData.Remove(pieChartSeries);
                 DayListItems.Remove(listItem);
+
+                // Remove in Pie: Might throw due to aggregated data in Pie > Other Apps
+                PieSeries pieChartSeries = (PieSeries)DayPieChartData.Single(pieSeries => pieSeries.Title == processName);
+                DayPieChartData.Remove(pieChartSeries);
             }
             catch (Exception ex)
             {
+                // Cannot remove from 
                 Console.WriteLine(ex);
             }
         }
@@ -493,69 +479,88 @@ namespace DigitalWellbeingWPF.ViewModels
 
         public static async Task<List<AppUsage>> GetData(DateTime date)
         {
-            List<AppUsage> appUsageList = new List<AppUsage>();
+            int retryCount = 0;
+            const int maxRetries = 3;
 
-            try
+            do
             {
-                string text = await Task.Run(() => File.ReadAllText($"{folderPath}{date:MM-dd-yyyy}.log")); ;
-                string[] lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                // Always retry with an empty list
+                List<AppUsage> appUsageList = new List<AppUsage>();
 
-                // Parse .log data
-                for (int i = 0; i < lines.Length; i++)
+                try
                 {
-                    if (i + 1 >= lines.Length) break;
+                    string text = await Task.Run(() => File.ReadAllText($"{folderPath}{date:MM-dd-yyyy}.log")); ;
+                    string[] lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 
-                    string line = lines[i];
-
-                    if (line == "") continue;
-
-                    string[] data = line.Split('\t');
-
-                    string processName = data[1];
-                    string programName = data[2] != "" ? data[2] : StringParser.FormatProcessName(processName);
-
-                    DateTime startTime = DateTime.Parse(data[0]);
-                    DateTime endTime = DateTime.Parse(lines[i + 1].Split('\t')[0]);
-
-                    if (endTime < startTime) continue; // Prevents negative values
-
-                    TimeSpan duration = endTime - startTime;
-
-                    AppUsage existingRecord = appUsageList.Find(a => a.ProcessName == processName);
-                    if (existingRecord == null)
+                    // Parse .log data ROWS
+                    for (int i = 0; i < lines.Length; i++)
                     {
-                        appUsageList.Add(new AppUsage(processName, programName, duration));
+                        try
+                        {
+                            if (i + 1 >= lines.Length) break;
+
+                            string line = lines[i];
+
+                            if (line == "") continue;
+
+                            string[] data = line.Split('\t');
+
+                            string processName = data[1];
+                            string programName = data[2] != "" ? data[2] : StringParser.FormatProcessName(processName);
+
+                            DateTime startTime = DateTime.Parse(data[0]);
+                            DateTime endTime = DateTime.Parse(lines[i + 1].Split('\t')[0]);
+
+                            if (endTime < startTime) continue; // Prevents negative values
+
+                            TimeSpan duration = endTime - startTime;
+
+                            AppUsage existingRecord = appUsageList.Find(a => a.ProcessName == processName);
+                            if (existingRecord == null)
+                            {
+                                appUsageList.Add(new AppUsage(processName, programName, duration));
+                            }
+                            else
+                            {
+                                existingRecord.Duration = existingRecord.Duration.Add(duration);
+                            }
+                        }
+                        catch (FormatException ex)
+                        {
+                            Console.WriteLine("Data parsing error. SKIP ROW... " + ex.Message);
+                        }
                     }
-                    else
-                    {
-                        existingRecord.Duration = existingRecord.Duration.Add(duration);
-                    }
+
+                    appUsageList.Sort((a, b) => a.Duration.CompareTo(b.Duration) * -1);
+                    return appUsageList;
                 }
-            }
-            catch (FileNotFoundException)
-            {
-                AppLogger.WriteLine($"CANNOT FIND: {folderPath}{date:MM-dd-yyyy}.log");
-            }
-            catch (DirectoryNotFoundException)
-            {
-                Directory.CreateDirectory(folderPath);
-            }
-            catch (IOException)
-            {
-                AppLogger.WriteLine("Can't read, file is still being used");
-                throw; // triggers catch in LoadWeeklyData()
-            }
-            catch (FormatException ex)
-            {
-                Console.WriteLine("Data row parsing error. Skipping... " + ex.Message);
-            }
-            catch (Exception ex)
-            {
-                AppLogger.WriteLine(ex.Message);
-            }
+                catch (FileNotFoundException)
+                {
+                    // If not found, just return []
+                    AppLogger.WriteLine($"CANNOT FIND: {folderPath}{date:MM-dd-yyyy}.log");
+                    return appUsageList;
+                }
+                catch (DirectoryNotFoundException)
+                {
+                    // If not found, just return []
+                    Directory.CreateDirectory(folderPath);
+                    return appUsageList;
+                }
+                catch (IOException)
+                {
+                    // TODO: RETRY HERE
+                    retryCount++;
+                }
+                catch (Exception ex)
+                {
+                    // Global Exception: throw to report
+                    AppLogger.WriteLine(ex.Message);
+                    throw;
+                }
+            } while (retryCount < maxRetries);
 
-            appUsageList.Sort((a, b) => a.Duration.CompareTo(b.Duration) * -1);
-            return appUsageList;
+            // If after 3 retries and still cannot access, just return empty
+            return new List<AppUsage>();
         }
         #endregion
 
