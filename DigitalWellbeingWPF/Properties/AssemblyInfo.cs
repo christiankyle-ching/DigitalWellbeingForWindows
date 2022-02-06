@@ -7,7 +7,7 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DigitalWellbeing.UI")]
+[assembly: AssemblyTitle("Digital Wellbeing For Windows")]
 [assembly: AssemblyDescription("An app for monitoring your daily app usage.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]

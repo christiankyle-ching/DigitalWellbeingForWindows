@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("DigitalWellbeing.Core")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Needed libraries for Digital Wellbeing for Windows")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("DigitalWellbeing.Core")]
-[assembly: AssemblyCopyright("Copyright ©  2022")]
+[assembly: AssemblyCopyright("© 2021 Christian Kyle Ching")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -20,8 +20,14 @@ namespace DigitalWellbeingWPF.Helpers
         public static System.Windows.Forms.NotifyIcon trayIcon;
         private static System.Windows.Forms.ContextMenuStrip ctx;
         private static int NOTIFICATION_TIMOUT_SECONDS = 10;
-        private static int CHECK_INTERVAL = 10;
+
         private static TimeSpan warningLimit = TimeSpan.FromMinutes(15);
+
+#if DEBUG
+        private static int CHECK_INTERVAL = 10;
+#else
+        private static int CHECK_INTERVAL = 60;
+#endif
 
         private static EventHandler defaultNotificationHandler;
 
