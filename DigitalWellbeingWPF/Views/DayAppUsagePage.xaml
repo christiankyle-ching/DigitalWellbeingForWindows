@@ -180,7 +180,10 @@
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBlock Text="{Binding ProgramName}" VerticalAlignment="Top" Grid.Column="0" Style="{StaticResource BaseTextBlockStyle}"/>
+                                        <TextBlock VerticalAlignment="Top" Grid.Column="0" Style="{StaticResource BaseTextBlockStyle}">
+                                            <Run Text="{Binding ProgramName}" /><Run Text=" (" /><Run Text="{Binding ProcessName}" /><Run Text=")" />
+                                        </TextBlock>
+
                                         <TextBlock Text="{Binding StrDuration}" VerticalAlignment="Top" Grid.Column="1" TextAlignment="Right" Style="{StaticResource CaptionTextBlockStyle}" Margin="10,0,0,0"/>
                                     </Grid>
                                     <ui:ProgressBar Value="{Binding Percentage}" Margin="0,5,0,5"/>
