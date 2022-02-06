@@ -545,6 +545,10 @@ namespace DigitalWellbeingWPF.ViewModels
                 AppLogger.WriteLine("Can't read, file is still being used");
                 throw; // triggers catch in LoadWeeklyData()
             }
+            catch (FormatException ex)
+            {
+                Console.WriteLine("Data row parsing error. Skipping... " + ex.Message);
+            }
             catch (Exception ex)
             {
                 AppLogger.WriteLine(ex.Message);
