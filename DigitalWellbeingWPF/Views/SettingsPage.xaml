@@ -212,7 +212,7 @@
 
                 <ui:ListView Style="{StaticResource SettingListViewStyle}">
 
-                    <!-- Clear Cache Folder -->
+                    <!-- Clear Icon Cache Folder -->
                     <ui:ListViewItem Style="{StaticResource SettingListItemStyle}">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -225,12 +225,38 @@
                                 <TextBlock Text="Deletes all the cached icon images." Style="{StaticResource CaptionTextBlockStyle}"/>
                             </ui:SimpleStackPanel>
 
-                            <Button Grid.Column="1" Content="Clear" >
+                            <Button Grid.Column="1" Content="Clear" x:Name="BtnConfirmClearIcons">
                                 <ui:FlyoutService.Flyout>
                                     <ui:Flyout Placement="TopEdgeAlignedRight" x:Name="FlyoutClearImageCache">
-                                        <ui:SimpleStackPanel>
-                                            <TextBlock Text="Icons will be reloaded on app restart. Continue?" Margin="0,0,0,10"/>
+                                        <ui:SimpleStackPanel MaxWidth="200">
+                                            <TextBlock Text="Icons will be reloaded on app restart. Continue?" Margin="0,0,0,10" TextWrapping="Wrap"/>
                                             <Button x:Name="BtnClearImageCache" Click="BtnClearImageCache_Click" Content="Yes" HorizontalAlignment="Right"/>
+                                        </ui:SimpleStackPanel>
+                                    </ui:Flyout>
+                                </ui:FlyoutService.Flyout>
+                            </Button>
+                        </Grid>
+                    </ui:ListViewItem>
+
+                    <!-- Clear Internal Logs Folder -->
+                    <ui:ListViewItem Style="{StaticResource SettingListItemStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <ui:SimpleStackPanel Grid.Column="0" Margin="0,0,20,0">
+                                <TextBlock Text="Clear Internal Logs" Style="{StaticResource BaseTextBlockStyle}"/>
+                                <TextBlock Text="Deletes all unnecessary error logs." Style="{StaticResource CaptionTextBlockStyle}"/>
+                            </ui:SimpleStackPanel>
+
+                            <Button Grid.Column="1" Content="Clear" x:Name="BtnConfirmClearInternalLogs">
+                                <ui:FlyoutService.Flyout>
+                                    <ui:Flyout Placement="TopEdgeAlignedRight" x:Name="FlyoutClearInternalLogs">
+                                        <ui:SimpleStackPanel MaxWidth="200">
+                                            <TextBlock Text="All error logs that might help track down problems will be deleted. Continue?" Margin="0,0,0,10" TextWrapping="Wrap"/>
+                                            <Button x:Name="BtnClearInternalLogs" Click="BtnClearInternalLogs_Click" Content="Yes" HorizontalAlignment="Right"/>
                                         </ui:SimpleStackPanel>
                                     </ui:Flyout>
                                 </ui:FlyoutService.Flyout>
@@ -247,10 +273,10 @@
                             </Grid.ColumnDefinitions>
 
                             <ui:SimpleStackPanel Grid.Column="0" Margin="0,0,20,0" VerticalAlignment="Center">
-                                <TextBlock Text="Open Usage Logs Folder" Style="{StaticResource BaseTextBlockStyle}"/>
+                                <TextBlock Text="Open App Folder" Style="{StaticResource BaseTextBlockStyle}"/>
                             </ui:SimpleStackPanel>
 
-                            <Button Grid.Column="1" Content="Open" x:Name="BtnOpenLogs" Click="BtnOpenLogs_Click"/>
+                            <Button Grid.Column="1" Content="Open" x:Name="BtnOpenAppFolder" Click="BtnOpenAppFolder_Click"/>
 
                         </Grid>
                     </ui:ListViewItem>

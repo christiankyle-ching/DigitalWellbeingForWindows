@@ -188,6 +188,7 @@ namespace DigitalWellbeingWPF.ViewModels
 
                     // Store App Usage List
                     List<AppUsage> appUsageList = await GetData(date);
+                    appUsageList.Sort(appUsageSorter);
 
                     // Calculate Total Hours
                     TimeSpan totalDuration = TimeSpan.Zero;
@@ -300,6 +301,8 @@ namespace DigitalWellbeingWPF.ViewModels
         }
         #endregion
 
+        Comparison<AppUsage> appUsageSorter = (a, b) => a.Duration.CompareTo(b.Duration) * -1;
+
         private async void TryRefreshData()
         {
             // If weekly data not loaded yet, do not refresh
@@ -313,6 +316,7 @@ namespace DigitalWellbeingWPF.ViewModels
                 try
                 {
                     List<AppUsage> appUsageList = await GetData(LoadedDate.Date);
+                    appUsageList.Sort(appUsageSorter);
                     UpdatePieChartAndList(appUsageList);
 
                     // Refresh Bar Graph
@@ -531,7 +535,7 @@ namespace DigitalWellbeingWPF.ViewModels
                         }
                     }
 
-                    appUsageList.Sort((a, b) => a.Duration.CompareTo(b.Duration) * -1);
+
                     return appUsageList;
                 }
                 catch (FileNotFoundException)

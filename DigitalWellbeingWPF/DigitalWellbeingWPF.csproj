@@ -81,6 +81,7 @@
     <Compile Include="Helpers\AppLogger.cs" />
     <Compile Include="Helpers\Notifier.cs" />
     <Compile Include="Helpers\SettingsManager.cs" />
+    <Compile Include="Helpers\StorageManager.cs" />
     <Compile Include="Helpers\Updater.cs" />
     <Compile Include="ViewModels\AppUsageViewModel.cs" />
     <Compile Include="Views\AlertWindow.xaml.cs">

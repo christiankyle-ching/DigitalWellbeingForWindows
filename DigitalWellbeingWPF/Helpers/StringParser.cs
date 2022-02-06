@@ -28,5 +28,20 @@ namespace DigitalWellbeingWPF.Helpers
         {
             return $"{duration.Hours}h {duration.Minutes}m";
         }
+
+        public static string ShortenBytes(ulong bytes)
+        {
+            ulong MB = bytes / 1048576;
+            ulong GB = MB / 1024;
+
+            if (GB > 0)
+            {
+                return $"{GB} GB";
+            }
+            else
+            {
+                return $"{MB} MB";
+            }
+        }
     }
 }

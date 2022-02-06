@@ -49,10 +49,17 @@ namespace DigitalWellbeingWPF.Views
             LoadAboutApp();
         }
 
+        private void LoadFolderSizes()
+        {
+            BtnConfirmClearIcons.Content = $"Clear ({GetFolderSize(ApplicationPath.GetImageCacheLocation())})";
+            BtnConfirmClearInternalLogs.Content = $"Clear ({GetFolderSize(ApplicationPath.InternalLogsFolder)})";
+        }
+
         public void OnNavigate()
         {
             LoadExcludedProcessItems();
             LoadAppTimeLimits();
+            LoadFolderSizes();
         }
 
         private void LoadCurrentSettings()
@@ -138,8 +145,13 @@ namespace DigitalWellbeingWPF.Views
 
         private void BtnClearImageCache_Click(object sender, RoutedEventArgs e)
         {
-            _ = IconManager.ClearCachedImages();
+            bool success = IconManager.ClearCachedImages();
             FlyoutClearImageCache.Hide();
+
+            if (success)
+            {
+                BtnConfirmClearIcons.Content = "Clear (0 MB)";
+            }
         }
 
         private void MinDuration_LostFocus(object sender, RoutedEventArgs e)
@@ -160,9 +172,45 @@ namespace DigitalWellbeingWPF.Views
             Properties.Settings.Default.Save();
         }
 
-        private void BtnOpenLogs_Click(object sender, RoutedEventArgs e)
+        private void BtnOpenAppFolder_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(ApplicationPath.UsageLogsFolder);
+            Process.Start(ApplicationPath.APP_LOCATION);
+        }
+
+        private string GetFolderSize(string folderPath)
+        {
+            try
+            {
+                Process cmd = new Process();
+                cmd.StartInfo.FileName = "cmd.exe";
+                cmd.StartInfo.RedirectStandardInput = true;
+                cmd.StartInfo.RedirectStandardOutput = true;
+                cmd.StartInfo.CreateNoWindow = true;
+                cmd.StartInfo.UseShellExecute = false;
+                cmd.Start();
+
+                cmd.StandardInput.WriteLine($@"dir /s {folderPath}");
+                cmd.StandardInput.Flush();
+                cmd.StandardInput.Close();
+
+                string _out = cmd.StandardOutput.ReadToEnd();
+                cmd.WaitForExit();
+
+                string[] output = _out.Replace("\r", "").Split('\n');
+                string[] lineWithTotal = output[output.Length - 4].Split(' ');
+                ulong totalBytes = ulong.Parse(lineWithTotal[lineWithTotal.Length - 2].Replace(",", ""));
+
+                string strSize = StringParser.ShortenBytes(totalBytes); // Divide by 1MB in bytes
+
+                return strSize;
+            }
+            catch (Exception ex)
+            {
+                // Not so important
+                AppLogger.WriteLine(ex);
+
+                return "";
+            }
         }
 
         private void ExcludedAppList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -268,6 +316,17 @@ namespace DigitalWellbeingWPF.Views
         private void EnableRunOnStartup_Toggled(object sender, RoutedEventArgs e)
         {
             SettingsManager.SetRunOnStartup(EnableRunOnStartup.IsOn);
+        }
+
+        private void BtnClearInternalLogs_Click(object sender, RoutedEventArgs e)
+        {
+            bool success = StorageManager.TryDeleteFolder(ApplicationPath.InternalLogsFolder);
+            FlyoutClearInternalLogs.Hide();
+
+            if (success)
+            {
+                BtnConfirmClearInternalLogs.Content = "Clear (0 MB)";
+            }
         }
     }
 }

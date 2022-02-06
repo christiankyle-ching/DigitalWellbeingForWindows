@@ -93,16 +93,7 @@ namespace DigitalWellbeingWPF.Helpers
 
         public static bool ClearCachedImages()
         {
-            try
-            {
-                Directory.Delete(ApplicationPath.GetImageCacheLocation(), true);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                AppLogger.WriteLine(ex.Message);
-                return false;
-            }
+            return StorageManager.TryDeleteFolder(ApplicationPath.GetImageCacheLocation());
         }
     }
 }

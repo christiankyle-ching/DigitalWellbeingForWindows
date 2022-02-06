@@ -26,34 +26,34 @@ namespace DigitalWellbeing.Core
 
 
 
-        private static string APPLOCATION
+        public static string APP_LOCATION
         {
             get => GetFolderPath(applicationPath) + $@"\{applicationFolderName}";
         }
 
         public static string autorunFilePath
         {
-            get => APPLOCATION + $@"\{autorunFileName}";
+            get => APP_LOCATION + $@"\{autorunFileName}";
         }
 
         public static string UsageLogsFolder
         {
-            get => APPLOCATION + $@"\{dailyLogsFolderName}\";
+            get => APP_LOCATION + $@"\{dailyLogsFolderName}\";
         }
 
         public static string SettingsFolder
         {
-            get => APPLOCATION + $@"\{settingsFolder}\";
+            get => APP_LOCATION + $@"\{settingsFolder}\";
         }
 
         public static string InternalLogsFolder
         {
-            get => APPLOCATION + $@"\{internalLogsFolder}\";
+            get => APP_LOCATION + $@"\{internalLogsFolder}\";
         }
 
         public static string GetImageCacheLocation(string appName = "")
         {
-            string location = APPLOCATION + $@"\{imageCacheFolderName}\";
+            string location = APP_LOCATION + $@"\{imageCacheFolderName}\";
             if (appName != "") { location += $"{appName}.ico"; }
             return location;
         }
