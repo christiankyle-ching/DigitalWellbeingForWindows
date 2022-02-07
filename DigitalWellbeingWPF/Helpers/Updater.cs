@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -17,6 +18,12 @@ namespace DigitalWellbeingWPF.Helpers
         static readonly HttpClient client = new HttpClient();
         static readonly string appGithubLink_ReleasesAPIURL =
                     "https://api.github.com/repos/christiankyle-ching/DigitalWellbeingForWindows/releases?per_page=1";
+
+        // Versions should be:
+        // 1.0.1        -> OK
+        // 1.0.1.0      -> OK
+        // 1.0.1.0.1    -> NOT OK
+        static readonly int VERSION_SEGMENT_LENGTH = 4;
 
         public static async Task<string> GetLatestVersion()
         {
@@ -44,25 +51,73 @@ namespace DigitalWellbeingWPF.Helpers
             return "";
         }
 
-        public static int ParseVersion(string strVersion)
+        public static bool IsUpdateAvailable(int[] curVersion, int[] latestVersion)
         {
-            int version = -1;
-
-            if (strVersion == string.Empty) return version;
-
-            strVersion = Regex.Replace(strVersion, "[^0-9]", ""); // Remove all non-numbers
-
-            if (int.TryParse(strVersion, out version))
+            // Check new version from major(left) to minor(right) rev
+            for (int i = 0; i < VERSION_SEGMENT_LENGTH; i++)
             {
-                return version;
+
+                if (latestVersion[i] > curVersion[i])
+                {
+                    return true;
+                }
             }
 
-            return version;
+            return false;
         }
 
-        public static bool IsUpdateAvailable(int curVersion, int latestVersion)
+        public static int[] VersionStringToIntArray(string version)
         {
-            return latestVersion > curVersion;
+            List<int> segments = new List<int>();
+            string[] tmp = version.Split('.');
+
+            // Get all version segments first in int
+            // It is guaranteed that every split has a number because
+            // A version like "3..2" is not a given
+            foreach (string seg in tmp)
+            {
+                segments.Add(int.Parse(seg));
+            }
+
+            // Fill empty slots with -1
+            // Make them all 4 in length
+            for (int i = 0; i < VERSION_SEGMENT_LENGTH - segments.Count; i++)
+            {
+                segments.Add(-1);
+            }
+
+            return segments.ToArray();
+        }
+
+        public static string VersionArrayToString(int[] version)
+        {
+            string strVersion = "";
+
+            for (int i = 0; i < version.Length; i++)
+            {
+                // Append version number and dot if greater than 0, else append empty
+                strVersion += version[i] >= 0 ? $"{version[i]}." : "";
+            }
+
+            // Remove end string
+            return strVersion.Remove(strVersion.Length - 1, 1);
+        }
+
+        public static string FormatVersionString(string version)
+        {
+            // Removes 'v' prefix
+            return version.Replace("v", "");
+        }
+
+        public static async Task<string> CheckForUpdates()
+        {
+            string strCurrent = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            string strLatest = await GetLatestVersion();
+
+            int[] curVersion = VersionStringToIntArray(FormatVersionString(strCurrent));
+            int[] latestVersion = VersionStringToIntArray(FormatVersionString(strLatest));
+
+            return IsUpdateAvailable(curVersion, latestVersion) ? strLatest : "";
         }
     }
 }

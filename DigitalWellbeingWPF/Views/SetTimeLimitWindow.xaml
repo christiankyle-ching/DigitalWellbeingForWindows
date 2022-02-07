@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         ui:WindowHelper.UseModernWindowStyle="True"
-        Title="Add Time Limit" Height="175" Width="500"
+        Title="Set Time Limit" Height="200" Width="500"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Topmost="True"

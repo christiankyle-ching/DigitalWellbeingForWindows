@@ -287,14 +287,35 @@
                 <TextBlock Text="About" Style="{StaticResource SubtitleTextBlockStyle}" Margin="10,0,0,10"/>
 
                 <ui:SimpleStackPanel Margin="10,0">
-                    <ui:SimpleStackPanel Orientation="Horizontal">
-                        <TextBlock x:Name="TxtCurrentVersion" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Left" FontWeight="Light"/>
-                        <TextBlock x:Name="TxtLatestVersion" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Left" FontWeight="Medium"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <ui:SimpleStackPanel Grid.Column="0" Orientation="Vertical">
+
+                            <!-- Version Number -->
+                            <ui:SimpleStackPanel Orientation="Horizontal" >
+                                <TextBlock x:Name="TxtCurrentVersion" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Left" FontWeight="Light"/>
+                                <TextBlock x:Name="TxtLatestVersion" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Left" FontWeight="Medium"/>
+                            </ui:SimpleStackPanel>
+
+                            <!-- Copyright -->
+                            <TextBlock x:Name="TxtCopyright" Style="{StaticResource BodyTextBlockStyle}" FontWeight="Light" Visibility="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=Text}"/>
+
+                        </ui:SimpleStackPanel>
+
+                        <!-- Manual Check Update -->
+                        <Button Grid.Column="1" x:Name="BtnCheckUpdate" Content="Check for Updates" Click="BtnCheckUpdate_Click" />
+                    </Grid>
+
+                    <!-- Links -->
+                    <ui:SimpleStackPanel Spacing="0">
+                        <ui:HyperlinkButton x:Name="LinkDeveloper" Content="Developer's Website"/>
+                        <ui:HyperlinkButton x:Name="LinkSource" Content="Source Code (Github)"/>
+                        <ui:HyperlinkButton x:Name="LinkUpdate" Content="Version Downloads (Github Releases)"/>
                     </ui:SimpleStackPanel>
-                    <TextBlock x:Name="TxtCopyright" Style="{StaticResource BodyTextBlockStyle}" FontWeight="Light" Visibility="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=Text}"/>
-                    <ui:HyperlinkButton x:Name="LinkSource" Margin="0,10,0,0" Content="Source Code (Github)"/>
-                    <ui:HyperlinkButton x:Name="LinkUpdate" Content="Check Latest Update"/>
-                    <ui:HyperlinkButton x:Name="LinkDeveloper" Content="Developer's Website"/>
                 </ui:SimpleStackPanel>
 
             </ui:SimpleStackPanel>

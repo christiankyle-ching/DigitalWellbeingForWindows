@@ -29,7 +29,9 @@ namespace DigitalWellbeingWPF.Views
     public partial class SettingsPage : Page
     {
         private readonly ApplicationTheme? systemTheme;
+
         private int UPDATE_CHECK_DELAY = 20;
+        const string APP_TIMELIMIT_SEPARATOR = "    /    ";
 
         public SettingsPage()
         {
@@ -49,17 +51,18 @@ namespace DigitalWellbeingWPF.Views
             LoadAboutApp();
         }
 
-        private void LoadFolderSizes()
-        {
-            BtnConfirmClearIcons.Content = $"Clear ({GetFolderSize(ApplicationPath.GetImageCacheLocation())})";
-            BtnConfirmClearInternalLogs.Content = $"Clear ({GetFolderSize(ApplicationPath.InternalLogsFolder)})";
-        }
-
         public void OnNavigate()
         {
             LoadExcludedProcessItems();
             LoadAppTimeLimits();
             LoadFolderSizes();
+        }
+
+        #region Loader Functions
+        private void LoadFolderSizes()
+        {
+            BtnConfirmClearIcons.Content = $"Clear ({GetFolderSize(ApplicationPath.GetImageCacheLocation())})";
+            BtnConfirmClearInternalLogs.Content = $"Clear ({GetFolderSize(ApplicationPath.InternalLogsFolder)})";
         }
 
         private void LoadCurrentSettings()
@@ -99,10 +102,12 @@ namespace DigitalWellbeingWPF.Views
             foreach (KeyValuePair<string, int> timeLimit in SettingsManager.appTimeLimits)
             {
                 TimeSpan time = TimeSpan.FromMinutes(timeLimit.Value);
-                AppTimeLimitsList.Items.Add($"{timeLimit.Key}{SEPARATOR}{time.Hours}h {time.Minutes}m");
+                AppTimeLimitsList.Items.Add($"{timeLimit.Key}{APP_TIMELIMIT_SEPARATOR}{time.Hours}h {time.Minutes}m");
             }
         }
+        #endregion
 
+        #region Events
         private void CBTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count > 0)
@@ -143,17 +148,6 @@ namespace DigitalWellbeingWPF.Views
             Properties.Settings.Default.Save();
         }
 
-        private void BtnClearImageCache_Click(object sender, RoutedEventArgs e)
-        {
-            bool success = IconManager.ClearCachedImages();
-            FlyoutClearImageCache.Hide();
-
-            if (success)
-            {
-                BtnConfirmClearIcons.Content = "Clear (0 MB)";
-            }
-        }
-
         private void MinDuration_LostFocus(object sender, RoutedEventArgs e)
         {
             int hrs = (int)MinDuration_Hours.Value;
@@ -172,9 +166,146 @@ namespace DigitalWellbeingWPF.Views
             Properties.Settings.Default.Save();
         }
 
+        private void ExcludedAppList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                ListView list = (ListView)sender;
+
+                string processName = list.SelectedItem.ToString();
+
+                Properties.Settings.Default.UserExcludedProcesses.Remove(processName);
+                Properties.Settings.Default.Save();
+
+                list.Items.Remove(list.SelectedItem);
+            }
+            catch (NullReferenceException ex)
+            {
+                Console.WriteLine($"No item selected: {ex}");
+            }
+        }
+
+        private void BtnFocusAssist_Click(object sender, RoutedEventArgs e)
+        {
+            _ = Process.Start("ms-settings:quiethours");
+            _ = Process.Start("ms-settings:quietmomentshome");
+        }
+
+        private void AppTimeLimitsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                ListView list = (ListView)sender;
+
+                string processName = list.SelectedItem.ToString().Split(new[] { APP_TIMELIMIT_SEPARATOR }, StringSplitOptions.None)[0];
+
+                SetTimeLimitWindow window = new SetTimeLimitWindow(processName);
+                window.ShowDialog();
+
+                LoadAppTimeLimits();
+                Notifier.ResetNotificationForApp(processName);
+            }
+            catch (NullReferenceException ex)
+            {
+                Console.WriteLine($"No item selected: {ex}");
+            }
+        }
+
+        private void EnableRunOnStartup_Toggled(object sender, RoutedEventArgs e)
+        {
+            SettingsManager.SetRunOnStartup(EnableRunOnStartup.IsOn);
+        }
+
+        private void BtnClearImageCache_Click(object sender, RoutedEventArgs e)
+        {
+            bool success = IconManager.ClearCachedImages();
+            FlyoutClearImageCache.Hide();
+
+            if (success)
+            {
+                BtnConfirmClearIcons.Content = "Clear (0 MB)";
+            }
+        }
+
+        #endregion
+
+        #region About App
+
+        private void LoadAboutApp()
+        {
+            LoadLinks();
+
+            Assembly app = Assembly.GetExecutingAssembly();
+
+            // Get Copyright
+            object[] attribs = app.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), true);
+            TxtCopyright.Text = (attribs.Length > 0) ? ((AssemblyCopyrightAttribute)attribs[0]).Copyright : "";
+
+            // Get Version
+            string strVersion = app.GetName().Version.ToString();
+            TxtCurrentVersion.Text = $"App version {strVersion}";
+
+            DelayCheckForUpdates();
+        }
+
+        private async void DelayCheckForUpdates()
+        {
+            await Task.Delay(UPDATE_CHECK_DELAY * 1000);
+
+            CheckForUpdates();
+        }
+
+        private async void CheckForUpdates(bool manualRefresh = false)
+        {
+            string latestVersion = await Updater.CheckForUpdates();
+
+            if (latestVersion != "")
+            {
+                TxtLatestVersion.Text = $" ({latestVersion})";
+
+                Notifier.ShowNotification(
+                App.APPNAME,
+                    $"Update Available: {latestVersion}",
+                    (s, e) => { _ = Process.Start(Updater.appReleasesLink); }
+                    );
+            }
+            else
+            {
+                if (manualRefresh)
+                {
+                    Notifier.ShowNotification(App.APPNAME, "No updates available.");
+                }
+            }
+        }
+
+        private void BtnCheckUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            CheckForUpdates(true);
+        }
+
+        private void LoadLinks()
+        {
+            LinkSource.NavigateUri = new Uri(Updater.appGithubLink);
+            LinkUpdate.NavigateUri = new Uri(Updater.appReleasesLink);
+            LinkDeveloper.NavigateUri = new Uri(Updater.appWebsiteLink);
+        }
+        #endregion
+
+        #region Clear Data Functions
         private void BtnOpenAppFolder_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(ApplicationPath.APP_LOCATION);
+        }
+
+        private void BtnClearInternalLogs_Click(object sender, RoutedEventArgs e)
+        {
+            bool success = StorageManager.TryDeleteFolder(ApplicationPath.InternalLogsFolder);
+            FlyoutClearInternalLogs.Hide();
+
+            if (success)
+            {
+                BtnConfirmClearInternalLogs.Content = "Clear (0 MB)";
+            }
         }
 
         private string GetFolderSize(string folderPath)
@@ -212,121 +343,7 @@ namespace DigitalWellbeingWPF.Views
                 return "";
             }
         }
-
-        private void ExcludedAppList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            try
-            {
-                ListView list = (ListView)sender;
-
-                string processName = list.SelectedItem.ToString();
-
-                Properties.Settings.Default.UserExcludedProcesses.Remove(processName);
-                Properties.Settings.Default.Save();
-
-                list.Items.Remove(list.SelectedItem);
-            }
-            catch (NullReferenceException ex)
-            {
-                Console.WriteLine($"No item selected: {ex}");
-            }
-        }
-
-        private void BtnFocusAssist_Click(object sender, RoutedEventArgs e)
-        {
-            _ = Process.Start("ms-settings:quiethours");
-            _ = Process.Start("ms-settings:quietmomentshome");
-        }
-
-
-        #region About App
-        private int currentVersion;
-        private int latestVersion;
-        private string strLatestVersion;
-
-        private void LoadAboutApp()
-        {
-            LoadLinks();
-
-            Assembly app = Assembly.GetExecutingAssembly();
-
-            // Get Copyright
-            object[] attribs = app.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), true);
-            TxtCopyright.Text = (attribs.Length > 0) ? ((AssemblyCopyrightAttribute)attribs[0]).Copyright : "";
-
-            // Get Version
-            string strVersion = app.GetName().Version.ToString();
-            TxtCurrentVersion.Text = $"App version {strVersion}";
-
-            currentVersion = Updater.ParseVersion(strVersion);
-            CheckForUpdates();
-        }
-
-        private async void CheckForUpdates()
-        {
-            await Task.Delay(UPDATE_CHECK_DELAY * 1000);
-
-            strLatestVersion = await Updater.GetLatestVersion();
-            latestVersion = Updater.ParseVersion(strLatestVersion);
-
-            if (Updater.IsUpdateAvailable(currentVersion, latestVersion))
-            {
-                TxtLatestVersion.Text = $" (Update Available {strLatestVersion})";
-                Notifier.ShowNotification(
-                    App.APPNAME,
-                    $"Update Available: {strLatestVersion}",
-                    (s, e) =>
-                    {
-                        (Application.Current.MainWindow as MainWindow).GoToSettings();
-                    }
-                    );
-            }
-        }
-
-        private void LoadLinks()
-        {
-            LinkSource.NavigateUri = new Uri(Updater.appGithubLink);
-            LinkUpdate.NavigateUri = new Uri(Updater.appReleasesLink);
-            LinkDeveloper.NavigateUri = new Uri(Updater.appWebsiteLink);
-        }
         #endregion
 
-        const string SEPARATOR = "    /    ";
-
-        private void AppTimeLimitsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            try
-            {
-                ListView list = (ListView)sender;
-
-                string processName = list.SelectedItem.ToString().Split(new[] { SEPARATOR }, StringSplitOptions.None)[0];
-
-                SetTimeLimitWindow window = new SetTimeLimitWindow(processName);
-                window.ShowDialog();
-
-                LoadAppTimeLimits();
-                Notifier.ResetNotificationForApp(processName);
-            }
-            catch (NullReferenceException ex)
-            {
-                Console.WriteLine($"No item selected: {ex}");
-            }
-        }
-
-        private void EnableRunOnStartup_Toggled(object sender, RoutedEventArgs e)
-        {
-            SettingsManager.SetRunOnStartup(EnableRunOnStartup.IsOn);
-        }
-
-        private void BtnClearInternalLogs_Click(object sender, RoutedEventArgs e)
-        {
-            bool success = StorageManager.TryDeleteFolder(ApplicationPath.InternalLogsFolder);
-            FlyoutClearInternalLogs.Hide();
-
-            if (success)
-            {
-                BtnConfirmClearInternalLogs.Content = "Clear (0 MB)";
-            }
-        }
     }
 }

@@ -145,7 +145,7 @@ namespace DigitalWellbeingWPF
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             MessageBoxResult res = MessageBox.Show(
-                "Are you sure you want to exit the app? Notifications won't work.",
+                "Are you sure you want to exit the app? Alert Notifications won't work.",
                 App.APPNAME,
                 MessageBoxButton.OKCancel,
                 MessageBoxImage.None,
