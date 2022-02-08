@@ -501,40 +501,27 @@ namespace DigitalWellbeingWPF.ViewModels
                     {
                         try
                         {
-                            if (i + 1 >= lines.Length) break;
+                            // Skip empty rows
+                            if (lines[i].Trim() == string.Empty) continue;
 
-                            string line = lines[i];
+                            string[] cells = lines[i].Split('\t');
 
-                            if (line == "") continue;
+                            string processName = cells[0];
+                            int seconds = 0;
+                            string programName = cells.Length > 2 ? cells[2] : "";
 
-                            string[] data = line.Split('\t');
+                            // Try get seconds
+                            int.TryParse(cells[1], out seconds);
 
-                            string processName = data[1];
-                            string programName = data[2] != "" ? data[2] : StringParser.FormatProcessName(processName);
-
-                            DateTime startTime = DateTime.Parse(data[0]);
-                            DateTime endTime = DateTime.Parse(lines[i + 1].Split('\t')[0]);
-
-                            if (endTime < startTime) continue; // Prevents negative values
-
-                            TimeSpan duration = endTime - startTime;
-
-                            AppUsage existingRecord = appUsageList.Find(a => a.ProcessName == processName);
-                            if (existingRecord == null)
-                            {
-                                appUsageList.Add(new AppUsage(processName, programName, duration));
-                            }
-                            else
-                            {
-                                existingRecord.Duration = existingRecord.Duration.Add(duration);
-                            }
+                            appUsageList.Add(
+                                new AppUsage(processName, programName, TimeSpan.FromSeconds(seconds))
+                            );
                         }
-                        catch (FormatException ex)
+                        catch (Exception ex)
                         {
-                            Console.WriteLine("Data parsing error. SKIP ROW... " + ex.Message);
+                            Console.WriteLine("SKIP READING ROW: " + ex);
                         }
                     }
-
 
                     return appUsageList;
                 }

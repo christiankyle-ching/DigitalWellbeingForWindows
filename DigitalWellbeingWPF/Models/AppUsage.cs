@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DigitalWellbeingWPF.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace DigitalWellbeingWPF.Models
         public AppUsage(string processName, string programName, TimeSpan duration)
         {
             this.ProcessName = processName;
-            this.ProgramName = programName;
+            this.ProgramName = programName != string.Empty ? programName : StringParser.TitleCaseWhenLower(processName);
             this.Duration = duration;
         }
 

@@ -19,7 +19,7 @@ namespace DigitalWellbeingWPF.Helpers
         }
 
         private static readonly TextInfo txtInfo = new CultureInfo("en-US", false).TextInfo;
-        public static string FormatProcessName(string processName)
+        public static string TitleCaseWhenLower(string processName)
         {
             return processName.Any(char.IsUpper) ? processName : txtInfo.ToTitleCase(processName);
         }

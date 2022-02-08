@@ -65,7 +65,7 @@ namespace DigitalWellbeingService.NET4._6
                 // Update Time Entry
                 for (int i = 0; i < lines.Count; i++)
                 {
-                    if (lines[i] == string.Empty) continue;
+                    if (lines[i].Trim() == string.Empty) continue;
 
                     string[] cells = lines[i].Split('\t');
 
