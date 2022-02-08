@@ -9,8 +9,6 @@ namespace DigitalWellbeingService.NET4._6
 {
     class Program
     {
-        private static int checkInterval = 1000;
-
         static void Main(string[] args)
         {
             ActivityLogger _al = new ActivityLogger();
@@ -18,7 +16,7 @@ namespace DigitalWellbeingService.NET4._6
             while (true)
             {
                 _al.OnTimer();
-                Thread.Sleep(checkInterval);
+                Thread.Sleep(ActivityLogger.TIMER_INTERVAL_SEC * 1000);
             }
         }
     }

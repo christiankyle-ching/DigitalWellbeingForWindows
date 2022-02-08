@@ -15,12 +15,10 @@ namespace DigitalWellbeingService.NET4._6
 {
     public class ActivityLogger
     {
-        private static readonly string IND_LAST = "*LAST";
+        public static readonly int TIMER_INTERVAL_SEC = 3;
 
         private string folderPath;
         private string autoRunFilePath;
-
-        private uint lastProcessId = 0;
 
         public ActivityLogger()
         {
@@ -51,94 +49,66 @@ namespace DigitalWellbeingService.NET4._6
             uint currProcessId = ForegroundWindowManager.GetForegroundProcessId(handle);
             Process proc = Process.GetProcessById((int)currProcessId);
 
-            if (IsProcessChanged(currProcessId))
-            {
-                string newProcessName = ForegroundWindowManager.GetActiveProcessName(proc);
-                string newProgramName = ForegroundWindowManager.GetActiveProgramName(proc);
-
-                if (newProgramName == null && newProcessName == null)
-                {
-                    // Error in getting process or program name.
-                    UpdateLastLine();
-                }
-                else
-                {
-                    lastProcessId = currProcessId;
-                    UpdateLastLine(newProcessName, newProgramName);
-                }
-            }
-            else
-            {
-                UpdateLastLine();
-            }
+            UpdateTimeEntry(proc);
         }
 
-        private void UpdateLastLine(string processName = "", string programName = "")
-        {
-            DateTime _dateTime = DateTime.Now;
-            string lastLine = $"{_dateTime}\t{IND_LAST}\t{IND_LAST}";
-
-            if (programName == "" && processName == "")
-            {
-                string[] ind_lastLine = new string[] {
-                    lastLine
-                };
-
-                AppendLineToFile(ind_lastLine);
-            }
-            else
-            {
-                string[] newProcessLine = new string[] {
-                    $"{_dateTime}\t{processName}\t{programName}",
-                    lastLine
-                };
-
-                AppendLineToFile(newProcessLine);
-            }
-
-        }
-
-        private void AppendLineToFile(string[] linesToInsert)
+        private void UpdateTimeEntry(Process proc)
         {
             string filePath = $"{folderPath}{DateTime.Now:MM-dd-yyyy}.log";
-            bool isInsertingProcess = linesToInsert.Length >= 2;
 
             try
             {
-                List<string> existingLines = File.ReadAllLines(filePath).ToList();
+                List<string> lines = File.ReadAllLines(filePath).ToList();
 
-                // Prevent having *LAST on first line
-                if (!isInsertingProcess && existingLines.Count <= 0) { return; }
+                bool found = false;
 
-                // If file already exists but no lines detected
-                if (isInsertingProcess && existingLines.Count <= 0)
+                // Update Time Entry
+                for (int i = 0; i < lines.Count; i++)
                 {
-                    File.AppendAllLines(filePath, linesToInsert);
-                    return;
+                    if (lines[i] == string.Empty) continue;
+
+                    string[] cells = lines[i].Split('\t');
+
+                    string processName = cells[0];
+
+                    // If already found, update and break
+                    if (proc.ProcessName == processName)
+                    {
+                        int seconds = 0;
+                        string programName = cells.Length > 2 ? cells[2] : "";
+
+                        // Try get seconds
+                        int.TryParse(cells[1], out seconds);
+
+                        // Just update the array inline then break
+                        seconds += TIMER_INTERVAL_SEC;
+                        lines[i] = GetEntryRow(processName, seconds, programName);
+
+                        found = true;
+                        break;
+                    }
                 }
 
-                existingLines.RemoveRange(existingLines.Count - 1, 1);
-                existingLines.AddRange(linesToInsert);
+                // If not found, then add at end with starting seconds as interval
+                if (!found)
+                {
+                    string newProcessName = ForegroundWindowManager.GetActiveProcessName(proc);
+                    string newProgramName = ForegroundWindowManager.GetActiveProgramName(proc);
 
-                File.WriteAllLines(filePath, existingLines);
+                    lines.Add(GetEntryRow(newProcessName, TIMER_INTERVAL_SEC, newProgramName));
+                }
+
+                // Update the file again
+                File.WriteAllLines(filePath, lines);
             }
             catch (DirectoryNotFoundException)
             {
                 Directory.CreateDirectory(folderPath);
-
-                //First entry, insert 2 lines(total 3 lines incl.last newline)
-                if (isInsertingProcess)
-                {
-                    File.AppendAllLines(filePath, linesToInsert);
-                }
             }
             catch (FileNotFoundException)
             {
-                //First entry, insert 2 lines(total 3 lines incl.last newline)
-                if (isInsertingProcess)
-                {
-                    File.AppendAllLines(filePath, linesToInsert);
-                }
+                // Create empty file
+                File.AppendAllLines(filePath, new List<string>());
             }
             catch (IOException ex)
             {
@@ -148,9 +118,9 @@ namespace DigitalWellbeingService.NET4._6
             }
         }
 
-        private bool IsProcessChanged(uint processId)
+        private string GetEntryRow(string processName, int seconds, string programName)
         {
-            return processId != lastProcessId;
+            return $"{processName}\t{seconds}\t{programName}";
         }
     }
 }
