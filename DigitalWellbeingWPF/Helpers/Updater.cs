@@ -56,10 +56,16 @@ namespace DigitalWellbeingWPF.Helpers
             // Check new version from major(left) to minor(right) rev
             for (int i = 0; i < VERSION_SEGMENT_LENGTH; i++)
             {
-
-                if (latestVersion[i] > curVersion[i])
+                if (latestVersion[i] == curVersion[i])
+                {
+                    continue;
+                }
+                else if (latestVersion[i] > curVersion[i])
                 {
                     return true;
+                } else
+                {
+                    return false;
                 }
             }
 
