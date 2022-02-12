@@ -12,12 +12,12 @@ namespace DigitalWellbeingWPF.Helpers
     public static class Updater
     {
         public static readonly string appGithubLink = "https://github.com/christiankyle-ching/DigitalWellbeingForWindows";
-        public static readonly string appReleasesLink = "https://github.com/christiankyle-ching/DigitalWellbeingForWindows/releases";
+        public static readonly string appReleasesLink = "https://github.com/christiankyle-ching/DigitalWellbeingForWindows/releases/latest";
         public static readonly string appWebsiteLink = "https://christiankyleching.vercel.app/works.html?scrollTo=digital-wellbeing-windows";
 
         static readonly HttpClient client = new HttpClient();
         static readonly string appGithubLink_ReleasesAPIURL =
-                    "https://api.github.com/repos/christiankyle-ching/DigitalWellbeingForWindows/releases?per_page=1";
+                    "https://api.github.com/repos/christiankyle-ching/DigitalWellbeingForWindows/releases/latest";
 
         // Versions should be:
         // 1.0.1        -> OK
@@ -119,6 +119,9 @@ namespace DigitalWellbeingWPF.Helpers
         {
             string strCurrent = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             string strLatest = await GetLatestVersion();
+
+            Console.WriteLine($"Current Version: {strCurrent}");
+            Console.WriteLine($"Latest Version: {strLatest}");
 
             int[] curVersion = VersionStringToIntArray(FormatVersionString(strCurrent));
             int[] latestVersion = VersionStringToIntArray(FormatVersionString(strLatest));
