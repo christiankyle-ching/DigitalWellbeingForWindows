@@ -18,6 +18,7 @@ namespace DigitalWellbeingWPF.Models
         Education = 2,
         Games = 3,
         Entertainment = 4,
+        Communication = 5,
     }
 
     public static class AppTagHelper
@@ -27,11 +28,12 @@ namespace DigitalWellbeingWPF.Models
          */
         public static Dictionary<int, string> AppTagColors = new Dictionary<int, string>()
         {
-            {0, "#9E9E9E" },
-            {1, "#FF9800" },
-            {2, "#4CAF50" },
-            {3, "#9C27B0" },
-            {4, "#F44336" },
+            {0, "#9E9E9E"},
+            {1, "#FF9800"},
+            {2, "#4CAF50"},
+            {3, "#9C27B0"},
+            {4, "#F44336"},
+            {5, "#00BCD4"},
         };
 
         public static Dictionary<string, int> GetComboBoxChoices()
