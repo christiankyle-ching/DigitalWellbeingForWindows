@@ -20,13 +20,18 @@ namespace DigitalWellbeingWPF.Models.UserControls
         public string StrDuration { get => StringParser.TimeSpanToString(Duration); }
         public ImageSource IconSource { get; set; }
 
-        public AppUsageListItem(string processName, string programName, TimeSpan duration, int percentage)
+        public AppTag _AppTag { get; set; }
+        public string StrAppTag { get => AppTagHelper.GetTagName(this._AppTag); }
+        public Brush BrushAppTag { get => AppTagHelper.GetTagColor(this._AppTag); }
+
+        public AppUsageListItem(string processName, string programName, TimeSpan duration, int percentage, AppTag appTag)
         {
             ProcessName = processName;
             ProgramName = programName;
             Duration = duration;
             Percentage = percentage;
             IconSource = IconManager.GetIconSource(processName);
+            _AppTag = appTag;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -40,8 +45,13 @@ namespace DigitalWellbeingWPF.Models.UserControls
         {
             OnPropertyChanged(nameof(ProcessName));
             OnPropertyChanged(nameof(Percentage));
+
             OnPropertyChanged(nameof(Duration));
             OnPropertyChanged(nameof(StrDuration));
+
+            OnPropertyChanged(nameof(_AppTag));
+            OnPropertyChanged(nameof(StrAppTag));
+            OnPropertyChanged(nameof(BrushAppTag));
         }
 
     }

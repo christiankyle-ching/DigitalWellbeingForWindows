@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         ui:WindowHelper.UseModernWindowStyle="True"
-        Title="Set App Tag" Height="200" Width="500"
+        Title="Set App Tag" Height="160" Width="500"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Topmost="True"
@@ -42,7 +42,7 @@
                     </Grid.ColumnDefinitions>
 
                     <ui:SimpleStackPanel Grid.Column="0" Margin="0,0,20,0">
-                        <TextBlock Text="App Tag" Style="{StaticResource BaseTextBlockStyle}"/>
+                        <TextBlock x:Name="txtLabel" Text="App Tag" Style="{StaticResource BaseTextBlockStyle}"/>
                         <TextBlock Text="Set the app's category." Style="{StaticResource CaptionTextBlockStyle}"/>
                     </ui:SimpleStackPanel>
 

@@ -45,7 +45,9 @@ namespace DigitalWellbeingWPF.ViewModels
         public DateTime LoadedDate = DateTime.Now.Date;
         public string StrLoadedDate
         {
-            get => (LoadedDate.Date == DateTime.Now.Date) ? "Today" : this.LoadedDate.ToString("dddd, MMM dd yyyy");
+            get => (LoadedDate.Date == DateTime.Now.Date) ?
+                "Today, " + this.LoadedDate.ToString("dddd") :
+                this.LoadedDate.ToString("dddd, MMM dd yyyy");
         }
 
         // Total Duration
@@ -264,6 +266,15 @@ namespace DigitalWellbeingWPF.ViewModels
         {
             SetAppTagWindow window = new SetAppTagWindow(processName);
             window.ShowDialog();
+
+            try
+            {
+                AppUsageListItem item = DayListItems.Single(i => i.ProcessName == processName);
+                item._AppTag = AppTagHelper.GetAppTag(processName);
+            }
+            catch { }
+
+            RefreshListItems();
         }
 
         public AppUsageListItem OnAppUsageChart_SelectionChanged(ChartPoint chartPoint)
@@ -332,6 +343,14 @@ namespace DigitalWellbeingWPF.ViewModels
                 {
                     AppLogger.WriteLine("Skip Refresh");
                 }
+            }
+        }
+
+        private void RefreshListItems()
+        {
+            foreach (AppUsageListItem item in DayListItems)
+            {
+                item.Refresh();
             }
         }
 
@@ -439,7 +458,7 @@ namespace DigitalWellbeingWPF.ViewModels
                     // Add List Item
                     if (app.Duration > Properties.Settings.Default.MinumumDuration)
                     {
-                        tempListItems.Add(new AppUsageListItem(app.ProcessName, app.ProgramName, app.Duration, percentage));
+                        tempListItems.Add(new AppUsageListItem(app.ProcessName, app.ProgramName, app.Duration, percentage, AppTagHelper.GetAppTag(app.ProcessName)));
                     }
                 }
 
@@ -593,6 +612,8 @@ namespace DigitalWellbeingWPF.ViewModels
             OnPropertyChanged(nameof(StrMinumumDuration));
             OnPropertyChanged(nameof(CanGoNext));
             OnPropertyChanged(nameof(CanGoPrev));
+
+            RefreshListItems();
         }
 
         private void OnPropertyChanged([CallerMemberName] String propertyName = "")

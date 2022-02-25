@@ -55,7 +55,7 @@
             <lvc:CartesianChart.AxisX>
                 <lvc:Axis Labels="{Binding WeeklyChartLabels}">
                     <lvc:Axis.Separator>
-                        <lvc:Separator Step="1" IsEnabled="False"/>
+                        <lvc:Separator Step="1" StrokeThickness="0"/>
                     </lvc:Axis.Separator>
                 </lvc:Axis>
             </lvc:CartesianChart.AxisX>
@@ -181,11 +181,12 @@
                                         </Grid.ColumnDefinitions>
 
                                         <TextBlock VerticalAlignment="Top" Grid.Column="0" Style="{StaticResource BaseTextBlockStyle}">
-                                            <Run Text="{Binding ProgramName}" /><Run Text=" (" /><Run Text="{Binding ProcessName}" /><Run Text=")" />
+                                            <Run Text="{Binding ProgramName}" /><Run Text=" (" /><Run Text="{Binding ProcessName}" /><Run Text=") " /><Run Text="{Binding StrAppTag, Mode=OneWay}" Foreground="{Binding BrushAppTag, Mode=OneWay}"/>
                                         </TextBlock>
 
                                         <TextBlock Text="{Binding StrDuration}" VerticalAlignment="Top" Grid.Column="1" TextAlignment="Right" Style="{StaticResource CaptionTextBlockStyle}" Margin="10,0,0,0"/>
                                     </Grid>
+
                                     <ui:ProgressBar Value="{Binding Percentage}" Margin="0,5,0,5"/>
                                 </ui:SimpleStackPanel>
 

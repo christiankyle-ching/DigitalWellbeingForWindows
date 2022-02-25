@@ -30,6 +30,8 @@ namespace DigitalWellbeingWPF.Views
             InitializeComponent();
 
             _processName = processName;
+            this.Title += $" for {_processName}";
+            txtLabel.Text += $" for {_processName}";
 
             LoadCBTagChoices();
 

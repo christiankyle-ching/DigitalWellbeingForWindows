@@ -22,6 +22,18 @@ namespace DigitalWellbeingWPF.Models
 
     public static class AppTagHelper
     {
+        /*
+         * Match int ID from AppTag enum
+         */
+        public static Dictionary<int, string> AppTagColors = new Dictionary<int, string>()
+        {
+            {0, "#9E9E9E" },
+            {1, "#FF9800" },
+            {2, "#4CAF50" },
+            {3, "#9C27B0" },
+            {4, "#F44336" },
+        };
+
         public static Dictionary<string, int> GetComboBoxChoices()
         {
             Dictionary<string, int> tags = new Dictionary<string, int>();
@@ -49,7 +61,15 @@ namespace DigitalWellbeingWPF.Models
 
         public static string GetTagName(AppTag appTag)
         {
+            if (appTag == AppTag.None) return "";
+
             return Enum.GetName(typeof(AppTag), appTag);
+        }
+
+        public static Brush GetTagColor(AppTag appTag)
+        {
+            BrushConverter bc = new BrushConverter();
+            return (Brush)bc.ConvertFromString(AppTagColors[(int)appTag]);
         }
     }
 }
