@@ -110,6 +110,12 @@ namespace DigitalWellbeingWPF.Views
             vm.OnSetTimeLimit(processName);
         }
 
+        private void AppUsageListMenuItem_SetAppTag(object sender, RoutedEventArgs e)
+        {
+            string processName = ((MenuItem)sender).Tag.ToString();
+            vm.OnSetAppTag(processName);
+        }
+
         public void OnNavigate()
         {
             vm.OnNavigate();

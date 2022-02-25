@@ -205,6 +205,7 @@
                                     <ui:FlyoutService.Flyout>
                                         <ui:MenuFlyout Placement="BottomEdgeAlignedRight">
                                             <MenuItem Header="Set Time Limit" Click="AppUsageListMenuItem_SetTimeLimit" Tag="{Binding ProcessName}"/>
+                                            <MenuItem Header="Set App Tag" Click="AppUsageListMenuItem_SetAppTag" Tag="{Binding ProcessName}"/>
                                             <MenuItem Header="Exclude" Click="AppUsageListMenuItem_ExcludeItem" Tag="{Binding ProcessName}"/>
                                         </ui:MenuFlyout>
                                     </ui:FlyoutService.Flyout>

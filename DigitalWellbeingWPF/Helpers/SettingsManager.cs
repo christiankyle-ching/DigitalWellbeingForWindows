@@ -1,4 +1,5 @@
 ﻿using DigitalWellbeing.Core;
+using DigitalWellbeingWPF.Models;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace DigitalWellbeingWPF.Helpers
 {
@@ -15,13 +17,15 @@ namespace DigitalWellbeingWPF.Helpers
     {
         static string folderPath = ApplicationPath.SettingsFolder;
 
-        public static Dictionary<string, int> appTimeLimits = new Dictionary<string, int>();
-        static string appTimeLimitsFilePath = folderPath + "app-time-limits.txt";
-
         static SettingsManager()
         {
             LoadAppTimeLimits();
+            LoadAppTags();
         }
+
+        #region App Time Limits
+        public static Dictionary<string, int> appTimeLimits = new Dictionary<string, int>();
+        static string appTimeLimitsFilePath = folderPath + "app-time-limits.txt";
 
         private static async void LoadAppTimeLimits()
         {
@@ -114,6 +118,103 @@ namespace DigitalWellbeingWPF.Helpers
             SaveAppTimeLimits();
         }
 
+        #endregion
+
+        #region App Tags
+
+        public static Dictionary<string, AppTag> appTags = new Dictionary<string, AppTag>();
+        static string appTagsPath = folderPath + "app-tags.txt";
+
+        private static async void LoadAppTags()
+        {
+            try
+            {
+                string text = await Task.Run(() => File.ReadAllText(appTagsPath));
+
+                string[] rows = text.Split('\n');
+
+                foreach (string row in rows)
+                {
+                    try
+                    {
+                        string[] cells = row.Split('\t');
+
+                        string processName = cells[0];
+                        AppTag appTag = (AppTag)int.Parse(cells[1]);
+
+                        appTags.Add(processName, appTag);
+                    }
+                    catch (IndexOutOfRangeException)
+                    {
+                        // No indicated cells, possibly last line in txt
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        throw;
+                    }
+                }
+            }
+            catch (FileNotFoundException)
+            {
+                AppLogger.WriteLine($"CANNOT FIND: {appTagsPath}");
+
+                // Saves an empty one
+                SaveAppTags();
+            }
+            catch (DirectoryNotFoundException)
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+            catch (IOException)
+            {
+                Console.WriteLine("Can't read, file is still being used");
+            }
+            catch (Exception ex)
+            {
+                AppLogger.WriteLine(ex.Message);
+            }
+        }
+
+        private static void SaveAppTags()
+        {
+            List<string> lines = new List<string>();
+
+            foreach (KeyValuePair<string, AppTag> appTag in appTags)
+            {
+                lines.Add($"{appTag.Key}\t{(int)appTag.Value}");
+            }
+
+            File.WriteAllLines(appTagsPath, lines);
+        }
+
+        public static void UpdateAppTag(string processName, AppTag appTag)
+        {
+            // Remove tag if set to NONE
+            if (appTag == AppTag.None)
+            {
+                if (appTags.ContainsKey(processName))
+                {
+                    appTags.Remove(processName);
+                }
+            }
+            // Else, update or add new
+            else
+            {
+                if (appTags.ContainsKey(processName))
+                {
+                    appTags[processName] = appTag;
+                }
+                else
+                {
+                    appTags.Add(processName, appTag);
+                }
+            }
+
+            SaveAppTags();
+        }
+
+        #endregion
 
         #region Run on Startup
 

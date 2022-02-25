@@ -260,6 +260,12 @@ namespace DigitalWellbeingWPF.ViewModels
             Notifier.ResetNotificationForApp(processName);
         }
 
+        public void OnSetAppTag(string processName)
+        {
+            SetAppTagWindow window = new SetAppTagWindow(processName);
+            window.ShowDialog();
+        }
+
         public AppUsageListItem OnAppUsageChart_SelectionChanged(ChartPoint chartPoint)
         {
             try

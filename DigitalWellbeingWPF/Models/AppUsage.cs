@@ -14,12 +14,14 @@ namespace DigitalWellbeingWPF.Models
         public string ProgramName { get; set; }
         public string ProcessName { get; set; } // Process name : Use as identifier
         public TimeSpan Duration { get; set; }
+        public AppTag Tag { get; set; }
 
-        public AppUsage(string processName, string programName, TimeSpan duration)
+        public AppUsage(string processName, string programName, TimeSpan duration, AppTag tag = AppTag.None)
         {
             this.ProcessName = processName;
             this.ProgramName = programName != string.Empty ? programName : StringParser.TitleCaseWhenLower(processName);
             this.Duration = duration;
+            this.Tag = tag;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
