@@ -29,6 +29,8 @@ namespace DigitalWellbeingWPF.Helpers
 
         private static async void LoadAppTimeLimits()
         {
+            appTimeLimits.Clear();
+
             try
             {
                 string text = await Task.Run(() => File.ReadAllText(appTimeLimitsFilePath));
@@ -127,6 +129,8 @@ namespace DigitalWellbeingWPF.Helpers
 
         private static async void LoadAppTags()
         {
+            appTags.Clear();
+
             try
             {
                 string text = await Task.Run(() => File.ReadAllText(appTagsPath));

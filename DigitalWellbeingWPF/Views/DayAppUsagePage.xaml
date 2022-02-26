@@ -22,7 +22,7 @@
                 </DataTrigger>
             </ControlTemplate.Triggers>
             <Border x:Name="borderContainer" Background="{TemplateBinding Background}" Padding="5" CornerRadius="10" >
-                <ContentPresenter/>
+                <ContentPresenter HorizontalAlignment="Center"/>
             </Border>
         </ControlTemplate>
     </Page.Resources>
@@ -75,7 +75,7 @@
             <lvc:CartesianChart.AxisY>
                 <lvc:Axis Title="Hours" LabelFormatter="{Binding HourFormatter}" MinValue="0">
                     <lvc:Axis.Separator>
-                        <lvc:Separator Stroke="{DynamicResource SystemControlBackgroundBaseLowRevealBackgroundBrush}"/>
+                        <lvc:Separator Stroke="{DynamicResource SystemControlBackgroundBaseLowRevealBackgroundBrush}" />
                     </lvc:Axis.Separator>
                 </lvc:Axis>
             </lvc:CartesianChart.AxisY>
@@ -96,34 +96,62 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
-                <lvc:PieChart Grid.Row="0" x:Name="appUsageChart"
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- TAGS CHART -->
+                    <lvc:CartesianChart x:Name="tagChart" Grid.Column="0" Series="{Binding TagsChartData}">
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis>
+                                <lvc:Axis.Separator>
+                                    <lvc:Separator Step="1" StrokeThickness="0"/>
+                                </lvc:Axis.Separator>
+                            </lvc:Axis>
+                        </lvc:CartesianChart.AxisX>
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis MinValue="0" MaxValue="1">
+                                <lvc:Axis.Separator>
+                                    <lvc:Separator Stroke="{DynamicResource SystemControlBackgroundBaseLowRevealBackgroundBrush}" />
+                                </lvc:Axis.Separator>
+                            </lvc:Axis>
+                        </lvc:CartesianChart.AxisY>
+                    </lvc:CartesianChart>
+
+                    <!-- PIE CHART -->
+                    <lvc:PieChart Grid.Column="1" x:Name="appUsageChart"
                               Series="{Binding DayPieChartData}"
                               DataClick="AppUsageChart_DataClick"
                               ChartLegend="{x:Null}" InnerRadius="{Binding PieChartInnerRadius}"
                               DisableAnimations="True" Hoverable="False">
-                    <lvc:PieChart.Resources>
-                        <Style TargetType="lvc:PieSeries">
-                            <Setter Property="StrokeThickness" Value="0"/>
-                            <Setter Property="DataLabels" Value="True"/>
-                            <Setter Property="LabelPosition" Value="OutsideSlice"/>
-                            <Setter Property="FontSize" Value="12"/>
-                            <Setter Property="FontWeight" Value="Medium"/>
-                            <Setter Property="Foreground" Value="{DynamicResource SystemControlPageTextBaseHighBrush}"/>
-                        </Style>
-                    </lvc:PieChart.Resources>
+                        <lvc:PieChart.Resources>
+                            <Style TargetType="lvc:PieSeries">
+                                <Setter Property="StrokeThickness" Value="0"/>
+                                <Setter Property="DataLabels" Value="True"/>
+                                <Setter Property="LabelPosition" Value="OutsideSlice"/>
+                                <Setter Property="FontSize" Value="12"/>
+                                <Setter Property="FontWeight" Value="Medium"/>
+                                <Setter Property="Foreground" Value="{DynamicResource SystemControlPageTextBaseHighBrush}"/>
+                            </Style>
+                        </lvc:PieChart.Resources>
 
-                    <lvc:PieChart.DataTooltip>
-                        <lvc:DefaultTooltip SelectionMode="OnlySender">
-                            <lvc:DefaultTooltip.Style>
-                                <Style TargetType="lvc:DefaultTooltip">
-                                    <Setter Property="Background" Value="{DynamicResource ApplicationPageBackgroundThemeBrush}"/>
-                                    <Setter Property="Foreground" Value="{DynamicResource SystemControlPageTextBaseHighBrush}"/>
-                                </Style>
-                            </lvc:DefaultTooltip.Style>
-                        </lvc:DefaultTooltip>
-                    </lvc:PieChart.DataTooltip>
+                        <lvc:PieChart.DataTooltip>
+                            <lvc:DefaultTooltip SelectionMode="OnlySender">
+                                <lvc:DefaultTooltip.Style>
+                                    <Style TargetType="lvc:DefaultTooltip">
+                                        <Setter Property="Background" Value="{DynamicResource ApplicationPageBackgroundThemeBrush}"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource SystemControlPageTextBaseHighBrush}"/>
+                                    </Style>
+                                </lvc:DefaultTooltip.Style>
+                            </lvc:DefaultTooltip>
+                        </lvc:PieChart.DataTooltip>
 
-                </lvc:PieChart>
+                    </lvc:PieChart>
+
+
+                </Grid>
 
                 <TextBlock Grid.Row="1" Text="{Binding StrMinumumDuration}" Style="{StaticResource CaptionTextBlockStyle}" FontSize="10" Margin="0,10,0,0"/>
 
@@ -156,9 +184,9 @@
                         <Button x:Name="BtnPreviousDay" Grid.Column="0" Content="&lt;" Click="BtnPreviousDay_Click" IsEnabled="{Binding CanGoPrev}"/>
 
                         <TextBlock Grid.Column="1"
-                        Text="{Binding StrLoadedDate, Mode=OneWay}"
-                        TextAlignment="Center" Style="{StaticResource SubtitleTextBlockStyle}"
-                    />
+                            Text="{Binding StrLoadedDate, Mode=OneWay}"
+                            TextAlignment="Center" Style="{StaticResource SubtitleTextBlockStyle}"/>
+
                         <Button x:Name="BtnNextDay" Grid.Column="2" Content="&gt;" Click="BtnNextDay_Click" IsEnabled="{Binding CanGoNext}"/>
                     </Grid>
 

@@ -38,6 +38,7 @@ namespace DigitalWellbeingWPF.ViewModels
         #region Formatters
         public Func<double, string> HourFormatter { get; set; }
         private Func<ChartPoint, string> PieChartLabelFormatter { get; set; }
+        private Func<ChartPoint, string> TagChartFormatter { get; set; }
         #endregion
 
         #region String Bindings
@@ -82,6 +83,7 @@ namespace DigitalWellbeingWPF.ViewModels
         public string[] WeeklyChartLabels { get; set; }
         public SeriesCollection DayPieChartData { get; set; } // Pie Chart Data
         public ObservableCollection<AppUsageListItem> DayListItems { get; set; } // List Items
+        public SeriesCollection TagsChartData { get; set; } // Tags's Combined Usage
 
         // Excluded Processes
         private static readonly string[] excludeProcesses = new string[]
@@ -145,6 +147,7 @@ namespace DigitalWellbeingWPF.ViewModels
             WeeklyChartData = new SeriesCollection();
             WeeklyChartLabels = new string[0];
             WeeklyChartLabelDates = new DateTime[0];
+            TagsChartData = new SeriesCollection();
 
             DayPieChartData = new SeriesCollection();
             DayListItems = new ObservableCollection<AppUsageListItem>();
@@ -155,6 +158,8 @@ namespace DigitalWellbeingWPF.ViewModels
             HourFormatter = (hours) => hours.ToString("F1") + " h";
             //PieChartLabelFormatter = (chartPoint) => string.Format("{0:F2} min/s", chartPoint.Y);
             PieChartLabelFormatter = (chartPoint) => string.Format("{0}", chartPoint.SeriesView.Title);
+
+            TagChartFormatter = (chartPoint) => string.Format("{0}", chartPoint.SeriesView.Title);
         }
 
         private void InitAutoRefreshTimer()
@@ -190,18 +195,17 @@ namespace DigitalWellbeingWPF.ViewModels
 
                     // Store App Usage List
                     List<AppUsage> appUsageList = await GetData(date);
-                    appUsageList.Sort(appUsageSorter);
+                    List<AppUsage> filteredUsageList = appUsageList.Where(appUsageFilter).ToList();
+                    filteredUsageList.Sort(appUsageSorter);
 
                     // Calculate Total Hours
                     TimeSpan totalDuration = TimeSpan.Zero;
-                    foreach (AppUsage app in appUsageList)
+                    foreach (AppUsage app in filteredUsageList)
                     {
-                        if (IsProcessExcluded(app.ProcessName)) continue;
-
                         totalDuration = totalDuration.Add(app.Duration);
                     }
 
-                    weekUsage.Add(appUsageList);
+                    weekUsage.Add(filteredUsageList);
                     hours.Add(totalDuration.TotalHours);
                     labels.Add(date.ToString("ddd"));
                     loadedDates.Add(date);
@@ -275,6 +279,7 @@ namespace DigitalWellbeingWPF.ViewModels
             catch { }
 
             RefreshListItems();
+            RefreshTagChart();
         }
 
         public AppUsageListItem OnAppUsageChart_SelectionChanged(ChartPoint chartPoint)
@@ -319,6 +324,7 @@ namespace DigitalWellbeingWPF.ViewModels
         #endregion
 
         Comparison<AppUsage> appUsageSorter = (a, b) => a.Duration.CompareTo(b.Duration) * -1;
+        Func<AppUsage, bool> appUsageFilter = (a) => !IsProcessExcluded(a.ProcessName);
 
         private async void TryRefreshData()
         {
@@ -333,8 +339,9 @@ namespace DigitalWellbeingWPF.ViewModels
                 try
                 {
                     List<AppUsage> appUsageList = await GetData(LoadedDate.Date);
-                    appUsageList.Sort(appUsageSorter);
-                    UpdatePieChartAndList(appUsageList);
+                    List<AppUsage> filteredUsageList = appUsageList.Where(appUsageFilter).ToList();
+                    filteredUsageList.Sort(appUsageSorter);
+                    UpdatePieChartAndList(filteredUsageList);
 
                     // Refresh Bar Graph
                     WeeklyChartData.ElementAt(0).Values[GetDayIndex(LoadedDate.Date)] = TotalDuration.TotalHours;
@@ -352,6 +359,49 @@ namespace DigitalWellbeingWPF.ViewModels
             {
                 item.Refresh();
             }
+        }
+
+        private void RefreshTagChart()
+        {
+            List<AppUsage> usageList = GetDayUsage(LoadedDate);
+
+            // Load Tags
+            SeriesCollection tempTagChartData = new SeriesCollection();
+            Dictionary<string, double> tagHours = new Dictionary<string, double>();
+            double totalMinutes = 0;
+
+            // Load empty first
+            foreach (string tagName in Enum.GetNames(typeof(AppTag)))
+            {
+                tagHours.Add(tagName, 0);
+            }
+
+            // Combine hours of different tags
+            foreach (AppUsage app in usageList)
+            {
+                string appTag = Enum.GetName(typeof(AppTag), AppTagHelper.GetAppTag(app.ProcessName));
+                tagHours[appTag] += app.Duration.TotalMinutes;
+
+                totalMinutes += app.Duration.TotalMinutes;
+            }
+
+
+            foreach (KeyValuePair<string, double> tagHour in tagHours)
+            {
+                double percentage = tagHour.Value / totalMinutes;
+
+                tempTagChartData.Add(new StackedColumnSeries()
+                {
+                    Values = new ChartValues<double> { percentage },
+                    DataLabels = true,
+                    Title = tagHour.Key,
+                    LabelPoint = TagChartFormatter,
+                    Fill = AppTagHelper.GetTagColor(tagHour.Key),
+                });
+            }
+
+            TagsChartData.Clear();
+            TagsChartData.AddRange(tempTagChartData);
         }
 
         private void ReloadSettings()
@@ -396,6 +446,8 @@ namespace DigitalWellbeingWPF.ViewModels
         {
             SetLoading(true);
 
+            List<AppUsage> filteredUsageList = appUsageList.Where(appUsageFilter).ToList();
+
             try
             {
                 TotalDuration = TimeSpan.Zero;
@@ -418,18 +470,14 @@ namespace DigitalWellbeingWPF.ViewModels
                 ObservableCollection<AppUsageListItem> tempListItems = new ObservableCollection<AppUsageListItem>();
 
                 // Calculate Total Duration
-                foreach (AppUsage app in appUsageList)
+                foreach (AppUsage app in filteredUsageList)
                 {
-                    if (IsProcessExcluded(app.ProcessName)) continue;
-
                     TotalDuration = TotalDuration.Add(app.Duration);
                 }
 
                 // Add List Items and Chart Items
-                foreach (AppUsage app in appUsageList)
+                foreach (AppUsage app in filteredUsageList)
                 {
-                    if (IsProcessExcluded(app.ProcessName)) continue;
-
                     int percentage = (int)Math.Round(app.Duration.TotalSeconds / TotalDuration.TotalSeconds * 100);
 
                     string durationStr = StringParser.TimeSpanToString(app.Duration);
@@ -485,8 +533,13 @@ namespace DigitalWellbeingWPF.ViewModels
                 {
                     DayListItems.Add(item);
                 }
+
+                RefreshTagChart();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                AppLogger.WriteLine(ex);
+            }
             finally
             {
                 NotifyChange();
@@ -499,6 +552,15 @@ namespace DigitalWellbeingWPF.ViewModels
         private int GetDayIndex(DateTime date)
         {
             return Array.FindIndex(WeeklyChartLabelDates, labelDates => labelDates.Date == date.Date);
+        }
+
+        private List<AppUsage> GetDayUsage(DateTime date)
+        {
+            List<AppUsage> appUsageList = WeekAppUsage[GetDayIndex(date)];
+            List<AppUsage> filteredUsageList = appUsageList.Where(appUsageFilter).ToList();
+            filteredUsageList.Sort(appUsageSorter);
+
+            return filteredUsageList;
         }
 
         public static bool IsProcessExcluded(string processName)

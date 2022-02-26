@@ -37,7 +37,7 @@ namespace DigitalWellbeingWPF.Views
 
             // Reload current tag
             AppTag tag = AppTagHelper.GetAppTag(_processName);
-            CBTag.SelectedItem = AppTagHelper.GetTagName(tag);
+            CBTag.SelectedItem = AppTagHelper.GetTagStrName(tag);
         }
 
         private void LoadCBTagChoices()

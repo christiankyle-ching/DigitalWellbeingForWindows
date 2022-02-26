@@ -67,7 +67,7 @@ namespace DigitalWellbeingWPF.Models
             }
         }
 
-        public static string GetTagName(AppTag appTag)
+        public static string GetTagStrName(AppTag appTag)
         {
             if (appTag == AppTag.None) return "";
 
@@ -78,6 +78,13 @@ namespace DigitalWellbeingWPF.Models
         {
             BrushConverter bc = new BrushConverter();
             return (Brush)bc.ConvertFromString(AppTagColors[(int)appTag]);
+        }
+
+        public static Brush GetTagColor(string appTagName)
+        {
+            BrushConverter bc = new BrushConverter();
+
+            return (Brush)bc.ConvertFromString(AppTagColors[(int)Enum.Parse(typeof(AppTag), appTagName)]);
         }
     }
 }
