@@ -19,21 +19,27 @@ namespace DigitalWellbeingWPF.Models
         Games = 3,
         Entertainment = 4,
         Communication = 5,
+        Utility = 6,
     }
 
     public static class AppTagHelper
     {
         /*
          * Match int ID from AppTag enum
+         * 
+         * Colors From 2014 Material Design Palette
+         * Color[900] for dark colors, since foreground is always white
+         * https://material.io/design/color/the-color-system.html#tools-for-picking-colors
          */
         public static Dictionary<int, string> AppTagColors = new Dictionary<int, string>()
         {
-            {0, "#9E9E9E"},
-            {1, "#FF9800"},
-            {2, "#4CAF50"},
-            {3, "#9C27B0"},
-            {4, "#F44336"},
-            {5, "#00BCD4"},
+            {0, "#212121"}, // None, Gray
+            {1, "#E65100"}, // Work, Orange
+            {2, "#1B5E20"}, // Education, Green
+            {3, "#4A148C"}, // Games, Purple
+            {4, "#B71C1C"}, // Entertainment, Red
+            {5, "#0D47A1"}, // Communication, Blue
+            {6, "#F57F17"}, // Utility, Yellow
         };
 
         public static Dictionary<string, int> GetComboBoxChoices()

@@ -14,6 +14,19 @@
       Background="{DynamicResource SystemControlPageBackgroundAltHighBrush}"
       Foreground="{DynamicResource SystemControlPageTextBaseHighBrush}">
 
+    <Page.Resources>
+        <ControlTemplate x:Key="BadgeLabel" TargetType="{x:Type Label}">
+            <ControlTemplate.Triggers>
+                <DataTrigger Binding="{Binding Path=Content, RelativeSource={RelativeSource Self}}" Value="">
+                    <Setter TargetName="borderContainer" Property="Border.Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </ControlTemplate.Triggers>
+            <Border x:Name="borderContainer" Background="{TemplateBinding Background}" Padding="5" CornerRadius="10" >
+                <ContentPresenter/>
+            </Border>
+        </ControlTemplate>
+    </Page.Resources>
+
     <Page.DataContext>
         <vm:AppUsageViewModel/>
     </Page.DataContext>
@@ -87,8 +100,7 @@
                               Series="{Binding DayPieChartData}"
                               DataClick="AppUsageChart_DataClick"
                               ChartLegend="{x:Null}" InnerRadius="{Binding PieChartInnerRadius}"
-                              DisableAnimations="True" Hoverable="False"
-                              DataTooltip="{x:Null}">
+                              DisableAnimations="True" Hoverable="False">
                     <lvc:PieChart.Resources>
                         <Style TargetType="lvc:PieSeries">
                             <Setter Property="StrokeThickness" Value="0"/>
@@ -99,17 +111,18 @@
                             <Setter Property="Foreground" Value="{DynamicResource SystemControlPageTextBaseHighBrush}"/>
                         </Style>
                     </lvc:PieChart.Resources>
-                    <!--
+
                     <lvc:PieChart.DataTooltip>
                         <lvc:DefaultTooltip SelectionMode="OnlySender">
                             <lvc:DefaultTooltip.Style>
                                 <Style TargetType="lvc:DefaultTooltip">
                                     <Setter Property="Background" Value="{DynamicResource ApplicationPageBackgroundThemeBrush}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource SystemControlPageTextBaseHighBrush}"/>
                                 </Style>
                             </lvc:DefaultTooltip.Style>
                         </lvc:DefaultTooltip>
                     </lvc:PieChart.DataTooltip>
-                    -->
+
                 </lvc:PieChart>
 
                 <TextBlock Grid.Row="1" Text="{Binding StrMinumumDuration}" Style="{StaticResource CaptionTextBlockStyle}" FontSize="10" Margin="0,10,0,0"/>
@@ -146,7 +159,6 @@
                         Text="{Binding StrLoadedDate, Mode=OneWay}"
                         TextAlignment="Center" Style="{StaticResource SubtitleTextBlockStyle}"
                     />
-
                         <Button x:Name="BtnNextDay" Grid.Column="2" Content="&gt;" Click="BtnNextDay_Click" IsEnabled="{Binding CanGoNext}"/>
                     </Grid>
 
@@ -181,10 +193,15 @@
                                         </Grid.ColumnDefinitions>
 
                                         <TextBlock VerticalAlignment="Top" Grid.Column="0" Style="{StaticResource BaseTextBlockStyle}">
-                                            <Run Text="{Binding ProgramName}" /><Run Text=" (" /><Run Text="{Binding ProcessName}" /><Run Text=") " /><Run Text="{Binding StrAppTag, Mode=OneWay}" Foreground="{Binding BrushAppTag, Mode=OneWay}"/>
+                                            <Run Text="{Binding ProgramName}" /><Run Text=" (" /><Run Text="{Binding ProcessName}" /><Run Text=") " />
                                         </TextBlock>
 
-                                        <TextBlock Text="{Binding StrDuration}" VerticalAlignment="Top" Grid.Column="1" TextAlignment="Right" Style="{StaticResource CaptionTextBlockStyle}" Margin="10,0,0,0"/>
+                                        <ui:SimpleStackPanel Margin="10,0,0,0" Grid.Column="1">
+                                            <TextBlock Text="{Binding StrDuration}" VerticalAlignment="Top" Grid.Column="1" TextAlignment="Right" Style="{StaticResource CaptionTextBlockStyle}" />
+
+                                            <Label Content="{Binding StrAppTag, Mode=OneWay}" Background="{Binding BrushAppTag, Mode=OneWay}" FontSize="12" FontWeight="Bold" Foreground="White" Template="{StaticResource BadgeLabel}" Margin="0,5,0,0"/>
+                                        </ui:SimpleStackPanel>
+
                                     </Grid>
 
                                     <ui:ProgressBar Value="{Binding Percentage}" Margin="0,5,0,5"/>
