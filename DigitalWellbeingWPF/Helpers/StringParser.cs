@@ -43,5 +43,6 @@ namespace DigitalWellbeingWPF.Helpers
                 return $"{MB} MB";
             }
         }
+
     }
 }

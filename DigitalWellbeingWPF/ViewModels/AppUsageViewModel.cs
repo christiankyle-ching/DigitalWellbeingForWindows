@@ -323,6 +323,7 @@ namespace DigitalWellbeingWPF.ViewModels
         }
         #endregion
 
+        // * -1 for desc, default is asc
         Comparison<AppUsage> appUsageSorter = (a, b) => a.Duration.CompareTo(b.Duration) * -1;
         Func<AppUsage, bool> appUsageFilter = (a) => !IsProcessExcluded(a.ProcessName);
 
@@ -379,18 +380,20 @@ namespace DigitalWellbeingWPF.ViewModels
             // Combine hours of different tags
             foreach (AppUsage app in usageList)
             {
-                string appTag = Enum.GetName(typeof(AppTag), AppTagHelper.GetAppTag(app.ProcessName));
+                string appTag = EnumUtils.GetEnumName(AppTagHelper.GetAppTag(app.ProcessName));
                 tagHours[appTag] += app.Duration.TotalMinutes;
 
                 totalMinutes += app.Duration.TotalMinutes;
             }
 
+            List<KeyValuePair<string, double>> sortedTagHours = tagHours.ToList();
+            sortedTagHours.Sort((a, b) => a.Value.CompareTo(b.Value) * -1);
 
-            foreach (KeyValuePair<string, double> tagHour in tagHours)
+            foreach (KeyValuePair<string, double> tagHour in sortedTagHours)
             {
                 double percentage = tagHour.Value / totalMinutes;
 
-                tempTagChartData.Add(new StackedColumnSeries()
+                tempTagChartData.Add(new StackedRowSeries()
                 {
                     Values = new ChartValues<double> { percentage },
                     DataLabels = true,

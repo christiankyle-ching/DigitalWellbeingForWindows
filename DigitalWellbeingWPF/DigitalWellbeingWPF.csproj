@@ -79,6 +79,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Helpers\AppLogger.cs" />
+    <Compile Include="Helpers\EnumUtils.cs" />
     <Compile Include="Helpers\Notifier.cs" />
     <Compile Include="Helpers\SettingsManager.cs" />
     <Compile Include="Helpers\StorageManager.cs" />

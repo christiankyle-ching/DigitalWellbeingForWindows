@@ -195,7 +195,7 @@ namespace DigitalWellbeingWPF.Helpers
         public static void UpdateAppTag(string processName, AppTag appTag)
         {
             // Remove tag if set to NONE
-            if (appTag == AppTag.None)
+            if (appTag == AppTag.Untagged)
             {
                 if (appTags.ContainsKey(processName))
                 {

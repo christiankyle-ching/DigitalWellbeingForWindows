@@ -9,11 +9,14 @@ using System.Windows.Media;
 namespace DigitalWellbeingWPF.Models
 {
     /*
-     * When removing a tag, don't re-use the numbers already in here. Just comment them and use a new int for ID.
+     * When removing a tag, don't re-use the numbers already in here.
+     * Just comment them and use a new int for ID.
+     * You can rename the enum string, though keep in mind that this might confuse you for previous tagged apps.
+     * Underscores (_) can be replaced by spaces ( ). See: `EnumUtils.GetEnumDisplayName`
      */
     public enum AppTag
     {
-        None = 0,
+        Untagged = 0,
         Work = 1,
         Education = 2,
         Games = 3,
@@ -49,7 +52,7 @@ namespace DigitalWellbeingWPF.Models
             foreach (AppTag tag in Enum.GetValues(typeof(AppTag)))
             {
                 // Name: Enum
-                tags.Add(Enum.GetName(typeof(AppTag), tag), (int)tag);
+                tags.Add(EnumUtils.GetEnumName(tag), (int)tag);
             }
 
             return tags;
@@ -63,15 +66,15 @@ namespace DigitalWellbeingWPF.Models
             }
             catch
             {
-                return AppTag.None;
+                return AppTag.Untagged;
             }
         }
 
-        public static string GetTagStrName(AppTag appTag)
+        public static string GetTagDisplayName(AppTag appTag)
         {
-            if (appTag == AppTag.None) return "";
+            if (appTag == AppTag.Untagged) return "";
 
-            return Enum.GetName(typeof(AppTag), appTag);
+            return EnumUtils.GetEnumName(appTag);
         }
 
         public static Brush GetTagColor(AppTag appTag)
@@ -84,7 +87,7 @@ namespace DigitalWellbeingWPF.Models
         {
             BrushConverter bc = new BrushConverter();
 
-            return (Brush)bc.ConvertFromString(AppTagColors[(int)Enum.Parse(typeof(AppTag), appTagName)]);
+            return (Brush)bc.ConvertFromString(AppTagColors[(int)EnumUtils.GetEnumValueFromName<AppTag>(appTagName)]);
         }
     }
 }

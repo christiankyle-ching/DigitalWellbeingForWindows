@@ -22,7 +22,7 @@ namespace DigitalWellbeingWPF.Views
     public partial class SetAppTagWindow : Window
     {
         string _processName = "";
-        AppTag _tag = AppTag.None;
+        AppTag _tag = AppTag.Untagged;
         Dictionary<string, int> appTags;
 
         public SetAppTagWindow(string processName)
@@ -37,7 +37,7 @@ namespace DigitalWellbeingWPF.Views
 
             // Reload current tag
             AppTag tag = AppTagHelper.GetAppTag(_processName);
-            CBTag.SelectedItem = AppTagHelper.GetTagStrName(tag);
+            CBTag.SelectedItem = AppTagHelper.GetTagDisplayName(tag);
         }
 
         private void LoadCBTagChoices()
