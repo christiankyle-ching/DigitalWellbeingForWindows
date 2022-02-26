@@ -104,10 +104,18 @@
 
                     <!-- TAGS CHART -->
                     <lvc:CartesianChart x:Name="tagChart" Grid.Column="0" Series="{Binding TagsChartData}">
+                        <lvc:CartesianChart.Resources>
+                            <Style TargetType="lvc:StackedColumnSeries">
+                                <Setter Property="FontSize" Value="12"/>
+                                <Setter Property="FontWeight" Value="Medium"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Style>
+                        </lvc:CartesianChart.Resources>
+
                         <lvc:CartesianChart.AxisX>
-                            <lvc:Axis>
+                            <lvc:Axis Labels="Tags">
                                 <lvc:Axis.Separator>
-                                    <lvc:Separator Step="1" StrokeThickness="0"/>
+                                    <lvc:Separator Step="1" StrokeThickness="0" />
                                 </lvc:Axis.Separator>
                             </lvc:Axis>
                         </lvc:CartesianChart.AxisX>
