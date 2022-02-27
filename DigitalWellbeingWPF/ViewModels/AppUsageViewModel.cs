@@ -312,6 +312,8 @@ namespace DigitalWellbeingWPF.ViewModels
                 else
                 {
                     LoadedDate = selectedDate;
+
+                    TryRefreshData();
                     UpdatePieChartAndList(WeekAppUsage.ElementAt(index));
                 }
             }
@@ -340,6 +342,10 @@ namespace DigitalWellbeingWPF.ViewModels
                 try
                 {
                     List<AppUsage> appUsageList = await GetData(LoadedDate.Date);
+
+                    // Also update source, which is the last in list
+                    WeekAppUsage[WeekAppUsage.Count - 1] = appUsageList;
+
                     List<AppUsage> filteredUsageList = appUsageList.Where(appUsageFilter).ToList();
                     filteredUsageList.Sort(appUsageSorter);
                     UpdatePieChartAndList(filteredUsageList);
