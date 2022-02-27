@@ -19,7 +19,7 @@
             </ui:NavigationView.MenuItems>
 
             <Frame x:Name="ContentFrame"
-                   NavigationUIVisibility="Hidden" Margin="20"
+                   NavigationUIVisibility="Hidden" Margin="20,0,20,20"
                    HorizontalContentAlignment="Stretch" VerticalAlignment="Stretch"/>
         </ui:NavigationView>
     </Grid>
