@@ -36,6 +36,8 @@
         <vm:AppUsageViewModel/>
     </Page.DataContext>
 
+    <!-- TODO: Gets cropped at the bottom somehow by MainWindow margins -->
+    <!-- Works only at MainWindow.MinHeight of >= 660 -->
     <Grid Name="MainGrid">
 
         <Grid.RowDefinitions>
@@ -56,10 +58,11 @@
                     </Style.Triggers>
                 </Style>
             </Grid.Style>
+
             <ui:ProgressBar IsIndeterminate="True" Margin="0,0,0,5"/>
         </Grid>
 
-        <Grid Grid.Row="1" Margin="20,0,20,0">
+        <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="auto"/>
@@ -95,7 +98,7 @@
             </lvc:CartesianChart>
 
             <!-- TAGS CHART -->
-            <lvc:CartesianChart Grid.Row="1" x:Name="tagChart" Series="{Binding TagsChartData}" Margin="0,10,0,0">
+            <lvc:CartesianChart Grid.Row="1" x:Name="tagChart" Series="{Binding TagsChartData}">
                 <lvc:CartesianChart.Resources>
                     <Style TargetType="lvc:StackedRowSeries">
                         <Setter Property="FontSize" Value="12"/>
@@ -133,22 +136,23 @@
             </Grid.ColumnDefinitions>
 
             <!-- First Column : Chart -->
-            <Grid Margin="20,20,20,0" Grid.Column="0" >
+            <Grid Grid.Column="0" >
 
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
+                    <RowDefinition Height="*"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0">
 
                     <!-- PIE CHART -->
-                    <lvc:PieChart Grid.Row="0" x:Name="appUsageChart"
-                              Series="{Binding DayPieChartData}"
-                              DataClick="AppUsageChart_DataClick"
-                              ChartLegend="{x:Null}" InnerRadius="{Binding PieChartInnerRadius}"
-                              DisableAnimations="True" Hoverable="False"
-                              Margin="0,0,0,10">
+                    <lvc:PieChart x:Name="appUsageChart"
+                                  Series="{Binding DayPieChartData}"
+                                  DataClick="AppUsageChart_DataClick"
+                                  ChartLegend="{x:Null}" InnerRadius="{Binding PieChartInnerRadius}"
+                                  DisableAnimations="True" Hoverable="False"
+                                  Margin="40">
+                        <!-- Keep Margin for Labels -->
                         <lvc:PieChart.Resources>
                             <Style TargetType="lvc:PieSeries">
                                 <Setter Property="StrokeThickness" Value="0"/>
@@ -168,8 +172,11 @@
 
                 </Grid>
 
-                <TextBlock Grid.Row="1" Text="{Binding StrMinumumDuration}" Style="{StaticResource CaptionTextBlockStyle}" FontSize="10" Margin="0,10,0,0"/>
-
+                <!-- Minimum Duration -->
+                <TextBlock Grid.Row="1" Style="{StaticResource CaptionTextBlockStyle}"
+                           Text="{Binding StrMinumumDuration}"
+                           FontSize="10" 
+                           TextAlignment="Center"/>
             </Grid>
 
             <!-- Second Column : Right Side List -->
@@ -196,13 +203,24 @@
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <Button x:Name="BtnPreviousDay" Grid.Column="0" Content="&lt;" Click="BtnPreviousDay_Click" IsEnabled="{Binding CanGoPrev}"/>
+                        <Button x:Name="BtnPreviousDay" Grid.Column="0"
+                                 Click="BtnPreviousDay_Click"
+                                IsEnabled="{Binding CanGoPrev}"
+                                Content="&lt;"
+                                Padding="10,5"
+                                FontSize="16" FontWeight="ExtraBold" 
+                                FontFamily="Calibri"/>
 
                         <TextBlock Grid.Column="1"
                             Text="{Binding StrLoadedDate, Mode=OneWay}"
                             TextAlignment="Center" Style="{StaticResource SubtitleTextBlockStyle}"/>
 
-                        <Button x:Name="BtnNextDay" Grid.Column="2" Content="&gt;" Click="BtnNextDay_Click" IsEnabled="{Binding CanGoNext}"/>
+                        <Button x:Name="BtnNextDay" Grid.Column="2"
+                                Content="&gt;" Click="BtnNextDay_Click"
+                                IsEnabled="{Binding CanGoNext}"
+                                Padding="10,5"
+                                FontSize="16" FontWeight="ExtraBold" 
+                                FontFamily="Calibri"/>
                     </Grid>
 
 

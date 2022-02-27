@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         ui:WindowHelper.UseModernWindowStyle="True" 
-        Height="550" Width="800" MinHeight="550" MinWidth="800"
+        Height="660" Width="900" MinHeight="660" MinWidth="900"
         Title="Digital Wellbeing For Windows"
         WindowStartupLocation="CenterScreen"
         StateChanged="Window_StateChanged" Closing="Window_Closing">
@@ -18,7 +18,9 @@
                 <ui:NavigationViewItem Tag="home" Icon="Home" Content="Home"/>
             </ui:NavigationView.MenuItems>
 
-            <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Margin="0,0,20,20"/>
+            <Frame x:Name="ContentFrame"
+                   NavigationUIVisibility="Hidden" Margin="20"
+                   HorizontalContentAlignment="Stretch" VerticalAlignment="Stretch"/>
         </ui:NavigationView>
     </Grid>
 </Window>
