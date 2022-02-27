@@ -386,8 +386,13 @@ namespace DigitalWellbeingWPF.ViewModels
                 totalMinutes += app.Duration.TotalMinutes;
             }
 
+            // Sort from largest to smallest
             List<KeyValuePair<string, double>> sortedTagHours = tagHours.ToList();
             sortedTagHours.Sort((a, b) => a.Value.CompareTo(b.Value) * -1);
+            // Then place AppTag.Untagged at last
+            int untaggedIndex = sortedTagHours.IndexOf(sortedTagHours.Single(t => t.Key == EnumUtils.GetEnumName(AppTag.Untagged)));
+            sortedTagHours.Add(sortedTagHours[untaggedIndex]);
+            sortedTagHours.RemoveAt(untaggedIndex);
 
             foreach (KeyValuePair<string, double> tagHour in sortedTagHours)
             {

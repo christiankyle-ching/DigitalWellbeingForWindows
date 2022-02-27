@@ -27,6 +27,7 @@
     <ROW Property="AI_PROPPATH_FILENAME_PERBUILD_System.ValueTuple.dll" Value="System.ValueTuple.dll"/>
     <ROW Property="ALLUSERS" Value="1"/>
     <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
+    <ROW Property="ARPHELPLINK" Value="https://github.com/christiankyle-ching/DigitalWellbeingForWindows"/>
     <ROW Property="ARPPRODUCTICON" Value="applogo.exe" Type="8"/>
     <ROW Property="Manufacturer" Value="ckcdev"/>
     <ROW Property="ProductCode" Value="1033:{692BE01D-F6B8-4F7E-86AF-4E0490B0D6AC} " Type="16"/>
