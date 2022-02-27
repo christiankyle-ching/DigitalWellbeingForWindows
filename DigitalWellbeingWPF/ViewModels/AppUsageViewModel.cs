@@ -394,17 +394,32 @@ namespace DigitalWellbeingWPF.ViewModels
             sortedTagHours.Add(sortedTagHours[untaggedIndex]);
             sortedTagHours.RemoveAt(untaggedIndex);
 
-            foreach (KeyValuePair<string, double> tagHour in sortedTagHours)
+            // Prevents dividing by zero
+            if (totalMinutes > 0)
             {
-                double percentage = tagHour.Value / totalMinutes;
+                foreach (KeyValuePair<string, double> tagHour in sortedTagHours)
+                {
+                    double percentage = tagHour.Value / totalMinutes;
 
+                    tempTagChartData.Add(new StackedRowSeries()
+                    {
+                        Values = new ChartValues<double> { percentage },
+                        DataLabels = true,
+                        Title = tagHour.Key,
+                        LabelPoint = TagChartFormatter,
+                        Fill = AppTagHelper.GetTagColor(tagHour.Key),
+                    });
+                }
+            }
+            else
+            {
                 tempTagChartData.Add(new StackedRowSeries()
                 {
-                    Values = new ChartValues<double> { percentage },
+                    Values = new ChartValues<double> { 1.0 },
                     DataLabels = true,
-                    Title = tagHour.Key,
+                    Title = "No Data",
                     LabelPoint = TagChartFormatter,
-                    Fill = AppTagHelper.GetTagColor(tagHour.Key),
+                    Fill = AppTagHelper.GetTagColor(AppTag.Untagged),
                 });
             }
 
