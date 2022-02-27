@@ -15,6 +15,11 @@ An App Usage tracker for Windows 10 inspired by Digital Wellbeing in Android. Bu
 - **Filter out short time entries**. Set a filter to hide apps that are run less than the set time limit.
 - **Auto-Refresh**. Auto-Refresh charts on intervals.
 
+## Installation
+**Download the .msi** installer of the [latest version / release](https://github.com/christiankyle-ching/DigitalWellbeingForWindows/releases/latest).
+
+_Windows Defender SmartScreen will block the installation of this file. Read the source code if you have any doubts, or run a VirusTotal scan._
+
 ## Screenshots
 ![image](https://user-images.githubusercontent.com/57316283/155863828-f970b952-d4c4-4a78-9f30-52a2bd0e5a7b.png)
 <br/><br/>
