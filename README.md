@@ -7,17 +7,18 @@ An App Usage tracker for Windows 10 inspired by Digital Wellbeing in Android. Bu
 - **Day App Usage**. View daily app usage time (Pie Chart and List).
 - **Alert Notifications**. Set a time limit per app of when to notify you when limit is exceeded, and has the option to close the app directly.
 - **Auto-Start**. Run on Startup option, minimized to tray.
+- **App Tagging**. Tag apps based on their category. See their percentage of usage through your daily life.
 - **Multi-user compatible**. Single installation, but different users have their own usage data.
 - **Exclude Apps**. Set a filter of apps to exclude.
 - **Filter out short time entries**. Set a filter to hide apps that are run less than the set time limit.
 - **Auto-Refresh**. Auto-Refresh charts on intervals.
 
 ## Screenshots
-![Light Theme](https://user-images.githubusercontent.com/57316283/149713916-8ee2220e-5fc6-4fee-8107-5d5f7359d8d7.png)
+![image](https://user-images.githubusercontent.com/57316283/155863828-f970b952-d4c4-4a78-9f30-52a2bd0e5a7b.png)
 <br/><br/>
-![Dark Theme](https://user-images.githubusercontent.com/57316283/149713883-ed1b0762-44bf-4059-815c-87623925304c.png)
+![image](https://user-images.githubusercontent.com/57316283/155863834-f1f41525-2232-4db9-a2ce-3d02e2f1b4d6.png)
 <br/><br/>
-![Settings](https://user-images.githubusercontent.com/57316283/152666413-87ad80b5-de08-482d-a7c6-b664118ea20c.png)
+![image](https://user-images.githubusercontent.com/57316283/155863844-2b066189-cac8-4e07-acfd-7f91ea8a2969.png)
 
 ## Solution Projects (Folders)
 - `DigitalWellbeing.Core` - A class library that has static shared classes among the projects.
