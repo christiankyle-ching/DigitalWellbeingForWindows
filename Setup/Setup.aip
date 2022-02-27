@@ -29,10 +29,10 @@
     <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
     <ROW Property="ARPPRODUCTICON" Value="applogo.exe" Type="8"/>
     <ROW Property="Manufacturer" Value="ckcdev"/>
-    <ROW Property="ProductCode" Value="1033:{9F0F0E1E-0B53-4CFB-A8B0-05E28EF8BA0C} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{692BE01D-F6B8-4F7E-86AF-4E0490B0D6AC} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="Digital Wellbeing For Windows"/>
-    <ROW Property="ProductVersion" Value="2.0.0.1" Type="32" TargetFile="DigitalWellbeingWPF.exe"/>
+    <ROW Property="ProductVersion" Value="2.0.1.0" Type="32" TargetFile="DigitalWellbeingWPF.exe"/>
     <ROW Property="REBOOT" MultiBuildValue="DefaultBuild:Force"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{D7DA3A0D-99E1-4FAC-B2CC-FEBB27BCA59A}"/>
@@ -62,7 +62,7 @@
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
     <ROW Component="APPDIR" ComponentId="{969BD37D-2D77-4BB0-A2EF-FA8AD98ADBB1}" Directory_="APPDIR" Attributes="0"/>
     <ROW Component="DigitalWellbeingService.NET4.6_PrimaryOutput" ComponentId="{FA385C41-DE30-4880-A584-61A0D16BAF7F}" Directory_="DigitalWellbeingService.NET4.6_Dir" Attributes="0" KeyPath="DigitalWellbeingService.NET4.6.exe"/>
-    <ROW Component="DigitalWellbeingService.NET4.6_References" ComponentId="{6B08D105-EC03-4961-BD53-D614C78C9E91}" Directory_="DigitalWellbeingService.NET4.6_Dir" Attributes="0" KeyPath="DigitalWellbeing.Core.dll"/>
+    <ROW Component="DigitalWellbeingService.NET4.6_References" ComponentId="{1A21F0A6-DCE2-4186-874A-7F6CC5FBC04B}" Directory_="DigitalWellbeingService.NET4.6_Dir" Attributes="0" KeyPath="DigitalWellbeing.Core.dll"/>
     <ROW Component="DigitalWellbeingWPF_PrimaryOutput" ComponentId="{AF6ADD13-3A60-49AC-86E0-67656F4DBB8F}" Directory_="DigitalWellbeingWPF_Dir" Attributes="0" KeyPath="DigitalWellbeingWPF.exe"/>
     <ROW Component="DigitalWellbeingWPF_References" ComponentId="{474BF6AB-CDBB-490D-8DE8-BD0065D66958}" Directory_="DigitalWellbeingWPF_Dir" Attributes="0" KeyPath="DigitalWellbeing.Core.dll_1"/>
     <ROW Component="ProductInformation" ComponentId="{5E6D901E-5FF4-4133-AE16-672B0136950B}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
