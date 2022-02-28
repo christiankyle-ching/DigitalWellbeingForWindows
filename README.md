@@ -27,9 +27,9 @@ NOTE: You may have multiple versions of this app installed. Just uninstall older
 If you experience any problems, see the troubleshooting guide.
 
 ## Screenshots
-![image](https://user-images.githubusercontent.com/57316283/155863828-f970b952-d4c4-4a78-9f30-52a2bd0e5a7b.png)
+![image](https://user-images.githubusercontent.com/57316283/155919727-c0801c34-12bb-47ea-860e-eab5dfb3cc48.png)
 <br/><br/>
-![image](https://user-images.githubusercontent.com/57316283/155863834-f1f41525-2232-4db9-a2ce-3d02e2f1b4d6.png)
+![image](https://user-images.githubusercontent.com/57316283/155919747-6ab542e5-27ef-4704-84be-6eee82442c48.png)
 <br/><br/>
 ![image](https://user-images.githubusercontent.com/57316283/155863844-2b066189-cac8-4e07-acfd-7f91ea8a2969.png)
 
