@@ -160,12 +160,13 @@
                         <!-- Keep Margin for Labels -->
                         <lvc:PieChart.Resources>
                             <Style TargetType="lvc:PieSeries">
-                                <Setter Property="StrokeThickness" Value="0"/>
                                 <Setter Property="DataLabels" Value="True"/>
                                 <Setter Property="LabelPosition" Value="OutsideSlice"/>
                                 <Setter Property="FontSize" Value="14"/>
                                 <Setter Property="FontWeight" Value="Normal"/>
                                 <Setter Property="Foreground" Value="{DynamicResource SystemControlPageTextBaseHighBrush}"/>
+
+                                <Setter Property="Stroke" Value="{DynamicResource SystemControlPageBackgroundAltHighBrush}"/>
                                 <Setter Property="StrokeThickness" Value="5"/>
                             </Style>
                         </lvc:PieChart.Resources>
