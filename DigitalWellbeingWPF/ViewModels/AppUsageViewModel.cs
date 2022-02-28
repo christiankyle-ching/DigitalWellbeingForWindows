@@ -17,6 +17,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
 
@@ -213,9 +214,12 @@ namespace DigitalWellbeingWPF.ViewModels
 
                 // Add all values at once
                 foreach (List<AppUsage> dayUsage in weekUsage) { WeekAppUsage.Add(dayUsage); } // AppUsage
-                WeeklyChartData.Add(new ColumnSeries { Values = hours }); // Bar Chart : Data
-                WeeklyChartLabels = labels.ToArray(); // Bar Chart : Labels
-                WeeklyChartLabelDates = loadedDates.ToArray(); // Bar Chart : Labels as DateTime for selections
+                // Bar Chart : Data
+                WeeklyChartData.Add(new ColumnSeries { Values = hours });
+                // Bar Chart : Labels
+                WeeklyChartLabels = labels.ToArray();
+                // Bar Chart : Labels as DateTime for SelectionChanged
+                WeeklyChartLabelDates = loadedDates.ToArray();
 
                 IsWeeklyDataLoaded = true;
 
@@ -243,6 +247,8 @@ namespace DigitalWellbeingWPF.ViewModels
         {
             try
             {
+                LoadUserExcludedProcesses();
+
                 // Remove List Item
                 AppUsageListItem listItem = DayListItems.Single(item => item.ProcessName == processName);
                 DayListItems.Remove(listItem);
@@ -253,8 +259,12 @@ namespace DigitalWellbeingWPF.ViewModels
             }
             catch (Exception ex)
             {
-                // Cannot remove from 
+                // Cannot remove from pie
                 Console.WriteLine(ex);
+            }
+            finally
+            {
+                RefreshTagChart();
             }
         }
 
@@ -410,7 +420,7 @@ namespace DigitalWellbeingWPF.ViewModels
                     tempTagChartData.Add(new StackedRowSeries()
                     {
                         Values = new ChartValues<double> { percentage },
-                        DataLabels = true,
+                        DataLabels = percentage >= 0.1,
                         Title = tagHour.Key,
                         LabelPoint = TagChartFormatter,
                         Fill = AppTagHelper.GetTagColor(tagHour.Key),

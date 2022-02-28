@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 
 namespace DigitalWellbeingWPF.Models
@@ -34,15 +35,15 @@ namespace DigitalWellbeingWPF.Models
          * Color[900] for dark colors, since foreground is always white
          * https://material.io/design/color/the-color-system.html#tools-for-picking-colors
          */
-        public static Dictionary<int, string> AppTagColors = new Dictionary<int, string>()
+        public static Dictionary<int, Brush> AppTagColors = new Dictionary<int, Brush>()
         {
-            {0, "#212121"}, // None, Gray
-            {1, "#E65100"}, // Work, Orange
-            {2, "#1B5E20"}, // Education, Green
-            {3, "#4A148C"}, // Games, Purple
-            {4, "#B71C1C"}, // Entertainment, Red
-            {5, "#0D47A1"}, // Communication, Blue
-            {6, "#F57F17"}, // Utility, Yellow
+            {0, (Brush)Application.Current.TryFindResource("Material_Gray") ?? Brushes.Gray}, // None, Gray,
+            {1, (Brush)Application.Current.TryFindResource("Material_Orange") ?? Brushes.Orange}, // Work, Orange,
+            {2, (Brush)Application.Current.TryFindResource("Material_Green") ?? Brushes.Green}, // Education, Green
+            {3, (Brush)Application.Current.TryFindResource("Material_Purple") ?? Brushes.Purple}, // Games, Purple
+            {4, (Brush)Application.Current.TryFindResource("Material_Red") ?? Brushes.Red}, // Entertainment, Red
+            {5, (Brush)Application.Current.TryFindResource("Material_Blue") ?? Brushes.Blue}, // Communication, Blue
+            {6, (Brush)Application.Current.TryFindResource("Material_Yellow") ?? Brushes.Yellow}, // Utility, Yellow
         };
 
         public static Dictionary<string, int> GetComboBoxChoices()
@@ -79,15 +80,13 @@ namespace DigitalWellbeingWPF.Models
 
         public static Brush GetTagColor(AppTag appTag)
         {
-            BrushConverter bc = new BrushConverter();
-            return (Brush)bc.ConvertFromString(AppTagColors[(int)appTag]);
+            return AppTagColors[(int)appTag];
         }
 
         public static Brush GetTagColor(string appTagName)
         {
-            BrushConverter bc = new BrushConverter();
-
-            return (Brush)bc.ConvertFromString(AppTagColors[(int)EnumUtils.GetEnumValueFromName<AppTag>(appTagName)]);
+            AppTag _tag = EnumUtils.GetEnumValueFromName<AppTag>(appTagName);
+            return AppTagColors[(int)_tag];
         }
     }
 }

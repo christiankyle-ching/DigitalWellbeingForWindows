@@ -77,7 +77,9 @@
                     <Style TargetType="lvc:ColumnSeries">
                         <Setter Property="DataLabels" Value="True"/>
                         <Setter Property="Foreground" Value="{DynamicResource SystemControlPageTextBaseHighBrush}"/>
-                        <Setter Property="FontWeight" Value="Medium"/>
+                        <Setter Property="FontWeight" Value="Normal"/>
+                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="Fill" Value="{StaticResource SystemControlBackgroundAccentBrush}"/>
                     </Style>
                 </lvc:CartesianChart.Resources>
                 <lvc:CartesianChart.AxisX>
@@ -104,6 +106,8 @@
                         <Setter Property="FontSize" Value="12"/>
                         <Setter Property="FontWeight" Value="Medium"/>
                         <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Stroke" Value="Transparent"/>
+                        <Setter Property="StrokeThickness" Value="5"/>
                     </Style>
                 </lvc:CartesianChart.Resources>
 
@@ -159,9 +163,10 @@
                                 <Setter Property="StrokeThickness" Value="0"/>
                                 <Setter Property="DataLabels" Value="True"/>
                                 <Setter Property="LabelPosition" Value="OutsideSlice"/>
-                                <Setter Property="FontSize" Value="12"/>
-                                <Setter Property="FontWeight" Value="Medium"/>
+                                <Setter Property="FontSize" Value="14"/>
+                                <Setter Property="FontWeight" Value="Normal"/>
                                 <Setter Property="Foreground" Value="{DynamicResource SystemControlPageTextBaseHighBrush}"/>
+                                <Setter Property="StrokeThickness" Value="5"/>
                             </Style>
                         </lvc:PieChart.Resources>
 
@@ -176,7 +181,6 @@
                 <!-- Minimum Duration -->
                 <TextBlock Grid.Row="1" Style="{StaticResource CaptionTextBlockStyle}"
                            Text="{Binding StrMinumumDuration}"
-                           FontSize="10" 
                            TextAlignment="Center"/>
             </Grid>
 

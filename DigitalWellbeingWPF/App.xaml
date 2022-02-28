@@ -10,6 +10,20 @@
                 <ui:ThemeResources />
                 <ui:XamlControlsResources />
             </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="{x:Type Control}">
+                <Setter Property="FontFamily" Value="Segoe UI" />
+                <Setter Property="FontWeight" Value="Normal" />
+            </Style>
+
+            <!-- Custom Colors -->
+            <SolidColorBrush x:Key="Material_Gray">#212121</SolidColorBrush>
+            <SolidColorBrush x:Key="Material_Orange">#E65100</SolidColorBrush>
+            <SolidColorBrush x:Key="Material_Green">#1B5E20</SolidColorBrush>
+            <SolidColorBrush x:Key="Material_Purple">#4A148C</SolidColorBrush>
+            <SolidColorBrush x:Key="Material_Red">#B71C1C</SolidColorBrush>
+            <SolidColorBrush x:Key="Material_Blue">#0D47A1</SolidColorBrush>
+            <SolidColorBrush x:Key="Material_Yellow">#F57F17</SolidColorBrush>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
