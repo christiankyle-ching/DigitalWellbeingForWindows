@@ -131,8 +131,8 @@
         <Grid Grid.Row="2">
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
+                <ColumnDefinition Width="*" MinWidth="300" />
+                <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
 
             <!-- First Column : Chart -->
@@ -151,7 +151,8 @@
                                   DataClick="AppUsageChart_DataClick"
                                   ChartLegend="{x:Null}" InnerRadius="{Binding PieChartInnerRadius}"
                                   DisableAnimations="True" Hoverable="False"
-                                  Margin="40">
+                                  Margin="20"
+                                  VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                         <!-- Keep Margin for Labels -->
                         <lvc:PieChart.Resources>
                             <Style TargetType="lvc:PieSeries">
@@ -244,37 +245,44 @@
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Image Source="{Binding IconSource}" Grid.Column="0" Height="16" MinWidth="16"/>
+                                <!-- App Icon -->
+                                <Image Source="{Binding IconSource}" Grid.Column="0" Height="16" Width="16" VerticalAlignment="Top" Margin="0,6"/>
 
+                                <!-- App Details -->
                                 <ui:SimpleStackPanel Orientation="Vertical" Grid.Column="1"  Margin="10,0">
+                                    <!-- Text Details -->
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBlock VerticalAlignment="Top" Grid.Column="0" Style="{StaticResource BaseTextBlockStyle}">
-                                            <Run Text="{Binding ProgramName}" /><Run Text=" (" /><Run Text="{Binding ProcessName}" /><Run Text=") " />
-                                        </TextBlock>
-
-                                        <ui:SimpleStackPanel Margin="10,0,0,0" Grid.Column="1">
-                                            <TextBlock Text="{Binding StrDuration}" VerticalAlignment="Top" Grid.Column="1" TextAlignment="Right" Style="{StaticResource CaptionTextBlockStyle}" />
+                                        <WrapPanel Grid.Column="0">
+                                            <!-- App Details -->
+                                            <TextBlock VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" 
+                                                       Margin="0,0,5,0">
+                                                <Run Text="{Binding ProgramName}" /><Run Text=" (" /><Run Text="{Binding ProcessName}" /><Run Text=") " />
+                                            </TextBlock>
 
                                             <!-- Badge -->
                                             <Label Content="{Binding StrAppTag, Mode=OneWay}"
                                                    Background="{Binding BrushAppTag, Mode=OneWay}"
                                                    Template="{StaticResource BadgeLabel}"
                                                    FontSize="12" FontWeight="Bold" Foreground="White" 
-                                                   HorizontalAlignment="Right"
-                                                   Margin="0,5,0,0"/>
+                                                   VerticalAlignment="Center"/>
+                                        </WrapPanel>
 
-                                        </ui:SimpleStackPanel>
-
+                                        <!-- App Usage Time -->
+                                        <TextBlock Grid.Column="1" Text="{Binding StrDuration}"
+                                                   VerticalAlignment="Center" TextAlignment="Right"
+                                                   Style="{StaticResource CaptionTextBlockStyle}" />
                                     </Grid>
 
-                                    <ui:ProgressBar Value="{Binding Percentage}" Margin="0,5,0,5"/>
+                                    <!-- Usage Bar -->
+                                    <ui:ProgressBar Value="{Binding Percentage}" Margin="0,10"/>
                                 </ui:SimpleStackPanel>
 
+                                <!-- App Menu Options -->
                                 <Button Grid.Column="2" Width="32" Height="32" Margin="0,0,10,0" >
                                     <Button.Content>
                                         <Label Content="•••" FontSize="8" RenderTransformOrigin="0.5,0.5" >
