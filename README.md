@@ -2,7 +2,10 @@
 [![Github All Releases](https://img.shields.io/github/downloads/christiankyle-ching/DigitalWellbeingForWindows/total.svg)](https://github.com/christiankyle-ching/DigitalWellbeingForWindows/releases)<br>
 An App Usage tracker for Windows 10 inspired by Digital Wellbeing in Android. Built with WPF (.NET 4.6), [ModernWpf](https://github.com/Kinnara/ModernWpf) and [Live Charts](https://lvcharts.net/).
 
-**This is only a hobby project. You will experience bugs.** See the [troubleshooting guide](#troubleshooting). You can help me fix them by reporting it in the [Issues tab](https://github.com/christiankyle-ching/DigitalWellbeingForWindows/issues/new). There are no warranties associated in using this app.
+**This is only a hobby project. You will experience bugs.** See the [troubleshooting guide](#troubleshooting).
+You can help me fix them by reporting it in the [Issues tab](https://github.com/christiankyle-ching/DigitalWellbeingForWindows/issues/new).
+
+There are no warranties associated in using this app.
 
 ## Main Features
 - **Weekly Usage**. View past week's total usage time (last 7 days).
@@ -19,6 +22,9 @@ An App Usage tracker for Windows 10 inspired by Digital Wellbeing in Android. Bu
 **Download the .msi** installer of the [latest version / release](https://github.com/christiankyle-ching/DigitalWellbeingForWindows/releases/latest).
 
 _Windows Defender SmartScreen will block the installation of this file. Read the source code if you have any doubts, or run a VirusTotal scan._
+
+NOTE: You may have multiple versions of this app installed. Just uninstall older versions.
+If you experience any problems, see the troubleshooting guide.
 
 ## Screenshots
 ![image](https://user-images.githubusercontent.com/57316283/155863828-f970b952-d4c4-4a78-9f30-52a2bd0e5a7b.png)
@@ -39,6 +45,9 @@ If the app crashes upon opening, try:
 3. Re-install the latest version.
 
 This will remove app usage history, but will mostly fix the issues. If the app is still crashing, go to: `%LOCALAPPDATA%/digital-wellbeing/internal-logs`, then send me the `.log` file for the current day when the crash happens. This will help me identify the issue.
+
+### App Icons not showing
+Fetching icons from running apps is a hit or miss. For better chances, try running the app in administrator mode. (`Right Click > Run as Administrator`).
 
 ## Solution Projects (Folders)
 - `DigitalWellbeing.Core` - A class library that has static shared classes among the projects.
