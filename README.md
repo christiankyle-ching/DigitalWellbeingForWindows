@@ -1,11 +1,28 @@
 # Digital Wellbeing For Windows 10
-[![Github All Releases](https://img.shields.io/github/downloads/christiankyle-ching/DigitalWellbeingForWindows/total.svg)](https://github.com/christiankyle-ching/DigitalWellbeingForWindows/releases)<br>
-An App Usage tracker for Windows 10 inspired by Digital Wellbeing in Android. Built with WPF (.NET 4.6), [ModernWpf](https://github.com/Kinnara/ModernWpf) and [Live Charts](https://lvcharts.net/).
+[![Github All Releases](https://img.shields.io/github/downloads/christiankyle-ching/DigitalWellbeingForWindows/total.svg)](https://github.com/christiankyle-ching/DigitalWellbeingForWindows/releases)
+
+An App Usage tracker (time tracker) for Windows 10 inspired by Digital Wellbeing in Android. Built with WPF (.NET 4.6), [ModernWpf](https://github.com/Kinnara/ModernWpf) and [Live Charts](https://lvcharts.net/).
 
 **This is only a hobby project. You will experience bugs.** See the [troubleshooting guide](#troubleshooting).
 You can help me fix them by reporting it in the [Issues tab](https://github.com/christiankyle-ching/DigitalWellbeingForWindows/issues/new).
 
 There are no warranties associated in using this app.
+
+## Screenshots
+<details>
+  <summary>Click to show screenshots</summary>
+
+  ### Light Mode
+  
+  ![image](https://user-images.githubusercontent.com/57316283/155919727-c0801c34-12bb-47ea-860e-eab5dfb3cc48.png)
+
+  ### Dark Mode
+  ![image](https://user-images.githubusercontent.com/57316283/155919747-6ab542e5-27ef-4704-84be-6eee82442c48.png)
+
+  ### Settings
+  ![image](https://user-images.githubusercontent.com/57316283/155935910-0e63014f-7d7d-44e3-acdb-bff46f7d6ed9.png)
+  
+</details>
 
 ## Main Features
 - **Weekly Usage**. View past week's total usage time (last 7 days).
@@ -21,17 +38,10 @@ There are no warranties associated in using this app.
 ## Installation
 **Download the .msi** installer of the [latest version / release](https://github.com/christiankyle-ching/DigitalWellbeingForWindows/releases/latest).
 
-_Windows Defender SmartScreen will block the installation of this file. Read the source code if you have any doubts, or run a VirusTotal scan._
+_Windows Defender SmartScreen will block the installation of this file. Read the source code if you have any doubts, or run a [VirusTotal](https://www.virustotal.com/) scan._
 
 NOTE: You may have multiple versions of this app installed. Just uninstall older versions.
 If you experience any problems, see the troubleshooting guide.
-
-## Screenshots
-![image](https://user-images.githubusercontent.com/57316283/155919727-c0801c34-12bb-47ea-860e-eab5dfb3cc48.png)
-<br/><br/>
-![image](https://user-images.githubusercontent.com/57316283/155919747-6ab542e5-27ef-4704-84be-6eee82442c48.png)
-<br/><br/>
-![image](https://user-images.githubusercontent.com/57316283/155863844-2b066189-cac8-4e07-acfd-7f91ea8a2969.png)
 
 ## Troubleshooting
 
@@ -44,10 +54,16 @@ If the app crashes upon opening, try:
   - Delete all `.log` files
 3. Re-install the latest version.
 
-This will remove app usage history, but will mostly fix the issues. If the app is still crashing, go to: `%LOCALAPPDATA%/digital-wellbeing/internal-logs`, then send me the `.log` file for the current day when the crash happens. This will help me identify the issue.
+This will remove app usage history, but will mostly fix the issues. If the app is still crashing, go to: 
+```bat
+%LOCALAPPDATA%/digital-wellbeing/internal-logs
+```
+Send me the `.log` file for the current day when the crash happens. This will help me identify the issue.
 
-### App Icons not showing
+### App icons not showing
 Fetching icons from running apps is a hit or miss. For better chances, try running the app in administrator mode. (`Right Click > Run as Administrator`).
+
+# For Developers
 
 ## Solution Projects (Folders)
 - `DigitalWellbeing.Core` - A class library that has static shared classes among the projects.
@@ -56,4 +72,6 @@ Fetching icons from running apps is a hit or miss. For better chances, try runni
 - `Setup` - An [Advanced Installer](https://www.advancedinstaller.com/) setup project for building an .MSI installer.
 
 ## How to Build with .MSI Installer
-- Select `Release - AdvancedInstaller` in Solution Configurations, then Build Solution.
+Select `Release - AdvancedInstaller` in Solution Configurations, then Build Solution.
+
+If you want to use Advanced Installer program instead, build using `Release` config only, then build the .msi using Advanced Installer tool.
