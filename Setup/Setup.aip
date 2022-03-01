@@ -30,10 +30,10 @@
     <ROW Property="ARPHELPLINK" Value="https://github.com/christiankyle-ching/DigitalWellbeingForWindows"/>
     <ROW Property="ARPPRODUCTICON" Value="applogo.exe" Type="8"/>
     <ROW Property="Manufacturer" Value="ckcdev"/>
-    <ROW Property="ProductCode" Value="1033:{B2A3CB22-240D-4B1D-9727-2F3A6AADE1B0} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{2BEDF880-D8B1-4813-8A44-6E79730D71A8} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="Digital Wellbeing For Windows"/>
-    <ROW Property="ProductVersion" Value="2.0.2.0" Type="32" TargetFile="DigitalWellbeingWPF.exe"/>
+    <ROW Property="ProductVersion" Value="2.0.3.0" Type="32" TargetFile="DigitalWellbeingWPF.exe"/>
     <ROW Property="REBOOT" MultiBuildValue="DefaultBuild:Force"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{D7DA3A0D-99E1-4FAC-B2CC-FEBB27BCA59A}"/>
