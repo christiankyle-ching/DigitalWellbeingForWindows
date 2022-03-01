@@ -72,7 +72,7 @@ namespace DigitalWellbeingWPF.ViewModels
             {
                 return Properties.Settings.Default.MinumumDuration.TotalSeconds <= 0
                     ? ""
-                    : $"Apps that run less than {StringParser.TimeSpanToString(Properties.Settings.Default.MinumumDuration)} are hidden.";
+                    : $"Apps that run less than {StringHelper.TimeSpanToString(Properties.Settings.Default.MinumumDuration)} are hidden.";
             }
         }
         #endregion
@@ -519,7 +519,7 @@ namespace DigitalWellbeingWPF.ViewModels
                 {
                     int percentage = (int)Math.Round(app.Duration.TotalSeconds / TotalDuration.TotalSeconds * 100);
 
-                    string durationStr = StringParser.TimeSpanToString(app.Duration);
+                    string durationStr = StringHelper.TimeSpanToString(app.Duration);
 
                     string label = app.ProcessName;
                     if (durationStr != "") { label += $" ({durationStr})"; }

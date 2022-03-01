@@ -31,8 +31,8 @@ namespace DigitalWellbeingWPF
     public partial class MainWindow : Window
     {
         // Pages
-        private readonly DayAppUsagePage usagePage = new DayAppUsagePage();
-        private readonly SettingsPage settingsPage = new SettingsPage();
+        private DayAppUsagePage usagePage = new DayAppUsagePage();
+        private SettingsPage settingsPage = new SettingsPage();
 
         public MainWindow()
         {
@@ -108,7 +108,7 @@ namespace DigitalWellbeingWPF
                 Notifier.ShowNotification(
                     $"Warning for {app.ProgramName}",
                     $"You have less than 15m using this app. " +
-                    $"You've been using this app for {StringParser.TimeSpanToShortString(app.Duration)}."
+                    $"You've been using this app for {StringHelper.TimeSpanToShortString(app.Duration)}."
                     );
             }
             else
@@ -145,7 +145,7 @@ namespace DigitalWellbeingWPF
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             MessageBoxResult res = MessageBox.Show(
-                "Are you sure you want to exit the app? Alert Notifications won't work.",
+                "Are you sure you want to exit the app? Alert Notifications won't work. You can minimize the app instead.",
                 App.APPNAME,
                 MessageBoxButton.OKCancel,
                 MessageBoxImage.None,
@@ -201,6 +201,12 @@ namespace DigitalWellbeingWPF
             // Increase Check Count
             autorunCheckCount++;
             Console.WriteLine($"Checked Autorun: {autorunCheckCount}");
+        }
+
+        public void ReloadUsagePage()
+        {
+            // New instance to reload all completely
+            usagePage = new DayAppUsagePage();
         }
     }
 }

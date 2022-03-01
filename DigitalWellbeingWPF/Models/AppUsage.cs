@@ -18,7 +18,7 @@ namespace DigitalWellbeingWPF.Models
         public AppUsage(string processName, string programName, TimeSpan duration)
         {
             this.ProcessName = processName;
-            this.ProgramName = programName != string.Empty ? programName : StringParser.TitleCaseWhenLower(processName);
+            this.ProgramName = programName != string.Empty ? programName : StringHelper.TitleCaseWhenLower(processName);
             this.Duration = duration;
         }
 

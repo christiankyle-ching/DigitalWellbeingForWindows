@@ -33,8 +33,8 @@ namespace DigitalWellbeingWPF.Views
 
             ProgramName.Text = appUsage.ProgramName;
             ProcessName.Text = appUsage.ProcessName;
-            UsageTime.Text = StringParser.TimeSpanToShortString(appUsage.Duration);
-            TimeLimit.Text = StringParser.TimeSpanToShortString(limit);
+            UsageTime.Text = StringHelper.TimeSpanToShortString(appUsage.Duration);
+            TimeLimit.Text = StringHelper.TimeSpanToShortString(limit);
 
             BtnCloseApp.Content = $"Exit ({appUsage.ProcessName})";
 

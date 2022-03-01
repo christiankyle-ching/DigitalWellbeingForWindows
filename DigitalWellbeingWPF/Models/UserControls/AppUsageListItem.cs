@@ -17,7 +17,7 @@ namespace DigitalWellbeingWPF.Models.UserControls
         public string ProcessName { get; set; }
         public string ProgramName { get; set; }
         public TimeSpan Duration { get; set; }
-        public string StrDuration { get => StringParser.TimeSpanToString(Duration); }
+        public string StrDuration { get => StringHelper.TimeSpanToString(Duration); }
         public ImageSource IconSource { get; set; }
 
         public AppTag _AppTag { get; set; }

@@ -1,0 +1,89 @@
+﻿<Window x:Class="DigitalWellbeingWPF.Views.ClearDataWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DigitalWellbeingWPF.Views"
+        mc:Ignorable="d"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        ui:WindowHelper.UseModernWindowStyle="True"
+        Title="Clear Data" Height="250" Width="400"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Topmost="True"
+        Background="{DynamicResource SystemControlPageBackgroundAltHighBrush}"
+        Foreground="{DynamicResource SystemControlPageTextBaseHighBrush}">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <ui:SimpleStackPanel Grid.Row="0" Spacing="10">
+
+            <!-- Daily Logs -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="30"/>
+                </Grid.ColumnDefinitions>
+
+                <ui:SimpleStackPanel Grid.Column="0">
+                    <TextBlock Text="Daily Logs" FontWeight="Bold" Style="{StaticResource BaseTextBlockStyle}"/>
+                    <TextBlock Text="Delete all the tracked time data of app usage." Style="{StaticResource CaptionTextBlockStyle}"/>
+                </ui:SimpleStackPanel>
+
+                <CheckBox Grid.Column="1" x:Name="chkDailyLogs"
+                          Checked="Options_Changed" Unchecked="Options_Changed"/>
+
+            </Grid>
+
+            <!-- Internal Logs -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="30"/>
+                </Grid.ColumnDefinitions>
+
+                <ui:SimpleStackPanel Grid.Column="0">
+                    <TextBlock Text="Internal Logs" FontWeight="Bold" Style="{StaticResource BaseTextBlockStyle}"/>
+                    <TextBlock Text="Delete all logs used by this app (Digital Wellbeing) for error tracking." Style="{StaticResource CaptionTextBlockStyle}"/>
+                </ui:SimpleStackPanel>
+
+                <CheckBox Grid.Column="1" x:Name="chkInternalLogs"
+                          Checked="Options_Changed" Unchecked="Options_Changed"/>
+
+            </Grid>
+
+            <!-- Process Icons -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="30"/>
+                </Grid.ColumnDefinitions>
+
+                <ui:SimpleStackPanel Grid.Column="0">
+                    <TextBlock Text="App Icons" FontWeight="Bold" Style="{StaticResource BaseTextBlockStyle}"/>
+                    <TextBlock Text="Delete all cached icons of tracked apps." Style="{StaticResource CaptionTextBlockStyle}"/>
+                </ui:SimpleStackPanel>
+
+                <CheckBox Grid.Column="1" x:Name="chkProcessIcons"
+                          Checked="Options_Changed" Unchecked="Options_Changed"/>
+
+            </Grid>
+
+        </ui:SimpleStackPanel>
+
+        <ui:SimpleStackPanel Grid.Row="1" Orientation="Horizontal"
+                             Spacing="20" HorizontalAlignment="Right">
+
+            <Button Content="Cancel" x:Name="btnCancel" Click="btnCancel_Click"/>
+
+            <Button Content="Delete" x:Name="btnDelete" Style="{StaticResource AccentButtonStyle}"
+                    Click="btnDelete_Click" IsEnabled="False"/>
+
+        </ui:SimpleStackPanel>
+
+    </Grid>
+</Window>

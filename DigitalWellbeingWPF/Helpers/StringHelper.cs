@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace DigitalWellbeingWPF.Helpers
 {
-    public static class StringParser
+    public static class StringHelper
     {
+        public static string NEWLINE = Environment.NewLine;
+
         public static string TimeSpanToString(TimeSpan duration)
         {
             string durationStr = (int)duration.Hours > 0 ? $"{duration.Hours}h " : "";

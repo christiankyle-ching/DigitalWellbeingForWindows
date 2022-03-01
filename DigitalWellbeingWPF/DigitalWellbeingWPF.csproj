@@ -89,6 +89,9 @@
     <Compile Include="Views\AlertWindow.xaml.cs">
       <DependentUpon>AlertWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ClearDataWindow.xaml.cs">
+      <DependentUpon>ClearDataWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SetAppTagWindow.xaml.cs">
       <DependentUpon>SetAppTagWindow.xaml</DependentUpon>
     </Compile>
@@ -111,7 +114,7 @@
     </Compile>
     <Compile Include="Helpers\IconManager.cs" />
     <Compile Include="Helpers\NumberFormatter.cs" />
-    <Compile Include="Helpers\StringParser.cs" />
+    <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -121,6 +124,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Resource>
     <Page Include="Views\AlertWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ClearDataWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
