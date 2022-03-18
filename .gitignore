@@ -366,3 +366,5 @@ FodyWeavers.xsd
 *-cache/
 *-SetupFiles/
 Prerequisites/
+Setup/Setup.back.aip
+Setup/Setup.back*.aip
