@@ -142,6 +142,11 @@ namespace DigitalWellbeingWPF
             usagePage.OnNavigate();
         }
 
+        public void ForceClose()
+        {
+            Application.Current.Shutdown();
+        }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (Properties.Settings.Default.MinimizeOnExit)

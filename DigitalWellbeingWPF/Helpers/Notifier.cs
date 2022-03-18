@@ -56,7 +56,7 @@ namespace DigitalWellbeingWPF.Helpers
             // Context Menu : Exit App
             ctx.Items.Add("Exit", null, (s, e) =>
             {
-                mWindow.Close();
+                mWindow.ForceClose();
             });
 
             // Always visible for notifications to work
