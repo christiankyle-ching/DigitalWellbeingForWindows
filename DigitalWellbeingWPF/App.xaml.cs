@@ -37,12 +37,11 @@ namespace DigitalWellbeingWPF
         {
             Process thisProcess = Process.GetCurrentProcess();
 
-            IEnumerable<Process> similarAppProcesses = Process.GetProcesses().Where(p => p.ProcessName == thisProcess.ProcessName);
+            IEnumerable<Process> similarAppProcesses = Process.GetProcesses().Where(
+                p => p.ProcessName == thisProcess.ProcessName && p.SessionId == thisProcess.SessionId);
 
             if (similarAppProcesses.Count() > 1)
             {
-                //ShowMessage_AlreadyRunning();
-
                 try
                 {
                     IntPtr existingProcessHWnd = similarAppProcesses.Single(p => thisProcess.Id != p.Id).MainWindowHandle;
