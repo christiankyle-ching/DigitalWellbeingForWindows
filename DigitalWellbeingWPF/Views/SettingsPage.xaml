@@ -28,10 +28,10 @@
         <ui:ScrollViewerEx>
 
             <ui:SimpleStackPanel>
+                <!-- APP SETTINGS -->
+                <TextBlock Text="App Runtime" Style="{StaticResource SubtitleTextBlockStyle}" Margin="10,0,0,10"/>
 
-                <!-- USAGE DATA -->
-                <TextBlock Text="Usage Data" Style="{StaticResource SubtitleTextBlockStyle}" Margin="10,0,0,10"/>
-
+                <!-- Run on Startup -->
                 <ui:ListViewItem Style="{StaticResource SettingListItemStyle}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -47,6 +47,27 @@
                         <ui:ToggleSwitch x:Name="EnableRunOnStartup" Toggled="EnableRunOnStartup_Toggled" Grid.Column="1"/>
                     </Grid>
                 </ui:ListViewItem>
+
+                <!-- Run on Startup -->
+                <ui:ListViewItem Style="{StaticResource SettingListItemStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <ui:SimpleStackPanel Grid.Column="0" Margin="0,0,20,0">
+                            <TextBlock Text="Minimize On Exit" Style="{StaticResource BaseTextBlockStyle}"/>
+                            <TextBlock Text="Minimize the app on taskbar on exit. Disable to exit the app completely (notifications won't work)."
+                                       Style="{StaticResource CaptionTextBlockStyle}"/>
+                        </ui:SimpleStackPanel>
+
+                        <ui:ToggleSwitch x:Name="ToggleMinimizeOnExit" Toggled="ToggleMinimizeOnExit_Toggled" Grid.Column="1"/>
+                    </Grid>
+                </ui:ListViewItem>
+
+                <!-- USAGE DATA -->
+                <TextBlock Text="Usage Data" Style="{StaticResource SubtitleTextBlockStyle}" Margin="10,0,0,10"/>
 
                 <!-- EXCLUDED APPS -->
                 <ui:ListView Style="{StaticResource SettingListViewStyle}">

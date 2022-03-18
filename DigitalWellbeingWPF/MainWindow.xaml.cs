@@ -144,19 +144,11 @@ namespace DigitalWellbeingWPF
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            MessageBoxResult res = MessageBox.Show(
-                "Are you sure you want to exit the app? Alert Notifications won't work. You can minimize the app instead.",
-                App.APPNAME,
-                MessageBoxButton.OKCancel,
-                MessageBoxImage.None,
-                MessageBoxResult.Cancel);
+            if (Properties.Settings.Default.MinimizeOnExit)
+            {
+                MainWindow mWindow = Application.Current.MainWindow as MainWindow;
+                mWindow.MinimizeToTray();
 
-            if (res == MessageBoxResult.OK)
-            {
-                Application.Current.Shutdown();
-            }
-            else
-            {
                 e.Cancel = true;
             }
         }

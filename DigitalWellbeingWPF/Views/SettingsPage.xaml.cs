@@ -67,6 +67,7 @@ namespace DigitalWellbeingWPF.Views
             MinDuration_Seconds.Value = minDuration.Seconds;
 
             EnableRunOnStartup.IsOn = SettingsManager.IsRunningOnStartup();
+            ToggleMinimizeOnExit.IsOn = Properties.Settings.Default.MinimizeOnExit;
 
             EnableAutoRefresh.IsOn = Properties.Settings.Default.EnableAutoRefresh;
             RefreshInterval.Value = Properties.Settings.Default.RefreshIntervalSeconds;
@@ -208,6 +209,12 @@ namespace DigitalWellbeingWPF.Views
         private void EnableRunOnStartup_Toggled(object sender, RoutedEventArgs e)
         {
             SettingsManager.SetRunOnStartup(EnableRunOnStartup.IsOn);
+        }
+
+        private void ToggleMinimizeOnExit_Toggled(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.MinimizeOnExit = ToggleMinimizeOnExit.IsOn;
+            Properties.Settings.Default.Save();
         }
 
         #endregion

@@ -12,7 +12,10 @@
         WindowStartupLocation="CenterScreen"
         StateChanged="Window_StateChanged" Closing="Window_Closing">
     <Grid>
-        <ui:NavigationView x:Name="NavView" SelectionChanged="NavView_SelectionChanged" IsBackButtonVisible="Collapsed" PaneTitle="Digital Wellbeing For Windows">
+        <ui:NavigationView x:Name="NavView"
+                           SelectionChanged="NavView_SelectionChanged"
+                           IsBackButtonVisible="Collapsed" PaneDisplayMode="LeftCompact"
+                           PaneTitle="Digital Wellbeing For Windows">
 
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem Tag="home" Icon="Home" Content="Home"/>
