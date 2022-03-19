@@ -40,8 +40,10 @@ There are no warranties associated in using this app.
 
 _Windows Defender SmartScreen will block the installation of this file. Read the source code if you have any doubts, or run a [VirusTotal](https://www.virustotal.com/) scan._
 
-NOTE: You may have multiple versions of this app installed. Just uninstall older versions.
-If you experience any problems, see the troubleshooting guide.
+**Additional Notes:**
+- **Restart is required** to start the app monitoring background service.
+- You may have multiple versions of this app installed. Just uninstall older versions via Control Panel / Settings.
+- If you experience any problems, see the troubleshooting guide.
 
 ## Troubleshooting
 
